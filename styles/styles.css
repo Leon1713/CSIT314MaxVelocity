@@ -1,12 +1,11 @@
-
 /* ── CSS Variables ── */
 :root {
-  --fundly-primary:      #c96b6b;
+  --fundly-primary: #c96b6b;
   --fundly-primary-dark: #b85c5c;
-  --fundly-text:         #2d2d2d;
-  --fundly-muted:        #aaa;
-  --navbar-height:       70px;
-  --footer-bg:           #c96b6b;
+  --fundly-text: #2d2d2d;
+  --fundly-muted: #aaa;
+  --navbar-height: 70px;
+  --footer-bg: #c96b6b;
 }
 
 /* ── Base reset ── */
@@ -231,20 +230,25 @@ body.login-page {
 
 /*Animated tiling background*/
 @keyframes scrollBg {
-  from { background-position: 0 0; }
-  to   { background-position: 130px 130px; } 
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 130px 130px;
+  }
 }
 
 .login-bg-pattern {
   position: fixed;
-  inset: 0;                           
+  inset: 0;
   z-index: 0;
   background-image: url('/img/logo-bg.png');
   background-repeat: repeat;
-  background-size: 130px 130px;       
-  opacity: 0.10;                      
+  background-size: 130px 130px;
+  opacity: 0.10;
   animation: scrollBg 12s linear infinite;
-  pointer-events: none;               
+  pointer-events: none;
 }
 
 /* Full-height wrapper that centres the card */
@@ -252,7 +256,7 @@ body.login-page {
   flex: 1;
   padding: 40px 16px;
   position: relative;
-  z-index: 1;          
+  z-index: 1;
 }
 
 /* The card itself */
@@ -260,7 +264,7 @@ body.login-page {
   background: #ffffff;
   border-radius: 20px;
   box-shadow: 0 8px 40px rgba(201, 107, 107, 0.12),
-              0 2px 8px  rgba(0, 0, 0, 0.06);
+    0 2px 8px rgba(0, 0, 0, 0.06);
   padding: 40px 36px 36px;
   width: 100%;
   max-width: 380px;
@@ -360,6 +364,12 @@ body.login-page {
   box-shadow: 0 5px 16px rgba(201, 107, 107, 0.38);
 }
 
+.login-btn-fetching {
+  background: var(--fundly-primary-dark);
+  transform: translateY(0) !important;
+  box-shadow: 0 5px 16px rgba(201, 107, 107, 0.38);
+}
+
 .login-btn:active {
   transform: translateY(0);
 }
@@ -373,7 +383,7 @@ body.login-page {
 }
 
 .login-signup-link {
-  color: #c96b6b; 
+  color: #c96b6b;
   font-weight: 700;
   text-decoration: none;
   transition: color 0.18s;
