@@ -1,3 +1,6 @@
 /__pycache__/
 .vscode/launch.json
 /Controller/__pycache__/
+Entity/__pycache__/LoginResponse.cpython-314.pyc
+.gitignore
+Entity/__pycache__/Account.cpython-314.pyc

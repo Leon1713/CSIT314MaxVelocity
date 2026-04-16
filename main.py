@@ -27,7 +27,7 @@ class LoginData(BaseModel):
 def login(data: LoginData):
     print(f"Received login data: {data.email}, {data.password}")
     controller = LoginController()
-    return controller.Login(data.email, data.password)
+    return controller.authLogin(data.email, data.password)
 
 app.mount("/styles", StaticFiles(directory="styles"), name="styles")
 app.mount("/img", StaticFiles(directory="img"), name="img")   

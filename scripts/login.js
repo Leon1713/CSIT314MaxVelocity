@@ -32,8 +32,17 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
       throw new Error(errText || "Login failed");
     }
 
-    const result = await res.json();
-    console.log(result);
+    const result = await res.json().then(data =>
+    {
+      if (data.error) {
+        modalMsg.innerText = data.error;
+        modal.show();
+      }
+      else if(data != "Login Successful") {
+        modalMsg.innerText = data;
+        modal.show();
+      }
+    });
 
   } catch (err) {
     modalMsg.innerText = "Failed to connect to server. Please try again later.";
