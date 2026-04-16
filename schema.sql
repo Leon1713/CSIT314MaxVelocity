@@ -71,7 +71,7 @@ INSERT INTO user_accounts (username, email, password_hash, role_id, first_name, 
 VALUES (
     'admin',
     'admin@fundraise.com',
-    '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMeJfWgDpjXnwY8tHC7cVnBV0i',  -- Admin@1234
+    '$2b$12,  -- Admin@1234
     1,
     'System',
     'Admin',
