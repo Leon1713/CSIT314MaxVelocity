@@ -38,8 +38,8 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
         modalMsg.innerText = data.error;
         modal.show();
       }
-      else if(data != "Login Successful") {
-        modalMsg.innerText = data;
+      else if(data.message != "Login Successful") {
+        modalMsg.innerText = data.message;
         modal.show();
       }
     });

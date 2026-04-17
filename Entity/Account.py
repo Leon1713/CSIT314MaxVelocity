@@ -1,6 +1,10 @@
-from .LoginResponse import LoginResponse
-from LoginStatus import LoginStatus
+from db import get_db_connection
+from passlib.context import CryptContext
 class Account:
+    db_connection = get_db_connection() # Establish a database connection when the class is loaded
+    db_cursor = db_connection.cursor(dictionary=True) # Create a cursor for executing SQL queries, with dictionary=True to return results as dictionaries
+    
+    # Define the attributes of the Account class
     def __init__(self, user_id: int, username: str, email: str, password_hash: str, role_id: int, first_name: str, last_name: str, phone: str, is_active: bool, is_suspended: bool, created_at, updated_at, last_login):
         self.user_id = user_id
         self.username = username
@@ -15,6 +19,7 @@ class Account:
         self.created_at = created_at
         self.updated_at = updated_at
         self.last_login = last_login
+        
     def to_dict(self):
         return {
             "user_id": self.user_id,
@@ -27,8 +32,17 @@ class Account:
             "is_active": self.is_active,
             "is_suspended": self.is_suspended
         }
-    def authenticate(self, password:str, hasher) -> LoginResponse:
+        
+    @staticmethod
+    def findUsersByEmailOrUsername(email_or_username: str):
+        Account.db_cursor.execute("SELECT * FROM user_accounts WHERE email = %s OR username = %s", (email_or_username, email_or_username))
+        user_data = Account.db_cursor.fetchall()
+        if user_data:
+            return [Account(**user) for user in user_data] # For each user in the result, create an Account object and return a list of them
+        return None # same as NULL
+
+    def authenticate(self, password:str, hasher) -> Account:
         if hasher.verify(password, self.password_hash):
-            return LoginResponse(account=self, login_status=LoginStatus.SUCCESS)
+            return self
         else:
-            return LoginResponse(account=self, login_status=LoginStatus.INVALID_CREDENTIALS)
+            return {"error": "Invalid email/username or password"} # return account info if successful, otherwise return message 

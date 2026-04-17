@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from Controller.LoginController import LoginController
+from Entity.Account import Account
 
 app = FastAPI()
 app.add_middleware(
@@ -27,7 +28,12 @@ class LoginData(BaseModel):
 def login(data: LoginData):
     print(f"Received login data: {data.email}, {data.password}")
     controller = LoginController()
-    return controller.authLogin(data.email, data.password)
+    result = controller.authLogin(data.email, data.password)
+    if isinstance(result, Account):
+        return {"message" : "Login successful"}
+    else:
+        return result
+    
 
 app.mount("/styles", StaticFiles(directory="styles"), name="styles")
 app.mount("/img", StaticFiles(directory="img"), name="img")   
