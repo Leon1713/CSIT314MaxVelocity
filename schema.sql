@@ -21,9 +21,9 @@ INSERT INTO user_roles (role_name, description) VALUES
 
 CREATE TABLE IF NOT EXISTS user_accounts (
     user_id         INT PRIMARY KEY AUTO_INCREMENT,
-    username        VARCHAR(50)  NOT NULL UNIQUE,
+    username        VARCHAR(50)  NOT NULL UNIQUE COLLATE utf8mb4_bin, -- case-sensitive username
     email           VARCHAR(100) NOT NULL UNIQUE,
-    password_hash   VARCHAR(255) NOT NULL,          -- bcrypt hashed
+    password_hash   VARCHAR(255) NOT NULL,          -- argon2id hashed
     role_id         INT          NOT NULL,
     first_name      VARCHAR(50),
     last_name       VARCHAR(50),

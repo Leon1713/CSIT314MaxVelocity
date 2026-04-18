@@ -32,7 +32,7 @@ def login(data: LoginData):
     if isinstance(result, Account):
         return {"message" : "Login successful"}
     else:
-        return result
+        return {"error" : "Invalid email/username or password"}
     
 
 app.mount("/styles", StaticFiles(directory="styles"), name="styles")

@@ -30,7 +30,10 @@ class Account:
             "last_name": self.last_name,
             "phone": self.phone,
             "is_active": self.is_active,
-            "is_suspended": self.is_suspended
+            "is_suspended": self.is_suspended,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+            "last_login": self.last_login
         }
         
     @staticmethod
@@ -40,9 +43,31 @@ class Account:
         if user_data:
             return [Account(**user) for user in user_data] # For each user in the result, create an Account object and return a list of them
         return None # same as NULL
+    
+    @staticmethod
+    def insertNewUser(account_data: dict)-> bool:
+        if(Account.findUsersByEmailOrUsername(account_data["email"]) != None or Account.findUsersByEmailOrUsername(account_data["username"]) != None):
+            return False # User with the same email or username already exists, return False to indicate failure
+        
+        Account.db_cursor.execute("""
+            INSERT IGNORE INTO user_accounts (username, email, password_hash, role_id, first_name, last_name, phone, is_active, is_suspended)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (
+            account_data["username"],
+            account_data["email"],
+            account_data["password_hash"],
+            account_data["role_id"],
+            account_data["first_name"],
+            account_data["last_name"],
+            account_data["phone"],
+            account_data.get("is_active", True),  # Default to True if not provided
+            account_data.get("is_suspended", False)  # Default to False if not provided
+        ))
+        Account.db_connection.commit() # Commit the transaction to save the new user in the database
+        return True # Return True to indicate successful insertion
 
     def authenticate(self, password:str, hasher) -> Account:
         if hasher.verify(password, self.password_hash):
             return self
         else:
-            return {"error": "Invalid email/username or password"} # return account info if successful, otherwise return message 
+            return None # Return None to indicate authentication failure
