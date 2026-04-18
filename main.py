@@ -18,12 +18,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 class LoginData(BaseModel):
     email: str
     password: str
     
-
-
+    
 @app.post("/login")
 def login(data: LoginData):
     print(f"Received login data: {data.email}, {data.password}")
