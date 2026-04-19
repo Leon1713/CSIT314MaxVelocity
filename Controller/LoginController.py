@@ -1,6 +1,5 @@
 from passlib.context import CryptContext
 from Entity.Account import Account
-from db import get_db_connection
 
 class LoginController:
     

@@ -25,7 +25,7 @@ class LoginData(BaseModel):
     
     
 @app.post("/login")
-def login(data: LoginData):
+def login(data: LoginData) -> dict:
     print(f"Received login data: {data.email}, {data.password}")
     controller = LoginController()
     result = controller.authLogin(data.email, data.password)
