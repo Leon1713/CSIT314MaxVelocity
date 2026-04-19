@@ -4,3 +4,6 @@
 Entity/__pycache__/LoginResponse.cpython-314.pyc
 .gitignore
 Entity/__pycache__/Account.cpython-314.pyc
+Entity/__pycache__/DBHandler.cpython-314.pyc
+*.pyc
+__pycache__/
