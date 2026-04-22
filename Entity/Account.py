@@ -36,14 +36,26 @@ class Account(DBHandler):
         }
         
     @staticmethod
-    def findUsersByEmailOrUsername(email_or_username: str):
+    def findUsersByEmailOrUsername(email_or_username: str, role_input: str):
         db_cursor = Account.db_connection.cursor(dictionary=True)
-        db_cursor.execute("SELECT * FROM user_accounts WHERE email = %s OR username = %s", (email_or_username, email_or_username))
+        roleId = Account.getRoleId(role_input) # Check if the role exists, will raise an error if it doesn't
+        db_cursor.execute("SELECT user_accounts.* FROM user_accounts join user_roles ON user_accounts.role_id = user_roles.role_id WHERE (email = %s OR username = %s) AND user_roles.role_id = %s", (email_or_username, email_or_username, roleId))
         user_data = db_cursor.fetchall()
         db_cursor.close()
         if user_data:
             return [Account(**user) for user in user_data] # For each user in the result, create an Account object and return a list of them
         return None # same as NULL
+    
+    @staticmethod
+    def getRoleId(role_name: str) -> int:
+        db_cursor = Account.db_connection.cursor(dictionary=True)
+        db_cursor.execute("SELECT role_id FROM user_roles WHERE role_name = %s", (role_name,))
+        result = db_cursor.fetchone()
+        db_cursor.close()
+        if result:
+            return result["role_id"]
+        else:
+            raise ValueError(f"Role '{role_name}' not found in the database.")
     
     @staticmethod
     def insertNewUser(account_data: dict)-> bool:

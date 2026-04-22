@@ -22,13 +22,14 @@ app.add_middleware(
 class LoginData(BaseModel):
     email: str
     password: str
+    role: str
     
     
 @app.post("/login")
 def login(data: LoginData) -> dict:
-    print(f"Received login data: {data.email}, {data.password}")
+    print(f"Received login data: {data.email}, {data.password}, {data.role}")
     controller = LoginController()
-    result = controller.authLogin(data.email, data.password)
+    result = controller.authLogin(data.email, data.password, data.role)
     if isinstance(result, Account):
         return {"message" : "Login successful"}
     else:

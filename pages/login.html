@@ -43,7 +43,7 @@
       <p class="login-subtitle">Sign in, or sign up to continue.</p>
  
       <!-- Form -->
-      <form class="login-form" novalidate>
+      <form class="login-form" id="login-form" novalidate>
  
         <div class="login-field-wrap">
           <input
@@ -73,13 +73,13 @@
           <label for="loginRole" class="login-role-label">Log in as a...</label>
           <select id="loginRole" class="login-role-select">
             <option value="donee">Donee</option>
-            <option value="fundraiser">Fund Raiser</option>
-            <option value="admin">Admin</option>
+            <option value="fund_raiser">Fund Raiser</option>
+            <option value="user_admin">Admin</option>
             <option value="platform_mgmt">Platform Mgmt</option>
           </select>
         </div>
  
-        <button type="submit" class="login-btn">Sign In</button>
+        <button type="submit" class="login-btn" id="login-btn-id">Sign In</button>
  
       </form>
  

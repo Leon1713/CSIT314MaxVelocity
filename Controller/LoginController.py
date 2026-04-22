@@ -5,8 +5,8 @@ class LoginController:
     
     def __init__(self):
         self.pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
-    def authLogin(self, email: str, password: str):
-        userids = Account.findUsersByEmailOrUsername(email)
+    def authLogin(self, email: str, password: str, role: str):
+        userids = Account.findUsersByEmailOrUsername(email, role)
         if userids == None or userids.__len__() == 0:
             return {"error": "Invalid email/username or password"}
         user : Account
