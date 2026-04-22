@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+mysql-connector-python
+passlib
+bcrypt
+python-dotenv
+requests
+argon2-cffi
