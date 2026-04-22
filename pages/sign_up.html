@@ -13,22 +13,21 @@
 </head>
 <body class="login-page">
 
-  <!-- Animated tiling background -->
   <div class="login-bg-pattern"></div>
-
-  <!-- Centred signup card -->
+ 
   <div class="login-wrapper d-flex align-items-center justify-content-center">
     <div class="login-card">
-
+ 
       <div class="login-logo-wrap">
         <img src="/img/fundly-logo.png" alt="Fundly Logo" class="login-logo-img"/>
       </div>
-
+ 
       <h1 class="login-title">Join Us</h1>
       <p class="login-subtitle">Sign up to use our platform.</p>
-
+ 
+      <!-- Form -->
       <form class="login-form" novalidate>
-
+ 
         <div class="login-field-wrap">
           <input
             type="text"
@@ -39,7 +38,7 @@
             required
           />
         </div>
-
+ 
         <div class="login-field-wrap">
           <input
             type="email"
@@ -50,7 +49,7 @@
             required
           />
         </div>
-
+ 
         <div class="login-field-wrap">
           <input
             type="password"
@@ -61,17 +60,29 @@
             required
           />
         </div>
-
+ 
+        <div class="login-divider"></div>
+ 
+        <div class="login-role-row">
+          <label for="signupRole" class="login-role-label">Sign up as a...</label>
+          <select id="signupRole" class="login-role-select">
+            <option value="donee">Donee</option>
+            <option value="fundraiser">Fund Raiser</option>
+            <option value="admin">Admin</option>
+            <option value="platform_mgmt">Platform Mgmt</option>
+          </select>
+        </div>
+ 
         <button type="submit" class="login-btn">Sign Up</button>
-
+ 
       </form>
-
+ 
       <!-- Footer link -->
       <p class="login-footer-text">
         Already have an account?
         <a href="login.html" class="login-signup-link">Sign in.</a>
       </p>
-
+ 
     </div>
   </div>
 
