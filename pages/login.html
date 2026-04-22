@@ -29,9 +29,9 @@
     </div>
   </div>
 
-
   <div class="login-bg-pattern"></div>
  
+  <!-- Centred login card -->
   <div class="login-wrapper d-flex align-items-center justify-content-center">
     <div class="login-card">
  
@@ -39,27 +39,16 @@
         <img src="/img/fundly-logo.png" alt="Fundly Logo" class="login-logo-img"/>
       </div>
  
-      <h1 class="login-title">Join Us</h1>
-      <p class="login-subtitle">Sign up to use our platform.</p>
+      <h1 class="login-title">Sign In</h1>
+      <p class="login-subtitle">Sign in, or sign up to continue.</p>
  
       <!-- Form -->
       <form class="login-form" novalidate>
  
         <div class="login-field-wrap">
           <input
-            type="text"
-            id="signupName"
-            class="login-input"
-            placeholder="Name"
-            autocomplete="name"
-            required
-          />
-        </div>
- 
-        <div class="login-field-wrap">
-          <input
             type="email"
-            id="signupEmail"
+            id="loginEmail"
             class="login-input"
             placeholder="Email"
             autocomplete="email"
@@ -70,21 +59,19 @@
         <div class="login-field-wrap">
           <input
             type="password"
-            id="signupPassword"
+            id="loginPassword"
             class="login-input"
             placeholder="Password"
-            autocomplete="new-password"
+            autocomplete="current-password"
             required
           />
         </div>
  
-        <!-- Divider -->
         <div class="login-divider"></div>
  
-        <!-- Role selector -->
         <div class="login-role-row">
-          <label for="signupRole" class="login-role-label">Sign up as a...</label>
-          <select id="signupRole" class="login-role-select">
+          <label for="loginRole" class="login-role-label">Log in as a...</label>
+          <select id="loginRole" class="login-role-select">
             <option value="donee">Donee</option>
             <option value="fundraiser">Fund Raiser</option>
             <option value="admin">Admin</option>
@@ -92,14 +79,14 @@
           </select>
         </div>
  
-        <button type="submit" class="login-btn">Sign Up</button>
+        <button type="submit" class="login-btn">Sign In</button>
  
       </form>
  
       <!-- Footer link -->
       <p class="login-footer-text">
-        Already have an account?
-        <a href="login.html" class="login-signup-link">Sign in.</a>
+        Don't have an account?
+        <a href="signup.html" class="login-signup-link">Sign up.</a>
       </p>
  
     </div>
