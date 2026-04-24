@@ -5,6 +5,8 @@ from pydantic import BaseModel
 from Controller.LoginController import LoginController
 from Entity.Account import Account
 
+from routes.signup import router as router_reg
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -18,12 +20,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.include_router(router_reg)
 
 class LoginData(BaseModel):
     email: str
     password: str
     role: str
-    
     
 @app.post("/login")
 def login(data: LoginData) -> dict:
@@ -38,4 +40,4 @@ def login(data: LoginData) -> dict:
 
 app.mount("/styles", StaticFiles(directory="styles"), name="styles")
 app.mount("/img", StaticFiles(directory="img"), name="img")   
-app.mount("/", StaticFiles(directory="."), name="static")
+app.mount("/pages", StaticFiles(directory="pages"), name="static")

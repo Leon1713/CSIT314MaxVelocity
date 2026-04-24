@@ -23,6 +23,7 @@ class Account(DBHandler):
         return {
             "user_id": self.user_id,
             "username": self.username,
+            "password_hash": self.password_hash,
             "email": self.email,
             "role_id": self.role_id,
             "first_name": self.first_name,
