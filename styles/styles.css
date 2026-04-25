@@ -342,6 +342,23 @@ body.login-page {
   box-shadow: 0 0 0 3px rgba(201, 107, 107, 0.12);
 }
 
+/* Wider card for signup (more fields) */
+.signup-card {
+  max-width: 440px;
+}
+ 
+/* First + Last name side by side */
+.signup-name-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+ 
+.signup-name-row .login-input {
+  flex: 1;
+  min-width: 0; /* prevent overflow */
+}
+
 /* Divider between fields and role row */
 .login-divider {
   width: 100%;

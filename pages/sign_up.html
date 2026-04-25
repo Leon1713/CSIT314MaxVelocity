@@ -13,10 +13,12 @@
 </head>
 <body class="login-page">
 
+  <!-- Animated tiling background -->
   <div class="login-bg-pattern"></div>
  
+  <!-- Centred signup card -->
   <div class="login-wrapper d-flex align-items-center justify-content-center">
-    <div class="login-card">
+    <div class="login-card signup-card">
  
       <div class="login-logo-wrap">
         <img src="/img/fundly-logo.png" alt="Fundly Logo" class="login-logo-img"/>
@@ -26,15 +28,24 @@
       <p class="login-subtitle">Sign up to use our platform.</p>
  
       <!-- Form -->
-      <form class="login-form" id ="signup-form" novalidate>
+      <form class="login-form" novalidate>
  
-        <div class="login-field-wrap">
+        <!-- First + Last name side by side -->
+        <div class="signup-name-row">
           <input
             type="text"
-            id="signupName"
+            id="signupFirstName"
             class="login-input"
-            placeholder="Name"
-            autocomplete="name"
+            placeholder="First name"
+            autocomplete="given-name"
+            required
+          />
+          <input
+            type="text"
+            id="signupLastName"
+            class="login-input"
+            placeholder="Last name"
+            autocomplete="family-name"
             required
           />
         </div>
@@ -52,10 +63,32 @@
  
         <div class="login-field-wrap">
           <input
+            type="tel"
+            id="signupPhone"
+            class="login-input"
+            placeholder="Phone number"
+            autocomplete="tel"
+            required
+          />
+        </div>
+ 
+        <div class="login-field-wrap">
+          <input
             type="password"
             id="signupPassword"
             class="login-input"
             placeholder="Password"
+            autocomplete="new-password"
+            required
+          />
+        </div>
+ 
+        <div class="login-field-wrap">
+          <input
+            type="password"
+            id="signupRepeatPassword"
+            class="login-input"
+            placeholder="Repeat password"
             autocomplete="new-password"
             required
           />
@@ -68,12 +101,11 @@
           <select id="signupRole" class="login-role-select">
             <option value="donee">Donee</option>
             <option value="fundraiser">Fund Raiser</option>
-            <option value="admin">Admin</option>
             <option value="platform_mgmt">Platform Mgmt</option>
           </select>
         </div>
  
-        <button type="submit" id="signup-btn" class="login-btn">Sign Up</button>
+        <button type="submit" class="login-btn">Sign Up</button>
  
       </form>
  
@@ -82,6 +114,7 @@
         Already have an account?
         <a href="login.html" class="login-signup-link">Sign in.</a>
       </p>
+ 
     </div>
   </div>
 
