@@ -1,9 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from Controller.LoginController import LoginController
 from Entity.Account import Account
+from Entity.Session import Session
 
 from routes.signup import router as router_reg
 
@@ -28,12 +29,17 @@ class LoginData(BaseModel):
     role: str
     
 @app.post("/login")
-def login(data: LoginData) -> dict:
+def login(data: LoginData, req : Request, res : Response) -> dict:
     print(f"Received login data: {data.email}, {data.password}, {data.role}")
     controller = LoginController()
     result = controller.authLogin(data.email, data.password, data.role)
     if isinstance(result, Account):
-        return {"message" : "Login successful"}
+        session : Session = controller.createNewSession(result, res, req)
+        return {"success" : True,
+                "session_id" : session.session_id,
+                "user_id" : session.user_id,
+                "message" : "Login Successful"
+                }
     else:
         return {"error" : "Invalid email/username or password"}
     

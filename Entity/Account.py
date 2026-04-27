@@ -35,7 +35,6 @@ class Account(DBHandler):
             "updated_at": self.updated_at,
             "last_login": self.last_login
         }
-        
     @staticmethod
     def findUsersByEmailOrUsername(email_or_username: str, role_input: str):
         db_cursor = Account.db_connection.cursor(dictionary=True)
