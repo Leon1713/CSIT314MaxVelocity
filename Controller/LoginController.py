@@ -1,7 +1,8 @@
 from passlib.context import CryptContext
 from Entity.Account import Account
 from Entity.Session import Session
-from fastapi import Request, Response
+from fastapi import Request, Response, HTTPException
+
 
 class LoginController:
     
@@ -14,21 +15,23 @@ class LoginController:
         user : Account
         user = userids[0] # Get the first user that matches the email/username
         return user.authenticate(password, self.pwd_context)
-    def createNewSession(account : Account, req : Request, res : Response) -> Session:
-        session = Session.findSessionByUserId(account.user_id)
-        
-        if isinstance(session, Session):
-            return session
-        
+    
+    def createNewSession(self, account : Account, req : Request, res : Response) -> Session:
         session = Session.create(account.user_id, req.client.host)
-        res.set_cookie(
-            key="session_token",
-            value=session.session_id,
-            httponly=True,
-            secure=True,
-            samesite="lax"
-        )
         return session
+    def getCurrentSession(self, request: Request) -> Session:
+        token = request.cookies.get("session_token")
+        if not token:
+            return None
+        try:
+            session = Session.getSessionBySessionId(token)
+            return session
+        except Exception as e:
+            return None
+            
+            
+        
+            
         
         
         

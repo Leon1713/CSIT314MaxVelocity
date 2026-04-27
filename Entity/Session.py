@@ -3,7 +3,7 @@ from datetime import datetime, timezone, timedelta
 from fastapi import HTTPException
 import secrets
 class Session(DBHandler):
-    def __init__(self, session_id, user_id, created_at = datetime.now(timezone.utc), expires_at = None, ip_address = None, is_active = True ):
+    def __init__(self, session_id, user_id, created_at = None,expires_at = None, ip_address = None, is_active = True ):
         super().__init__()
         self.session_id = session_id
         self.user_id = user_id
@@ -17,7 +17,9 @@ class Session(DBHandler):
         
         session_id = secrets.token_hex(32)
         expires = datetime.now(timezone.utc) + timedelta(seconds=secondsToExpire)
-        temp = Session(session_id, user_id_,expires,ip_address)
+        now = datetime.now(timezone.utc)
+        print(expires)
+        temp = Session(session_id, user_id_,now,expires,ip_address)
         try:
             db_cursor.execute("""INSERT INTO user_sessions(session_id, user_id, created_at, expires_at, ip_address,is_active) 
                             VALUES(%s,%s,%s,%s,%s,%s)""",(
@@ -40,8 +42,20 @@ class Session(DBHandler):
     def findSessionByUserId(id : int):
         db_cursor = Session.db_connection.cursor(dictionary=True)
         try:
-            db_cursor.execute("SELECT * FROM user_sessions WHERE user_id = %s AND is_active = TRUE", id)
+            db_cursor.execute("SELECT * FROM user_sessions WHERE user_id = %s AND expires_at > NOW() AND is_active = 1", (id,))
             result = db_cursor.fetchone()
+            session = Session(result["session_id"], result["user_id"], result["created_at"], result["expires_at"], result["ip_address"],result["is_active"])
+            return session
+        except Exception as e:
+            raise HTTPException(status_code=404, detail="Item not found")
+        finally:
+            db_cursor.close()
+    @staticmethod
+    def getSessionBySessionId(id: str):
+        db_cursor = Session.db_connection.cursor(dictionary=True)
+        try:
+            db_cursor.execute("SELECT * FROM user_sessions WHERE session_id = %s AND expires_at > NOW() AND is_active = 1", (id,))
+            result = db_cursor.fetchone()    
             session = Session(result["session_id"], result["user_id"], result["created_at"], result["expires_at"], result["ip_address"],result["is_active"])
             return session
         except Exception as e:

@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Response, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -33,16 +34,30 @@ def login(data: LoginData, req : Request, res : Response) -> dict:
     print(f"Received login data: {data.email}, {data.password}, {data.role}")
     controller = LoginController()
     result = controller.authLogin(data.email, data.password, data.role)
-    if isinstance(result, Account):
-        session : Session = controller.createNewSession(result, res, req)
-        return {"success" : True,
+    if isinstance(result, Account) and result:
+        session : Session = controller.getCurrentSession(req)
+        if not session:
+            session = controller.createNewSession(result,req,res)
+            
+        res = JSONResponse(
+            content={   "success" : True,
                 "session_id" : session.session_id,
                 "user_id" : session.user_id,
                 "message" : "Login Successful"
-                }
+            }
+        )
+        res.set_cookie(
+            key="session_token",
+            value=session.session_id,
+            httponly=True,
+            samesite="lax",
+            secure=False #test only
+        )   
     else:
-        return {"error" : "Invalid email/username or password"}
-    
+        res = JSONResponse(
+            content={"error" : "Invalid email/username or password"}
+        )
+    return res
 
 app.mount("/styles", StaticFiles(directory="styles"), name="styles")
 app.mount("/img", StaticFiles(directory="img"), name="img")   

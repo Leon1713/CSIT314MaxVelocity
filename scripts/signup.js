@@ -19,7 +19,7 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
         "role": roles.value
     }
     try {
-        const res = await fetch("http://localhost:8000/signup",
+        const res = await fetch("http://127.0.0.1:8000/signup",
             {
                 method: "POST",
                 headers: {

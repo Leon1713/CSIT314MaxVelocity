@@ -20,8 +20,9 @@ const roleInput = document.getElementById("loginRole");
   btn.classList.add("login-btn-fetching");
 
   try {
-    const res = await fetch("http://localhost:8000/login", {
+    const res = await fetch("http://127.0.0.1:8000/login", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json"
       },
