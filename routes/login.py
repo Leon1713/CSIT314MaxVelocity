@@ -18,7 +18,7 @@ def login(data: LoginData, req : Request, res : Response) -> dict:
     controller = LoginController()
     result = controller.authLogin(data.email, data.password, data.role)
     if isinstance(result, Account) and result:
-        session : Session = controller.getCurrentSession(req)
+        session : Session = controller.getCurrentSession(req) # Session need to be in check session 
         if not session:
             session = controller.createNewSession(result,req,res)
             

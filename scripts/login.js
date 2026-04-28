@@ -1,3 +1,30 @@
+// check if login
+async function start() {
+  try {
+    res = await fetch("http://127.0.0.1:8000/me", { // send session cookie to backend
+      method: "GET",
+      credentials: "include"
+    })
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(errText);
+    }
+    const result = await res.json().then(data => {
+      if(data.error)
+      {
+        console.log("no result found");
+      }
+      else if(data.success)
+      {
+        console.log(data);
+      }
+    })
+  }
+  catch (err) {
+    console.log("Failed to connect to server. Please try again later.")
+  }
+}
+start();
 document.getElementById("login-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -6,9 +33,9 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
   const btn = document.getElementById("login-btn-id");
   const modalEl = document.getElementById("errorModal");
   const modalMsg = document.getElementById("errorModalMessage");
-const roleInput = document.getElementById("loginRole");
+  const roleInput = document.getElementById("loginRole");
   const modal = new bootstrap.Modal(modalEl);
-  
+
   const data = {
     email: emailEl.value,
     password: passwordEl.value,
@@ -34,18 +61,16 @@ const roleInput = document.getElementById("loginRole");
       throw new Error(errText || "Login failed");
     }
 
-    const result = await res.json().then(data =>
-    {
+    const result = await res.json().then(data => {
       if (data.error) {
         modalMsg.innerText = data.error;
         modal.show();
       }
-      else if(data.message != "Login Successful") {
+      else if (data.message != "Login Successful") {
         modalMsg.innerText = data.message;
         modal.show();
       }
-      else if(data.success == true)
-      {
+      else if (data.success == true) {
         console.log("Logged in");
       }
     });

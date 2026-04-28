@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routes.signup import router as router_reg
 from routes.login import router as router_login
+from routes.me import router as router_me
 
 app = FastAPI()
 app.add_middleware(
@@ -20,6 +21,8 @@ app.add_middleware(
 
 app.include_router(router_reg)
 app.include_router(router_login)
+app.include_router(router_me)
+
 
 # app.mount("/styles", StaticFiles(directory="styles"), name="styles")
 # app.mount("/img", StaticFiles(directory="img"), name="img")   
