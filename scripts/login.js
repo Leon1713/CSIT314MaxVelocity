@@ -44,6 +44,10 @@ const roleInput = document.getElementById("loginRole");
         modalMsg.innerText = data.message;
         modal.show();
       }
+      else if(data.success == true)
+      {
+        console.log("Logged in");
+      }
     });
 
   } catch (err) {

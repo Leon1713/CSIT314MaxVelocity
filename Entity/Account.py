@@ -84,7 +84,7 @@ class Account(DBHandler):
             db_cursor.close() # Close the cursor to free up resources
         return True # Return True to indicate successful insertion
 
-    def authenticate(self, password:str, hasher) -> Account:
+    def authenticate(self, password:str, hasher):
         if hasher.verify(password, self.password_hash):
             return self
         else:

@@ -12,7 +12,7 @@ class Session(DBHandler):
         self.ip_address = ip_address
         self.is_active = is_active
     @staticmethod
-    def create(user_id_, ip_address, secondsToExpire = 5*60) -> Session:
+    def create(user_id_, ip_address, secondsToExpire = 5*60) -> "Session":
         db_cursor = Session.db_connection.cursor(dictionary=True)
         
         session_id = secrets.token_hex(32)

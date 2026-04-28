@@ -16,7 +16,7 @@ class LoginController:
         user = userids[0] # Get the first user that matches the email/username
         return user.authenticate(password, self.pwd_context)
     
-    def createNewSession(self, account : Account, req : Request, res : Response) -> Session:
+    def createNewSession(self, account : Account, req : Request, res : Response) -> "Session":
         session = Session.create(account.user_id, req.client.host)
         return session
     def getCurrentSession(self, request: Request) -> Session:
