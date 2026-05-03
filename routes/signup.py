@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, field_validator, EmailStr
 import re
 from Controller.signupController import signupController
@@ -38,12 +38,10 @@ router = APIRouter()
 @router.post("/signup")
 def signup(data: signUpData):
     controller = signupController()
-    return controller.signupUser(
-        data.email,
-        data.username,
-        data.password,
-        data.role,
-        data.first_name,
-        data.last_name,
-        data.phone
+    result = controller.signupUser(
+        data.email, data.username, data.password, data.role,
+        data.first_name, data.last_name, data.phone
     )
+    if not result["success"]:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return {"message": "User registered successfully"}
