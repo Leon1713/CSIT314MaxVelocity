@@ -13,7 +13,6 @@ router = APIRouter();
 def signup(data: signUpData):
     controller = signupController()
     return controller.signupUser(data.email,data.username, data.password, data.role)
-    
-    
-    
+
+
     
