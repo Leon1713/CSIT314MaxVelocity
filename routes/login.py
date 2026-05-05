@@ -15,6 +15,7 @@ router = APIRouter()
 @router.post("/login")
 def login(data: LoginData, req : Request, res : Response) -> dict:
     print(f"Received login data: {data.email}, {data.password}, {data.role}")
+    
     controller = LoginController()
     result = controller.authLogin(data.email, data.password, data.role)
     if isinstance(result, Account) and result:

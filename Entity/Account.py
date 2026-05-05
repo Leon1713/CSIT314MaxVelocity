@@ -84,8 +84,15 @@ class Account(DBHandler):
             db_cursor.close() # Close the cursor to free up resources
         return True # Return True to indicate successful insertion
 
-    def authenticate(self, password:str, hasher):
+    def auth(self, password:str, hasher):
         if hasher.verify(password, self.password_hash):
             return self
         else:
             return None # Return None to indicate authentication failure
+    @staticmethod    
+    def authenticate(email : str, password : str, role : str, hasher):
+        users = Account.findUsersByEmailOrUsername(email, role)
+        if users.__len__() != 0 and (authenticated_user := users[0].auth(password, hasher)):
+            return authenticated_user
+        return None
+        
