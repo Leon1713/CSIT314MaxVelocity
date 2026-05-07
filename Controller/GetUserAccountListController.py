@@ -9,5 +9,5 @@ class GetUserAccountListController:
         try:
             accounts = Account.getAllUsers()
             return accounts
-        except Exception as e:
-            raise e
+        except Exception:
+            raise

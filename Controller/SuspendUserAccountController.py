@@ -6,5 +6,5 @@ class SuspendUserAccountController:
         try:
             Account.suspend(user_id)
             return True
-        except Exception as e:
-            raise e
+        except Exception:
+            raise

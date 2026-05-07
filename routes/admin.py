@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, StringConstraints
@@ -27,6 +27,15 @@ class AccountModal(BaseModel):
     first_name : strictStr
     last_name : strictStr
     phone : strictStr
+    
+class AccountUpdateModal(BaseModel):
+    username : Optional[str] = None
+    password : Optional[str] = None
+    email : Optional[str] = None
+    role_name : Optional[str] = None
+    first_name : Optional[str] = None
+    last_name : Optional[str] = None
+    phone : Optional[str] = None
     
 def require_admin(user : Account = Depends(get_current_users)):
     if user.role_id == 1:
@@ -68,14 +77,16 @@ def get_user_account_details(user_id : int):
         raise HTTPException(status_code=404, detail="User not found")
     return acc.to_dict()
 
-@router.post("/user_accounts/{user_id}")
-def update_user_account(user_id : int, input : AccountModal):
+@router.patch("/user_accounts/{user_id}")
+def update_user_account(user_id : int, input : AccountUpdateModal):
     controller : UpdateUserAccountController = UpdateUserAccountController()
+    input_dict = input.model_dump(exclude_unset=True)
     try:
-        controller.updateUserAccount(user_id, input)
+        controller.updateUserAccount(user_id, input_dict)
     except Exception:
            raise HTTPException(status_code=404, detail="Failed to update Accounts")
     return True
+
 @router.post("/user_accounts/{user_id}/suspend")
 def suspend_user_account(user_id : int) -> bool:
     suspend_account_controller : SuspendUserAccountController = SuspendUserAccountController()
@@ -84,6 +95,8 @@ def suspend_user_account(user_id : int) -> bool:
         return {"success" : True}
     except Exception:
         raise HTTPException(status_code=404, detail="Failed to suspend account")
+# User Profile
+
 
     
 

@@ -15,8 +15,8 @@ class LoginController:
             sess:Session = Session.create(auth.user_id, ip_address)
             res = LoginResponse(sess.session_id,auth.user_id, auth.role_id)
             return res
-        except Exception as e:
-            raise e
+        except Exception:
+            raise
             
             
             

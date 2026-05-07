@@ -10,5 +10,5 @@ class SessionCleanUp:
     async def cleanUpExpiredSessions(self):
         try:
             AuthController.cleanUpExpiredSessions()
-        except Exception as e:
-            raise e
+        except Exception:
+            raise

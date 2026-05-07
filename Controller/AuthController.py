@@ -13,8 +13,8 @@ class AuthController:
     def cleanUpExpiredSessions(self):
         try:
             Session.cleanUpExpiredSessions()
-        except Exception as e:
-            raise e
+        except Exception:
+            raise
             
 
             
