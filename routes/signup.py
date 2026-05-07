@@ -11,12 +11,12 @@ NonEmptyString = Annotated[
 ]
 
 class signUpData(BaseModel):
+    first_name: NonEmptyString
+    last_name: NonEmptyString
     username: NonEmptyString
     email: NonEmptyString
     password: NonEmptyString
     role: NonEmptyString
-    first_name: NonEmptyString
-    last_name: NonEmptyString
     phone: NonEmptyString
 
     @field_validator('password')

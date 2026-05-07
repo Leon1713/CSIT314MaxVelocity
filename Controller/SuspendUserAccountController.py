@@ -1,4 +1,5 @@
 from Entity.Account import Account
+from Entity.Session import Session
 class SuspendUserAccountController:
     def __init__(self):
         pass

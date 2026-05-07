@@ -161,6 +161,7 @@ class Account(DBHandler):
                 db_cursor.execute("""UPDATE user_accounts SET last_login = NOW() WHERE user_id = %s""",(self.user_id,))
             except Exception:
                 raise
+    
         
         
             

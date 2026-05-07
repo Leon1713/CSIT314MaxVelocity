@@ -37,7 +37,7 @@ class AccountUpdateModal(BaseModel):
     phone : Optional[str] = None
     
 def require_admin(user : Account = Depends(get_current_users)):
-    if user.role_id == 1:
+    if user and user.role_id == 1:
         return user
     else:
          raise HTTPException(status_code=403, detail="Admin only")

@@ -8,6 +8,13 @@
   --footer-bg: #c96b6b;
 }
 
+/* ── Others ── */
+
+.hidden
+{
+  display: none !important;
+}
+
 /* ── Base reset ── */
 *,
 *::before,
