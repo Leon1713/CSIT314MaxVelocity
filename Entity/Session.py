@@ -78,6 +78,17 @@ class Session(DBHandler):
             session = Session.getSessionBySessionId(token)
             return session
         except Exception as e:
-            return None    
+            return None
+    @staticmethod
+    def cleanUpExpiredSessions():
+        db_cursor = Session.db_connection.cursor(dictionary=True)
+        try:
+            db_cursor.execute("DELETE FROM user_sessions WHERE expires_at < NOW() OR is_active = 0")
+            Session.db_connection.commit()
+        except Exception as e:
+            Session.db_connection.rollback()
+            raise Exception("Failed to clean up expired sessions")
+        finally:
+            db_cursor.close()    
 
         

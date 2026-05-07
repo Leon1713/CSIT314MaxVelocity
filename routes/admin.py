@@ -2,10 +2,18 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, StringConstraints
-from Entity.Account import Account # for type hints
-from ..Dependencies.Auth import get_current_users
-from ..Controller.CreateUserAccountController import CreateUserAccountController
-from ..Controller.GetUserAccountListController import GetUserAccountListController
+from Controller.UpdateUserAccountController import UpdateUserAccountController
+from Dependencies.Auth import get_current_users
+from Controller.CreateUserAccountController import CreateUserAccountController
+from Controller.GetUserAccountListController import GetUserAccountListController
+from Controller.ReadUserAccountController import ReadUserAccountController
+from Controller.SuspendUserAccountController import SuspendUserAccountController
+
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from Entity.Account import Account
 
 strictStr = Annotated[str,StringConstraints(strip_whitespace=True, min_length=1)]
 
@@ -28,7 +36,8 @@ def require_admin(user : Account = Depends(get_current_users)):
 
 router = APIRouter(prefix="/admin", dependencies=[Depends(require_admin)])
 
-@router.get("/dashboard", response_model=AccountModal) #Call at start of admin dashboard
+#User accounts
+@router.get("/dashboard", response_model=AccountModal) # Call at start of admin dashboard
 def admin_dashboard(admin : Account = Depends(require_admin)) -> Account:
     return admin
 
@@ -40,8 +49,41 @@ def create_account(input : AccountModal):
 @router.get("/user_accounts")
 def get_user_accounts_list():
     controller : GetUserAccountListController = GetUserAccountListController()
-    return controller.getUserAccountList()
+    accounts = controller.getUserAccountList()
+    account_info_list = []
+    for acc in accounts:
+        account_info_list.append({
+            "user_id" : acc.user_id,
+            "username" : acc.username,
+            "role_id" : acc.role_id,
+            "last_login" : acc.last_login
+        })
+    return account_info_list
+
+@router.get("/user_accounts/{user_id}")
+def get_user_account_details(user_id : int):
+    controller : ReadUserAccountController = ReadUserAccountController()
+    acc : Account = controller.getUserAccount(user_id)
+    if acc is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return acc.to_dict()
+
+@router.post("/user_accounts/{user_id}")
+def update_user_account(user_id : int, input : AccountModal):
+    controller : UpdateUserAccountController = UpdateUserAccountController()
+    try:
+        controller.updateUserAccount(user_id, input)
+    except Exception:
+           raise HTTPException(status_code=404, detail="Failed to update Accounts")
+    return True
+@router.post("/user_accounts/{user_id}/suspend")
+def suspend_user_account(user_id : int) -> bool:
+    suspend_account_controller : SuspendUserAccountController = SuspendUserAccountController()
+    try:
+        suspend_account_controller.suspend(user_id)
+        return {"success" : True}
+    except Exception:
+        raise HTTPException(status_code=404, detail="Failed to suspend account")
+
     
-    
-    
-    
+

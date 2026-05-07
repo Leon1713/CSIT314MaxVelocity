@@ -10,6 +10,11 @@ class AuthController:
             return account
         except Exception:
             raise HTTPException(status_code=404, detail="Item not found")
+    def cleanUpExpiredSessions(self):
+        try:
+            Session.cleanUpExpiredSessions()
+        except Exception as e:
+            raise e
             
 
             

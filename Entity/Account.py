@@ -39,7 +39,7 @@ class Account(DBHandler):
     def findUsersByEmailOrUsername(email_or_username: str, role_input: str):
         db_cursor = Account.db_connection.cursor(dictionary=True)
         roleId = Account.getRoleId(role_input) # Check if the role exists, will raise an error if it doesn't
-        db_cursor.execute("SELECT user_accounts.* FROM user_accounts join user_roles ON user_accounts.role_id = user_roles.role_id WHERE (email = %s OR username = %s) AND user_roles.role_id = %s", (email_or_username, email_or_username, roleId))
+        db_cursor.execute("SELECT user_accounts.* FROM user_accounts join user_roles ON user_accounts.role_id = user_roles.role_id WHERE (email = %s OR username = %s) AND user_roles.role_id = %s AND user_accounts.is_suspended = 0", (email_or_username, email_or_username, roleId))
         user_data = db_cursor.fetchall()
         db_cursor.close()
         if user_data:
@@ -105,7 +105,7 @@ class Account(DBHandler):
             result = Account(**account_dict)
             return result
         except Exception:
-            return None
+            raise Exception("User account with id = %s is not found", (id,))
     @staticmethod
     def getAllUsers():
         db_cursor = Account.db_connection.cursor(dictionary=True)
@@ -116,6 +116,46 @@ class Account(DBHandler):
             return list_account
         except Exception:
             return None
+    def update(self) -> bool:
+        db_cursor = Account.db_connection.cursor(dictionary=True)
+        try:
+            db_cursor.execute("""
+                UPDATE user_accounts
+                SET username = %s, email = %s, password_hash = %s, role_id = %s, first_name = %s, last_name = %s, phone = %s, is_active = %s, is_suspended = %s, updated_at = NOW()
+                WHERE user_id = %s
+            """, (
+                self.username,
+                self.email,
+                self.password_hash,
+                self.role_id,
+                self.first_name,
+                self.last_name,
+                self.phone,
+                self.is_active,
+                self.is_suspended,
+                self.user_id
+            ))
+            Account.db_connection.commit()
+        except Exception as e:
+            print(f"Error updating user: {e}")
+            self.db_connection.rollback()
+            raise Exception("Error updating Account with id = %s", (self.user_id,))
+        finally:
+            db_cursor.close()
+        return True
+    @staticmethod
+    def suspend(user_id : int):
+        db_cursor = Account.db_connection.cursor(dictionary=True)
+        try:
+            db_cursor.execute("""UPDATE user_accounts
+                              SET is_suspended = 1, is_active = 0
+                              WHERE user_id = %s""", (user_id,))
+            Account.db_connection.commit()
+        except Exception:
+            Account.db_connection.rollback()
+            raise Exception("Error Suspending Account with id = %s",(user_id,))
+        
+        
             
         
         

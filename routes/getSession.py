@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Response
 from Controller.AuthController import AuthController
 router = APIRouter()
 @router.get("/session")
 #frontend call /session -> authController -> Validate Session
-def currentSession(req : Request): 
-        token = req.cookies.get("session_token")
+def currentSession(req : Request, res : Response): 
+        token = req.cookies.get("token")
         if not token:
             return None
         try:
@@ -16,10 +16,10 @@ def currentSession(req : Request):
                 "role_id" : acc.role_id
             }
         except Exception:
-            return None
-        
-        
-        
+            # Session is Invalid remove from cookie
+            res.delete_cookie(key="token")
+            return res
+
         
         
          

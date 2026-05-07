@@ -9,8 +9,7 @@ class LoginData(BaseModel):
     email: str
     password: str
     role: str
-
-
+    
 router = APIRouter()
 @router.post("/login")
 def login(data: LoginData, req : Request, res : Response) -> dict:
