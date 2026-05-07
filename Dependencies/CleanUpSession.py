@@ -7,8 +7,9 @@ class SessionCleanUp:
         pass
 
     @staticmethod
-    async def cleanUpExpiredSessions(self):
+    async def cleanUpExpiredSessions():
         try:
-            AuthController.cleanUpExpiredSessions()
+            auth_control = AuthController()
+            auth_control.cleanUpExpiredSessions()
         except Exception:
             raise

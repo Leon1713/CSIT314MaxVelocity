@@ -1,4 +1,4 @@
-from ..Entity.Account import Account
+from Entity.Account import Account
 class UpdateUserAccountController:
     def __init__(self):
         pass

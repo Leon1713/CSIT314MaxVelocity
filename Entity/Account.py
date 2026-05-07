@@ -93,6 +93,7 @@ class Account(DBHandler):
     def authenticate(email : str, password : str, role : str, hasher):
         users = Account.findUsersByEmailOrUsername(email, role)
         if users.__len__() != 0 and (authenticated_user := users[0].auth(password, hasher)):
+            authenticated_user.SetLastLogin()
             return authenticated_user
         else:
             raise Exception("Authentication Failure")
@@ -100,7 +101,7 @@ class Account(DBHandler):
     def getUsersById(id : str):
         db_cursor = Account.db_connection.cursor(dictionary=True)
         try:
-            db_cursor.execute("""SELECT * FROM user_accounts where user_id = %s)""",(id,))
+            db_cursor.execute("""SELECT * FROM user_accounts where user_id = %s""",(id,))
             account_dict = db_cursor.fetchone()
             result = Account(**account_dict)
             return result
@@ -154,6 +155,12 @@ class Account(DBHandler):
         except Exception:
             Account.db_connection.rollback()
             raise Exception("Error Suspending Account with id = %s",(user_id,))
+    def SetLastLogin(self : "Account"):
+            db_cursor = Account.db_connection.cursor(dictionary=True)
+            try:
+                db_cursor.execute("""UPDATE user_accounts SET last_login = NOW() WHERE user_id = %s""",(self.user_id,))
+            except Exception:
+                raise
         
         
             

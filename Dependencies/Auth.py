@@ -1,5 +1,5 @@
 from fastapi import Cookie
-from ..Controller.AuthController import AuthController
+from Controller.AuthController import AuthController
 def get_current_users(session_id : str = Cookie(None, alias="token")):
     try:
         controller = AuthController()

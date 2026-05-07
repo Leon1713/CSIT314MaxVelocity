@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Annotated, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -9,7 +10,6 @@ from Controller.GetUserAccountListController import GetUserAccountListController
 from Controller.ReadUserAccountController import ReadUserAccountController
 from Controller.SuspendUserAccountController import SuspendUserAccountController
 
-from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -19,7 +19,6 @@ strictStr = Annotated[str,StringConstraints(strip_whitespace=True, min_length=1)
 
 
 class AccountModal(BaseModel):
-    user_id : int
     username : strictStr
     password : strictStr
     email : strictStr
@@ -50,10 +49,10 @@ router = APIRouter(prefix="/admin", dependencies=[Depends(require_admin)])
 def admin_dashboard(admin : Account = Depends(require_admin)) -> Account:
     return admin
 
-@router.post("/create_account", response_model=AccountModal)
+@router.post("/create_account")
 def create_account(input : AccountModal):
     controller : CreateUserAccountController = CreateUserAccountController()
-    return controller.createAccount(**input)
+    return controller.createAccount(**input.model_dump())
 
 @router.get("/user_accounts")
 def get_user_accounts_list():
