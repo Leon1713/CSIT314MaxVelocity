@@ -1,6 +1,8 @@
+from Entity.Account import Account
+
 from .DBHandler import DBHandler
 from datetime import datetime, timezone, timedelta
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 import secrets
 class Session(DBHandler):
     def __init__(self, session_id, user_id, created_at = None,expires_at = None, ip_address = None, is_active = True ):
@@ -34,7 +36,7 @@ class Session(DBHandler):
             return temp
         except Exception as e:
             Session.db_connection.rollback()
-            raise HTTPException(status_code=500, detail=str(e))
+            raise Exception("Failed to create a session")
         finally:
             db_cursor.close()
     
@@ -51,21 +53,31 @@ class Session(DBHandler):
         finally:
             db_cursor.close()
     @staticmethod
-    def getSessionBySessionId(id: str):
+    def getSessionBySessionId(id: str) -> "Session":
         db_cursor = Session.db_connection.cursor(dictionary=True)
         try:
             db_cursor.execute("SELECT * FROM user_sessions WHERE session_id = %s AND expires_at > NOW() AND is_active = 1", (id,))
             result = db_cursor.fetchone()    
             session = Session(result["session_id"], result["user_id"], result["created_at"], result["expires_at"], result["ip_address"],result["is_active"])
             return session
-        except Exception as e:
+        except Exception:
             raise HTTPException(status_code=404, detail="Item not found")
         finally:
             db_cursor.close()
-        
-        
-        
-        
-        
-        
+    
+    @staticmethod
+    def createNewSession(account : Account, req : Request) -> "Session":
+        session = Session.create(account.user_id, req.client.host)
+        return session
+    @staticmethod
+    def getCurrentSession(request: Request) -> Session:
+        token = request.cookies.get("session_token")
+        if not token:
+            return None
+        try:
+            session = Session.getSessionBySessionId(token)
+            return session
+        except Exception as e:
+            return None    
+
         

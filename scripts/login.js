@@ -16,6 +16,12 @@ async function start() {
       }
       else if(data.success)
       {
+        switch(data.role_id)
+        {
+          case "1":
+            window.location.href ="admin_dashboard.html";
+            
+        }
         console.log(data);
       }
     })

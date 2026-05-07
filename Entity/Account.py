@@ -94,5 +94,28 @@ class Account(DBHandler):
         users = Account.findUsersByEmailOrUsername(email, role)
         if users.__len__() != 0 and (authenticated_user := users[0].auth(password, hasher)):
             return authenticated_user
-        return None
+        else:
+            raise Exception("Authentication Failure")
+    @staticmethod    
+    def getUsersById(id : str):
+        db_cursor = Account.db_connection.cursor(dictionary=True)
+        try:
+            db_cursor.execute("""SELECT * FROM user_accounts where user_id = %s)""",(id,))
+            account_dict = db_cursor.fetchone()
+            result = Account(**account_dict)
+            return result
+        except Exception:
+            return None
+    @staticmethod
+    def getAllUsers():
+        db_cursor = Account.db_connection.cursor(dictionary=True)
+        try:
+            db_cursor.execute("""SELECT * FROM user_accounts""")
+            accounts = db_cursor.fetchall()
+            list_account : list[Account] = [Account(**acc) for acc in accounts]
+            return list_account
+        except Exception:
+            return None
+            
+        
         

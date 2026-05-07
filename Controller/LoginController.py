@@ -1,28 +1,24 @@
 from passlib.context import CryptContext
 from Entity.Account import Account
 from Entity.Session import Session
-from fastapi import Request, Response, HTTPException
+from DTO.LoginResponse import LoginResponse
 
 
 class LoginController:
     
     def __init__(self):
         self.pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
-    def authLogin(self, email: str, password: str, role: str):
-        return Account.authenticate(email, password, role, self.pwd_context)
-    
-    def createNewSession(self, account : Account, req : Request, res : Response) -> "Session":
-        session = Session.create(account.user_id, req.client.host)
-        return session
-    def getCurrentSession(self, request: Request) -> Session:
-        token = request.cookies.get("session_token")
-        if not token:
-            return None
+    def Login(self, email: str, password: str, role: str, ip_address : str):
         try:
-            session = Session.getSessionBySessionId(token)
-            return session
+            res : LoginResponse
+            auth:Account = Account.authenticate(email, password, role, self.pwd_context)
+            sess:Session = Session.create(auth.user_id, ip_address)
+            res = LoginResponse(sess.session_id,auth.user_id, auth.role_id)
+            return res
         except Exception as e:
-            return None
+            raise e
+            
+            
             
             
         

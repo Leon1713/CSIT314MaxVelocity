@@ -1,26 +1,25 @@
+from typing import Annotated
+
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, field_validator, EmailStr
+from pydantic import BaseModel, StringConstraints, field_validator, EmailStr
 import re
 from Controller.signupController import signupController
 
-class signUpData(BaseModel):
-    username: str
-    email: str
-    password: str
-    role: str
-    first_name: str
-    last_name: str
-    phone: str
+NonEmptyString = Annotated[
+    str, 
+    StringConstraints(strip_whitespace=True, min_length=1)
+]
 
-    @field_validator('username', 'email', 'password', 'role', 'first_name', 'last_name', 'phone')
-    @classmethod
-    def not_empty(cls, v: str) -> str:
-        if not v or not v.strip():
-            raise ValueError('Field cannot be empty')
-        return v.strip()
+class signUpData(BaseModel):
+    username: NonEmptyString
+    email: NonEmptyString
+    password: NonEmptyString
+    role: NonEmptyString
+    first_name: NonEmptyString
+    last_name: NonEmptyString
+    phone: NonEmptyString
 
     @field_validator('password')
-    @classmethod
     def password_strength(cls, v: str) -> str:
         if len(v) < 6:
             raise ValueError('Password must be at least 6 characters long')
@@ -34,16 +33,9 @@ class signUpData(BaseModel):
 
 
 router = APIRouter()
-
 @router.post("/signup")
 def signup(data: signUpData):
     controller = signupController()
-<<<<<<< HEAD
-    return controller.signupUser(data.email,data.username, data.password, data.role)
-
-
-    
-=======
     result = controller.signupUser(
         data.email, data.username, data.password, data.role,
         data.first_name, data.last_name, data.phone
@@ -51,4 +43,3 @@ def signup(data: signUpData):
     if not result["success"]:
         raise HTTPException(status_code=400, detail=result["error"])
     return {"message": "User registered successfully"}
->>>>>>> yaz-dev

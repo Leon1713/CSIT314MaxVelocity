@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routes.signup import router as router_reg
 from routes.login import router as router_login
-from routes.me import router as router_me
+from routes.getSession import router as router_me
 
 app = FastAPI()
 app.add_middleware(
