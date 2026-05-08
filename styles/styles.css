@@ -10,9 +10,43 @@
 
 /* ── Others ── */
 
-.hidden
-{
+.hidden {
   display: none !important;
+}
+
+.loader-ctn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  min-height: 100vh;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  height: 80px;
+  aspect-ratio: 1;
+  padding: 10px;
+  border: 1px solid purple;
+  border-radius: 20px;
+  box-sizing: border-box;
+  position: relative;
+  mask: conic-gradient(#000 0 0) content-box exclude, conic-gradient(#000 0 0);
+  filter: blur(12px);
+}
+
+.loader:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-conic-gradient(#0000 0 5%, #C02942, #0000 20% 50%);
+  animation: l3 1.5s linear infinite;
+}
+
+@keyframes l3 {
+  to {
+    rotate: 1turn
+  }
 }
 
 /* ── Base reset ── */
@@ -353,17 +387,18 @@ body.login-page {
 .signup-card {
   max-width: 440px;
 }
- 
+
 /* First + Last name side by side */
 .signup-name-row {
   display: flex;
   gap: 10px;
   width: 100%;
 }
- 
+
 .signup-name-row .login-input {
   flex: 1;
-  min-width: 0; /* prevent overflow */
+  min-width: 0;
+  /* prevent overflow */
 }
 
 /* Divider between fields and role row */
@@ -373,7 +408,7 @@ body.login-page {
   background: #e8d8d8;
   margin: 4px 0;
 }
- 
+
 /* Role selector row */
 .login-role-row {
   display: flex;
@@ -381,7 +416,7 @@ body.login-page {
   justify-content: space-between;
   gap: 12px;
 }
- 
+
 .login-role-label {
   font-size: 0.9rem;
   font-weight: 600;
@@ -389,7 +424,7 @@ body.login-page {
   white-space: nowrap;
   margin: 0;
 }
- 
+
 .login-role-select {
   height: 38px;
   padding: 0 32px 0 12px;
@@ -409,7 +444,7 @@ body.login-page {
   transition: border-color 0.2s, box-shadow 0.2s;
   min-width: 140px;
 }
- 
+
 .login-role-select:focus {
   border-color: var(--fundly-primary);
   box-shadow: 0 0 0 3px rgba(201, 107, 107, 0.12);
