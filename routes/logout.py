@@ -1,17 +1,16 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException, status
 from fastapi.responses import JSONResponse
-from Entity.Session import Session
+from Controller.LogoutController import LogoutController
 
 router = APIRouter()
 
 @router.post("/logout")
 def logout(req: Request):
+    controller = LogoutController()
     token = req.cookies.get("token")
     if token:
-        try:
-            Session.deactivate(token)
-        except Exception:
-            pass
+        if not controller.logout(token):
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=("No session with id = %s was found",(token,)))
     response = JSONResponse(content={"success": True})
     response.delete_cookie(key="token")
     return response
