@@ -291,6 +291,23 @@ body.landing-page {
   padding: 12px 32px;
 }
 
+.about-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+  max-width: 520px;
+  padding: 0 16px;
+}
+
+.about-para {
+  font-size: 0.97rem;
+  font-weight: 500;
+  color: var(--fundly-text);
+  line-height: 1.75;
+}
+
 
 /* ══════════════════════════════════════════════
    LOGIN PAGE  (login.html)
