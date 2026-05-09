@@ -15,12 +15,7 @@ async function start() {
         console.log("no result found");
       }
       else if (data.success) {
-        switch (data.role_id) {
-          case 1:
-            window.location.href = "admin_dashboard.html";
-
-        }
-        console.log(data);
+        window.location.href = "hub.html";
       }
     })
   }

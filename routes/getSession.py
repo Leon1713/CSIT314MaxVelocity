@@ -15,7 +15,8 @@ def currentSession(req : Request, res : Response):
                 "success" : True,
                 "session_id" : token,
                 "user_id" : acc.user_id,
-                "role_id" : acc.role_id
+                "role_id" : acc.role_id,
+                "username" : acc.username
             }
         except Exception:
             # Session is Invalid remove from cookie

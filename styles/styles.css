@@ -310,6 +310,111 @@ body.landing-page {
 
 
 /* ══════════════════════════════════════════════
+   HUB PAGE  (hub.html)
+   ══════════════════════════════════════════════ */
+
+#hub-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.fundly-hub-navbar {
+  height: var(--navbar-height);
+  background: var(--fundly-primary);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.hub-nav-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.hub-nav-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.hub-nav-brand {
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.hub-nav-gear {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.6rem;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.hub-nav-gear:hover {
+  color: #fff;
+}
+
+.hub-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.hub-subtext {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #888;
+  margin: 0;
+}
+
+.hub-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.hub-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--fundly-primary);
+  color: #fff;
+  border-radius: 14px;
+  padding: 16px 28px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  min-width: 200px;
+  text-decoration: none;
+  transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
+  box-shadow: 0 4px 16px rgba(201, 107, 107, 0.25);
+}
+
+.hub-btn:hover {
+  background: var(--fundly-primary-dark);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201, 107, 107, 0.35);
+}
+
+.hub-btn i {
+  font-size: 1.4rem;
+}
+
+
+/* ══════════════════════════════════════════════
    LOGIN PAGE  (login.html)
    ══════════════════════════════════════════════ */
 

@@ -46,8 +46,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
       }
       else if (data.success == true) {
         console.log("Logged in");
-        if(data.role_id == 1)
-            window.location.href ="admin_dashboard.html";
+        window.location.href = "hub.html";
       }
     });
 

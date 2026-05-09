@@ -70,7 +70,7 @@ class Session(DBHandler):
         session = Session.create(account.user_id, req.client.host)
         return session
     @staticmethod
-    def getCurrentSession(request: Request) -> Session:
+    def getCurrentSession(request: Request) -> "Session":
         token = request.cookies.get("session_token")
         if not token:
             return None
