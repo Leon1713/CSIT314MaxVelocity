@@ -1,7 +1,7 @@
 const ROLE_BUTTONS = {
     1: [ // user_admin — sees all roles
         { icon: 'bi-cash-stack',    label: 'Fundraiser',    href: 'fundraiser_dashboard.html' },
-        { icon: 'bi-hand-heart',    label: 'Donee',         href: 'donee_dashboard.html' },
+        { icon: 'bi-heart-fill',    label: 'Donee',         href: 'donee_dashboard.html' },
         { icon: 'bi-people-fill',   label: 'User Admin',    href: 'admin_dashboard.html' },
         { icon: 'bi-speedometer2',  label: 'Platform Mgmt', href: 'platform_dashboard.html' },
     ],
