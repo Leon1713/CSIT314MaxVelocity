@@ -19,6 +19,8 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
   // UI: disable button
   btn.disabled = true;
   btn.classList.add("login-btn-fetching");
+  document.getElementById("login-modal-page").classList.add("hidden");
+  document.getElementById("loader").classList.remove("hidden");
 
   try {
     const res = await fetch("http://127.0.0.1:8000/login", {
@@ -57,5 +59,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     // UI: always restore button
     btn.disabled = false;
     btn.classList.remove("login-btn-fetching");
+    document.getElementById("login-modal-page").classList.remove("hidden");
+    document.getElementById("loader").classList.add("hidden");
   }
 });

@@ -16,7 +16,7 @@ def require_permission(permissions : str):
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No permissions")
             return user
         except Exception as e:
-             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e)
+             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
     return checker
                 
             

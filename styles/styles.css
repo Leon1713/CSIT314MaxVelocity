@@ -19,36 +19,38 @@
   align-items: center;
   justify-content: center;
   background-color: white;
-  min-height: 100vh;
 }
 
 /* HTML: <div class="loader"></div> */
 .loader {
-  height: 80px;
+  width: 50px;
   aspect-ratio: 1;
-  padding: 10px;
-  border: 1px solid purple;
-  border-radius: 20px;
-  box-sizing: border-box;
-  position: relative;
-  mask: conic-gradient(#000 0 0) content-box exclude, conic-gradient(#000 0 0);
-  filter: blur(12px);
+  display:grid;
+  -webkit-mask: conic-gradient(from 15deg,#0000,#000);
+  animation: l26 1s infinite steps(12);
 }
-
-.loader:before {
+.loader,
+.loader:before,
+.loader:after{
+  background:
+    radial-gradient(closest-side at 50% 12.5%,
+     #f03355 96%,#0000) 50% 0/20% 80% repeat-y,
+    radial-gradient(closest-side at 12.5% 50%,
+     #f03355 96%,#0000) 0 50%/80% 20% repeat-x;
+}
+.loader:before,
+.loader:after {
   content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-conic-gradient(#0000 0 5%, #C02942, #0000 20% 50%);
-  animation: l3 1.5s linear infinite;
+  grid-area: 1/1;
+  transform: rotate(30deg);
+}
+.loader:after {
+  transform: rotate(60deg);
 }
 
-@keyframes l3 {
-  to {
-    rotate: 1turn
-  }
+@keyframes l26 {
+  100% {transform:rotate(1turn)}
 }
-
 /* ── Base reset ── */
 *,
 *::before,
