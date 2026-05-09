@@ -40,47 +40,52 @@
       <div class="login-logo-wrap">
         <img src="/img/fundly-logo.png" alt="Fundly Logo" class="login-logo-img" />
       </div>
+      <div class="login-modal-page hidden" id="login-modal-page">
+        <h1 class="login-title">Sign In</h1>
+        <p class="login-subtitle">Sign in, or sign up to continue.</p>
 
-      <h1 class="login-title">Sign In</h1>
-      <p class="login-subtitle">Sign in, or sign up to continue.</p>
+        <!-- Form -->
+        <form class="login-form" id="login-form" novalidate>
 
-      <!-- Form -->
-      <form class="login-form" id="login-form" novalidate>
+          <div class="login-field-wrap">
+            <input type="email" id="loginEmail" class="login-input" placeholder="Email" autocomplete="email" required />
+          </div>
 
-        <div class="login-field-wrap">
-          <input type="email" id="loginEmail" class="login-input" placeholder="Email" autocomplete="email" required />
-        </div>
+          <div class="login-field-wrap">
+            <input type="password" id="loginPassword" class="login-input" placeholder="Password"
+              autocomplete="current-password" required />
+          </div>
 
-        <div class="login-field-wrap">
-          <input type="password" id="loginPassword" class="login-input" placeholder="Password"
-            autocomplete="current-password" required />
-        </div>
+          <div class="login-divider"></div>
 
-        <div class="login-divider"></div>
+          <div class="login-role-row">
+            <label for="loginRole" class="login-role-label">Log in as a...</label>
+            <select id="loginRole" class="login-role-select">
+              <option value="user_admin">User Admin</option>
+              <option value="donee">Donee</option>
+              <option value="fund_raiser">Fund Raiser</option>
+              <option value="platform_mgmt">Platform Mgmt</option>
+            </select>
+          </div>
+          <button type="submit" class="login-btn" id="login-btn-id">
+            <div id="sign-in-text">
+              Sign In
+            </div>
+            <div class="loader-ctn hidden" id="login-loader">
+              <div class="loader login-loader"></div>
+            </div>
+          </button>
+        </form>
 
-        <div class="login-role-row">
-          <label for="loginRole" class="login-role-label">Log in as a...</label>
-          <select id="loginRole" class="login-role-select">
-            <option value="user_admin">User Admin</option>
-            <option value="donee">Donee</option>
-            <option value="fund_raiser">Fund Raiser</option>
-            <option value="platform_mgmt">Platform Mgmt</option>
-          </select>
-        </div>
-        <div id="login-modal-page" class="hidden">
-          <button type="submit" class="login-btn" id="login-btn-id">Sign In</button>
-        </div>
-        <div class="loader-ctn" id="loader">
-          <div class="loader"></div>
-        </div>
-      </form>
-
-      <!-- Footer link -->
-      <p class="login-footer-text">
-        Don't have an account?
-        <a href="sign_up.html" class="login-signup-link">Sign up.</a>
-      </p>
-
+        <!-- Footer link -->
+        <p class="login-footer-text">
+          Don't have an account?
+          <a href="sign_up.html" class="login-signup-link">Sign up.</a>
+        </p>
+      </div>
+      <div class="loader-ctn" id="loader">
+        <div class="loader"></div>
+      </div>
     </div>
   </div>
 

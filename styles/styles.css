@@ -10,15 +10,32 @@
 
 /* ── Others ── */
 
+.login-modal-page
+{
+  display: flex;
+  flex-direction: column;
+  width:100%;
+  align-items: center;
+  justify-content: center;
+}
+
 .hidden {
   display: none !important;
 }
-
+#hub-loader
+{
+  min-height: 100vh !important;
+}
 .loader-ctn {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: white;
+}
+
+.login-loader
+{
+  background-color: None;
+  width: 30px !important;
 }
 
 /* HTML: <div class="loader"></div> */
