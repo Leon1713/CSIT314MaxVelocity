@@ -80,6 +80,18 @@ class Session(DBHandler):
         except Exception as e:
             return None
     @staticmethod
+    def deactivate(session_id: str):
+        db_cursor = Session.db_connection.cursor(dictionary=True)
+        try:
+            db_cursor.execute("UPDATE user_sessions SET is_active = 0 WHERE session_id = %s", (session_id,))
+            Session.db_connection.commit()
+        except Exception:
+            Session.db_connection.rollback()
+            raise Exception("Failed to deactivate session")
+        finally:
+            db_cursor.close()
+
+    @staticmethod
     def cleanUpExpiredSessions():
         db_cursor = Session.db_connection.cursor(dictionary=True)
         try:

@@ -34,9 +34,28 @@
                         <span class="hub-nav-brand">Fundly</span>
                     </div>
                     <span class="hub-nav-title">Hub</span>
-                    <a href="#" class="hub-nav-gear ms-auto">
-                        <i class="bi bi-gear-fill"></i>
-                    </a>
+                    <div class="hub-gear-wrap ms-auto">
+                        <button class="hub-nav-gear" id="hub-gear-btn" aria-label="Settings">
+                            <i class="bi bi-gear-fill"></i>
+                        </button>
+                        <div id="hub-settings-dropdown" class="hub-settings-dropdown hidden">
+                            <p class="hub-dropdown-section">Account</p>
+                            <div class="hub-dropdown-user">
+                                <span class="hub-dropdown-username" id="dropdown-username"></span>
+                                <span class="hub-dropdown-role" id="dropdown-role"></span>
+                            </div>
+                            <div class="hub-dropdown-divider"></div>
+                            <a href="#" class="hub-dropdown-item">
+                                <i class="bi bi-person-circle"></i>My Profile
+                            </a>
+                            <a href="#" class="hub-dropdown-item">
+                                <i class="bi bi-envelope"></i>Notifications
+                            </a>
+                            <button class="hub-dropdown-item hub-dropdown-logout" id="hub-logout-btn">
+                                <i class="bi bi-box-arrow-right"></i>Logout
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </nav>
 

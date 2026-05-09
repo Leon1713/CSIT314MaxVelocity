@@ -352,17 +352,6 @@ body.landing-page {
   letter-spacing: 0.4px;
 }
 
-.hub-nav-gear {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.6rem;
-  text-decoration: none;
-  line-height: 1;
-}
-
-.hub-nav-gear:hover {
-  color: #fff;
-}
-
 .hub-content {
   display: flex;
   flex-direction: column;
@@ -411,6 +400,115 @@ body.landing-page {
 
 .hub-btn i {
   font-size: 1.4rem;
+}
+
+.hub-gear-wrap {
+  position: relative;
+}
+
+.hub-nav-gear {
+  background: none;
+  border: none;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.hub-nav-gear:hover {
+  color: #fff;
+}
+
+.hub-settings-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.13);
+  width: 210px;
+  padding: 10px 0 8px;
+  z-index: 200;
+}
+
+.hub-dropdown-section {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin: 0 0 6px;
+  padding: 0 14px;
+}
+
+.hub-dropdown-user {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(201, 107, 107, 0.1);
+  margin: 0 8px 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.hub-dropdown-username {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--fundly-text);
+}
+
+.hub-dropdown-role {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--fundly-primary);
+}
+
+.hub-dropdown-divider {
+  height: 1px;
+  background: #f0e8e8;
+  margin: 0 0 4px;
+}
+
+.hub-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--fundly-text);
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.hub-dropdown-item:hover {
+  background: #faf0f0;
+  color: var(--fundly-text);
+}
+
+.hub-dropdown-item i {
+  font-size: 1rem;
+  color: var(--fundly-primary);
+  width: 18px;
+  text-align: center;
+}
+
+.hub-dropdown-logout {
+  color: #c0392b;
+}
+
+.hub-dropdown-logout i {
+  color: #c0392b;
+}
+
+.hub-dropdown-logout:hover {
+  background: #fff5f5;
 }
 
 
