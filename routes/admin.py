@@ -9,7 +9,7 @@ from Controller.CreateUserAccountController import CreateUserAccountController
 from Controller.GetUserAccountListController import GetUserAccountListController
 from Controller.ReadUserAccountController import ReadUserAccountController
 from Controller.SuspendUserAccountController import SuspendUserAccountController
-
+from Dependencies.Auth import require_permission
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -36,7 +36,7 @@ class AccountUpdateModal(BaseModel):
     last_name : Optional[str] = None
     phone : Optional[str] = None
     
-def require_admin(user : Account = Depends(get_current_users)):
+def require_admin(user : Account = Depends(require_permission("can_access_admin_dashboard"))):
     if user and user.role_id == 1:
         return user
     else:
@@ -49,12 +49,12 @@ router = APIRouter(prefix="/admin", dependencies=[Depends(require_admin)])
 def admin_dashboard(admin : Account = Depends(require_admin)) -> Account:
     return admin
 
-@router.post("/create_account")
+@router.post("/create_account", dependencies=[Depends(require_permission("can_manage_user_account"))])
 def create_account(input : AccountModal):
     controller : CreateUserAccountController = CreateUserAccountController()
     return controller.createAccount(**input.model_dump())
 
-@router.get("/user_accounts")
+@router.get("/user_accounts", dependencies=[Depends(require_permission("can_manage_user_account"))])
 def get_user_accounts_list():
     controller : GetUserAccountListController = GetUserAccountListController()
     accounts = controller.getUserAccountList()
@@ -68,7 +68,7 @@ def get_user_accounts_list():
         })
     return account_info_list
 
-@router.get("/user_accounts/{user_id}")
+@router.get("/user_accounts/{user_id}", dependencies=[Depends(require_permission("can_manage_user_account"))])
 def get_user_account_details(user_id : int):
     controller : ReadUserAccountController = ReadUserAccountController()
     acc : Account = controller.getUserAccount(user_id)
@@ -76,7 +76,7 @@ def get_user_account_details(user_id : int):
         raise HTTPException(status_code=404, detail="User not found")
     return acc.to_dict()
 
-@router.patch("/user_accounts/{user_id}")
+@router.patch("/user_accounts/{user_id}", dependencies=[Depends(require_permission("can_manage_user_account"))])
 def update_user_account(user_id : int, input : AccountUpdateModal):
     controller : UpdateUserAccountController = UpdateUserAccountController()
     input_dict = input.model_dump(exclude_unset=True)
@@ -86,7 +86,7 @@ def update_user_account(user_id : int, input : AccountUpdateModal):
            raise HTTPException(status_code=404, detail="Failed to update Accounts")
     return True
 
-@router.post("/user_accounts/{user_id}/suspend")
+@router.post("/user_accounts/{user_id}/suspend", dependencies=[Depends(require_permission("can_manage_user_account"))])
 def suspend_user_account(user_id : int) -> bool:
     suspend_account_controller : SuspendUserAccountController = SuspendUserAccountController()
     try:

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter, Request, Response, HTTPException, status
 from fastapi.responses import JSONResponse
 from Controller.AuthController import AuthController
 router = APIRouter()
@@ -7,7 +7,7 @@ router = APIRouter()
 def currentSession(req : Request, res : Response): 
         token = req.cookies.get("token")
         if not token:
-            return {"success" : False}
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No session found")
         try:
             authC : AuthController = AuthController()
             acc = authC.AuthSession(token)

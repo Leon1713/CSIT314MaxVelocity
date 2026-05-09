@@ -34,7 +34,7 @@ async function loadHub() {
 
         document.getElementById('hub-username').textContent = data.username;
 
-        const buttons = ROLE_BUTTONS[data.role_id] || [];
+        const buttons = ROLE_BUTTONS[data.role_id] || []; // need to fetch permissions to get role
         const container = document.getElementById('hub-buttons');
 
         buttons.forEach(btn => {

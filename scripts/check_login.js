@@ -1,6 +1,6 @@
 async function start() {
   try {
-    res = await fetch("http://127.0.0.1:8000/session", { // send session cookie to backend
+    const res = await fetch("http://127.0.0.1:8000/session", { // send session cookie to backend
       method: "GET",
       credentials: "include"
     })

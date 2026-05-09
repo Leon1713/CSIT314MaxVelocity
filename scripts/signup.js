@@ -45,10 +45,11 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
                 },
                 body: JSON.stringify(data)
             }
+            
         )
         if (!res.ok) {
             const errText = await res.text();
-            throw new Error(errText || "Signup failed");
+            console.log(errText || "Signup failed");
         }
 
         const result = await res.json((data)=>{

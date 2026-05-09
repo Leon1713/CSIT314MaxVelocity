@@ -13,6 +13,22 @@
 </head>
 <body class="login-page">
 
+  <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="errorModalLabel">Login Error</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="errorModalMessage">
+           <!-- Error message will be injected here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="login-modal-page">
+  <!--Error modal-->
   <!-- Animated tiling background -->
   <div class="login-bg-pattern"></div>
  

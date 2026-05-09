@@ -28,7 +28,7 @@ class signUpData(BaseModel):
         if not re.search(r'[0-9]', v):
             raise ValueError('Password must contain at least one number')
         if not re.search(r'[!@#$%^&*(),.?":{}|<>]', v):
-            raise ValueError('Password must contain at least one special character')
+            raise HTTPException(status_code=422, detail='Password must contain at least one special character')
         return v
 
 
