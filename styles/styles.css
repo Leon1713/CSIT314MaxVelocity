@@ -256,6 +256,43 @@ body {
 
 
 /* ══════════════════════════════════════════════
+   LANDING PAGE  (index.html)
+   ══════════════════════════════════════════════ */
+
+body.landing-page {
+  background: #fff;
+  overflow: hidden;
+}
+
+.landing-hero {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  text-align: center;
+}
+
+.landing-headline {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--fundly-text);
+  line-height: 1.25;
+}
+
+.landing-cta {
+  font-size: 1rem;
+  padding: 12px 32px;
+}
+
+
+/* ══════════════════════════════════════════════
    LOGIN PAGE  (login.html)
    ══════════════════════════════════════════════ */
 
