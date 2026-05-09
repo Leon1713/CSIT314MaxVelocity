@@ -1,3 +1,10 @@
+const ROLE_NAMES = {
+    1: 'User Admin',
+    2: 'Fundraiser',
+    3: 'Donee',
+    4: 'Platform Mgmt',
+};
+
 const ROLE_BUTTONS = {
     1: [ // user_admin — sees all roles
         { icon: 'bi-cash-stack',    label: 'Fundraiser',    href: 'fundraiser_dashboard.html' },
@@ -36,7 +43,6 @@ async function loadHub() {
 
         const buttons = ROLE_BUTTONS[data.role_id] || []; // need to fetch permissions to get role
         const container = document.getElementById('hub-buttons');
-
         buttons.forEach(btn => {
             const a = document.createElement('a');
             a.href = btn.href;
@@ -45,12 +51,44 @@ async function loadHub() {
             container.appendChild(a);
         });
 
+        // Populate settings dropdown
+        document.getElementById('dropdown-username').textContent = data.username;
+        document.getElementById('dropdown-role').textContent = ROLE_NAMES[data.role_id] || '';
+
         document.getElementById('hub-loader').classList.add('hidden');
         document.getElementById('hub-page').classList.remove('hidden');
+
+        setupDropdown();
 
     } catch (err) {
         window.location.href = 'login.html';
     }
+}
+
+function setupDropdown() {
+    const gearBtn = document.getElementById('hub-gear-btn');
+    const dropdown = document.getElementById('hub-settings-dropdown');
+
+    gearBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', () => {
+        dropdown.classList.add('hidden');
+    });
+
+    dropdown.addEventListener('click', (e) => e.stopPropagation());
+
+    document.getElementById('hub-logout-btn').addEventListener('click', async () => {
+        try {
+            await fetch('http://127.0.0.1:8000/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
+        } catch (_) {}
+        window.location.href = 'login.html';
+    });
 }
 
 loadHub();
