@@ -1,4 +1,56 @@
+const errors =
+{
+    "name": document.getElementById("name-error"),
+    "email": document.getElementById("email-error"),
+    "password": document.getElementById("password-error"),
+    "phone": document.getElementById("phone-error"),
+    "username": document.getElementById("username-error")
+}
+
+Object.values(errors).forEach(el => {
+    el.classList.add("hidden");
+})
 const errorEl = () => document.getElementById('signup-error');
+
+function validatePassword(password) {
+
+    if (!password.trim()) {
+        return {
+            type: "PASSWORD_ERROR",
+            msg: "Password cannot be empty."
+        };
+    }
+
+    if (password.length < 6) {
+        return {
+            type: "PASSWORD_ERROR",
+            msg: "Password must be at least 6 characters long"
+        };
+    }
+
+    if (!/[A-Z]/.test(password)) {
+        return {
+            type: "PASSWORD_ERROR",
+            msg: "Password must contain at least one uppercase letter"
+        };
+    }
+
+    if (!/[0-9]/.test(password)) {
+        return {
+            type: "PASSWORD_ERROR",
+            msg: "Password must contain at least one number"
+        };
+    }
+
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        return {
+            type: "PASSWORD_ERROR",
+            msg: "Password must contain at least one special character"
+        };
+    }
+
+    return null; // valid password
+}
 
 function showError(msg) {
     const el = errorEl();
@@ -11,6 +63,8 @@ function clearError() {
     el.textContent = '';
     el.classList.add('hidden');
 }
+
+
 
 document.getElementById("signup-form").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -26,11 +80,76 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
     const roles = document.getElementById("signupRole");
     const btn = document.getElementById("signup-btn");
 
-    if (pw.value !== repeatPw.value) {
-        showError("Passwords do not match.");
-        return;
+    Object.values(errors).forEach(el => {
+        el.classList.add("hidden");
+    })
+
+    const fieldMap =
+    {
+        signupFirstName: "name",
+        signupEmail: "email",
+        signupPassword: "password",
+        signupRepeatPassword: "password",
+        signupPhone: "phone",
+        username: "username"
+    }
+    // validate input not empty except last name
+    inputs = [firstName, userName, email, phone_no, pw, repeatPw];
+    valid = true;
+    for (let i = 0; i < inputs.length; ++i) {
+        let tempInput = inputs[i];
+        if (!(tempInput.value.trim())) {
+            // highlight red border
+            tempInput.classList.add("input-error-border");
+            let errorDiv = errors[fieldMap[tempInput.id]];
+            let errortext = document.querySelector("#" + errors[fieldMap[tempInput.id]].id + " .error-text");
+            let subject = tempInput.placeholder;
+            if (!(tempInput == repeatPw)) {
+                errortext.innerText = subject + " cannot be empty.";
+                errorDiv.classList.remove("hidden");
+            }
+            valid = false;
+        }
+        else {
+            tempInput.classList.remove("input-error-border");
+
+        }
     }
 
+    validPw = validatePassword(pw.value.trim())
+    if (validPw != null) {
+        const error = errors[fieldMap[pw.id]];
+        error.classList.remove("hidden");
+        text = document.querySelector("#" + error.id + " .error-text");
+        text.innerText = validPw.msg;
+        pw.classList.add("input-error-border");
+    }
+    else {
+        const error = errors[fieldMap[pw.id]];
+        error.classList.add("hidden");
+        pw.classList.remove("input-error-border");
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const emailValue = email.value.trim();
+    if (emailValue &&!emailRegex.test(emailValue)) {
+        const error = errors[fieldMap[email.id]];
+        error.classList.remove("hidden");
+        text = document.querySelector("#" + error.id + " .error-text");
+        text.innerText = "Invalid email format";
+    }
+
+    if (pw.value.trim() !== repeatPw.value.trim()) {
+        const error = errors[fieldMap[pw.id]];
+        error.classList.remove("hidden");
+        text = document.querySelector("#" + error.id + " .error-text");
+        text.innerText = "Password must be the same.";
+        repeatPw.classList.add("input-error-border");
+    }
+
+    if (!valid)
+        return;
     btn.disabled = true;
 
     try {
@@ -55,7 +174,12 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
             if (data.detail) {
                 if (Array.isArray(data.detail)) {
                     // Pydantic validation error — strip "Value error, " prefix FastAPI adds
-                    msg = (data.detail[0]?.msg || msg).replace(/^Value error,\s*/i, '');
+                    if (data.detail[0].type && data.detail[0].type == "PASSWORD_ERROR") {
+                        msg = data.detail[0].type.msg;
+                    }
+                    else {
+                        msg = "All fields are required.";
+                    }
                 } else {
                     msg = data.detail;
                 }
