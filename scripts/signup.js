@@ -126,6 +126,7 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
         text = document.querySelector("#" + error.id + " .error-text");
         text.innerText = validPw.msg;
         pw.classList.add("input-error-border");
+        valid = false;
     }
     else {
         const error = errors[fieldMap[pw.id]];
@@ -141,6 +142,7 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
         error.classList.remove("hidden");
         text = document.querySelector("#" + error.id + " .error-text");
         text.innerText = "Invalid email format";
+        valid = false;
     }
 
     if (pw.value.trim() !== repeatPw.value.trim()) {
@@ -149,6 +151,7 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
         text = document.querySelector("#" + error.id + " .error-text");
         text.innerText = "Password must be the same.";
         repeatPw.classList.add("input-error-border");
+        valid = false;
     }
 
     if (!valid) {
