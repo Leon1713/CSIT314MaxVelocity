@@ -6,6 +6,7 @@ class SuspendUserAccountController:
     def suspend(user_id : int) -> bool:
         try:
             Account.suspend(user_id)
+            Session.deactivate(Session.findSessionByUserId(user_id).session_id)
             return True
         except Exception:
             raise
