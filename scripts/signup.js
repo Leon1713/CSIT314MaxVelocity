@@ -53,9 +53,12 @@ function validatePassword(password) {
 }
 
 function showError(msg) {
-    const el = errorEl();
-    el.textContent = msg;
-    el.classList.remove('hidden');
+    // Hide all inline field errors so only one message shows at a time
+    Object.values(errors).forEach(el => el.classList.add("hidden"));
+    const errDiv = errors["password"];
+    const errText = document.querySelector("#" + errDiv.id + " .error-text");
+    errText.innerText = msg;
+    errDiv.classList.remove("hidden");
 }
 
 function clearError() {
@@ -126,6 +129,7 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
         text = document.querySelector("#" + error.id + " .error-text");
         text.innerText = validPw.msg;
         pw.classList.add("input-error-border");
+        valid = false;
     }
     else {
         const error = errors[fieldMap[pw.id]];
@@ -186,6 +190,8 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
                     else {
                         msg = "All fields are required.";
                     }
+                } else if (typeof data.detail === 'object') {
+                    msg = data.detail.msg || msg;
                 } else {
                     msg = data.detail;
                 }
