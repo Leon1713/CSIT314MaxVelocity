@@ -70,6 +70,9 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     clearError();
 
+    document.getElementById("sign-in-text").classList.add("hidden");
+    document.getElementById("login-loader").classList.remove("hidden");
+
     const firstName = document.getElementById("signupFirstName");
     const lastName = document.getElementById("signupLastName");
     const userName = document.getElementById("username");
@@ -133,7 +136,7 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const emailValue = email.value.trim();
-    if (emailValue &&!emailRegex.test(emailValue)) {
+    if (emailValue && !emailRegex.test(emailValue)) {
         const error = errors[fieldMap[email.id]];
         error.classList.remove("hidden");
         text = document.querySelector("#" + error.id + " .error-text");
@@ -148,8 +151,11 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
         repeatPw.classList.add("input-error-border");
     }
 
-    if (!valid)
+    if (!valid) {
+        document.getElementById("sign-in-text").classList.remove("hidden");
+        document.getElementById("login-loader").classList.add("hidden");
         return;
+    }
     btn.disabled = true;
 
     try {
@@ -193,6 +199,8 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
     } catch (err) {
         showError("Could not connect to the server. Please try again later.");
     } finally {
+        document.getElementById("sign-in-text").classList.remove("hidden");
+        document.getElementById("login-loader").classList.add("hidden");
         btn.disabled = false;
     }
 });

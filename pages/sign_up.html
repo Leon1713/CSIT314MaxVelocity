@@ -131,7 +131,12 @@
             </select>
           </div>
 
-          <button type="submit" class="login-btn" id="signup-btn">Sign Up</button>
+          <button type="submit" class="login-btn" id="signup-btn">
+            <div id="sign-in-text">Sign Up</div>
+            <div class="loader-ctn hidden" id="login-loader">
+              <div class="loader-btn login-loader"></div>
+            </div>
+          </button>
           <p class="signup-error hidden" id="signup-error"></p>
 
         </form>
