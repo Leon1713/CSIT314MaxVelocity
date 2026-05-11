@@ -5,6 +5,7 @@ from Controller.GetFundraiserStatsController import GetFundraiserStatsController
 from Controller.CreateFRAController import CreateFRAController
 from Controller.GetFRACategoriesController import GetFRACategoriesController
 from Controller.GetFRADetailsController import GetFRADetailsController
+from Controller.DeleteFRAController import DeleteFRAController
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -78,6 +79,23 @@ def get_activity_details(
             "start_date":     str(activity["start_date"]) if activity["start_date"] else None,
             "end_date":       str(activity["end_date"]) if activity["end_date"] else None,
         }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
+@router.delete("/activity/{activity_id}")
+def delete_activity(
+    activity_id: int,
+    user: "Account" = Depends(require_permission("can_manage_fr"))
+):
+    controller = DeleteFRAController()
+    try:
+        deleted = controller.deleteActivity(activity_id, user.user_id)
+        if not deleted:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found")
+        return {"success": True}
     except HTTPException:
         raise
     except Exception as e:

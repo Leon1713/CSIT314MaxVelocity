@@ -69,6 +69,32 @@ async function loadActivity() {
             window.location.href = `edit_FRA.html?id=${a.id}`;
         };
 
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+
+        document.getElementById('fra-delete-btn').onclick = () => {
+            document.getElementById('delete-modal-msg').textContent =
+                `Delete "${a.title}"? This cannot be undone.`;
+            deleteModal.show();
+        };
+
+        document.getElementById('delete-confirm-btn').onclick = async () => {
+            deleteModal.hide();
+            try {
+                const del = await fetch(`http://127.0.0.1:8000/fundraiser/activity/${a.id}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                if (del.ok) {
+                    window.location.href = 'fundraiser_dashboard.html';
+                } else {
+                    const err = await del.json();
+                    alert(err.detail || 'Failed to delete activity.');
+                }
+            } catch (_) {
+                alert('Could not connect to the server.');
+            }
+        };
+
     } catch (err) {
         console.error('Failed to load activity:', err);
     }

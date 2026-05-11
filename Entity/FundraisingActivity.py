@@ -81,6 +81,22 @@ class FundraisingActivity(DBHandler):
             db_cursor.close()
 
     @staticmethod
+    def deleteById(activity_id: int, fundraiser_id: int) -> bool:
+        db_cursor = FundraisingActivity.db_connection.cursor(dictionary=True)
+        try:
+            db_cursor.execute("""
+                DELETE FROM fundraising_activities
+                WHERE id = %s AND fundraiser_id = %s
+            """, (activity_id, fundraiser_id))
+            FundraisingActivity.db_connection.commit()
+            return db_cursor.rowcount > 0
+        except Exception as e:
+            FundraisingActivity.db_connection.rollback()
+            raise e
+        finally:
+            db_cursor.close()
+
+    @staticmethod
     def getByIdAndFundraiser(activity_id: int, fundraiser_id: int):
         db_cursor = FundraisingActivity.db_connection.cursor(dictionary=True)
         try:
