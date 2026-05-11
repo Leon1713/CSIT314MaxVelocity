@@ -62,7 +62,7 @@ class FundraisingActivity(DBHandler):
                 INSERT INTO fundraising_activities
                     (fundraiser_id, donee_id, category_id, description, service_type,
                      goal_amount, current_amount, status, start_date, end_date)
-                VALUES (%s, NULL, %s, %s, %s, %s, 0, 'draft', %s, %s)
+                VALUES (%s, NULL, %s, %s, %s, %s, 0, 'active', %s, %s)
             """, (
                 data["fundraiser_id"],
                 data["category_id"],
@@ -77,6 +77,20 @@ class FundraisingActivity(DBHandler):
         except Exception as e:
             FundraisingActivity.db_connection.rollback()
             raise e
+        finally:
+            db_cursor.close()
+
+    @staticmethod
+    def getByIdAndFundraiser(activity_id: int, fundraiser_id: int):
+        db_cursor = FundraisingActivity.db_connection.cursor(dictionary=True)
+        try:
+            db_cursor.execute("""
+                SELECT fa.*, fc.category_name
+                FROM fundraising_activities fa
+                LEFT JOIN fra_categories fc ON fa.category_id = fc.id
+                WHERE fa.id = %s AND fa.fundraiser_id = %s
+            """, (activity_id, fundraiser_id))
+            return db_cursor.fetchone()
         finally:
             db_cursor.close()
 

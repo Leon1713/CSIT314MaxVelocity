@@ -4,6 +4,7 @@ from Dependencies.Auth import require_permission
 from Controller.GetFundraiserStatsController import GetFundraiserStatsController
 from Controller.CreateFRAController import CreateFRAController
 from Controller.GetFRACategoriesController import GetFRACategoriesController
+from Controller.GetFRADetailsController import GetFRADetailsController
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -40,6 +41,7 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
             },
             "recent_activities": [
                 {
+                    "id":          act["id"],
                     "description": act["description"],
                     "category":    act.get("service_type") or "—",
                     "status":      act["status"],
@@ -53,6 +55,33 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve fundraiser data"
         )
+
+
+@router.get("/activity/{activity_id}")
+def get_activity_details(
+    activity_id: int,
+    user: "Account" = Depends(require_permission("can_access_fr_dashboard"))
+):
+    controller = GetFRADetailsController()
+    try:
+        activity = controller.getActivity(activity_id, user.user_id)
+        if not activity:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found")
+        return {
+            "id":            activity["id"],
+            "title":         activity["description"],
+            "category_name": activity.get("category_name") or "—",
+            "service_type":  activity.get("service_type") or "—",
+            "current_amount": float(activity["current_amount"] or 0),
+            "goal_amount":    float(activity["goal_amount"] or 0),
+            "status":         activity["status"],
+            "start_date":     str(activity["start_date"]) if activity["start_date"] else None,
+            "end_date":       str(activity["end_date"]) if activity["end_date"] else None,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 @router.get("/categories")

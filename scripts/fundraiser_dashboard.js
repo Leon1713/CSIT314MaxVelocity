@@ -17,10 +17,10 @@ function formatDate(dateStr) {
     });
 }
 
-function renderStats({ total, active, raised, donors }) {
-    document.getElementById('stat-total').textContent  = total;
+function renderStats({ total_activities, active, total_raised, donors }) {
+    document.getElementById('stat-total').textContent  = total_activities;
     document.getElementById('stat-active').textContent = active;
-    document.getElementById('stat-raised').textContent = formatCurrency(raised);
+    document.getElementById('stat-raised').textContent = formatCurrency(total_raised);
     document.getElementById('stat-donors').textContent = donors;
 }
 
@@ -55,6 +55,9 @@ function renderActivities(activities) {
             </div>
             <span class="fr-activity-date">${formatDate(act.created_at)}</span>
         `;
+        item.addEventListener('click', () => {
+            window.location.href = `view_FRA.html?id=${act.id}`;
+        });
         list.appendChild(item);
     });
 }
