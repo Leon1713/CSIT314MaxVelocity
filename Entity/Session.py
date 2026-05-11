@@ -1,10 +1,10 @@
 from Entity.Account import Account
 
-from .DBHandler import DBHandler
 from datetime import datetime, timezone, timedelta
 from fastapi import HTTPException, Request
+from db import get_db_connection
 import secrets
-class Session(DBHandler):
+class Session:
     def __init__(self, session_id, user_id, created_at = None,expires_at = None, ip_address = None, is_active = True ):
         super().__init__()
         self.session_id = session_id
@@ -15,7 +15,8 @@ class Session(DBHandler):
         self.is_active = is_active
     @staticmethod
     def create(user_id_, ip_address, secondsToExpire = 5*60) -> "Session":
-        db_cursor = Session.db_connection.cursor(dictionary=True)
+        db_conn = get_db_connection()
+        db_cursor = db_conn.cursor(dictionary=True)
         
         session_id = secrets.token_hex(32)
         expires = datetime.now(timezone.utc) + timedelta(seconds=secondsToExpire)
@@ -32,17 +33,19 @@ class Session(DBHandler):
                                 temp.ip_address,
                                 temp.is_active
                             ))
-            Session.db_connection.commit()
+            db_conn.commit()
             return temp
         except Exception as e:
-            Session.db_connection.rollback()
+            db_conn.rollback()
             raise Exception("Failed to create a session")
         finally:
+            db_conn.close()
             db_cursor.close()
     
     @staticmethod
     def findSessionByUserId(id : int):
-        db_cursor = Session.db_connection.cursor(dictionary=True)
+        db_conn = get_db_connection()
+        db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("SELECT * FROM user_sessions WHERE user_id = %s AND expires_at > NOW() AND is_active = 1", (id,))
             result = db_cursor.fetchone()
@@ -52,9 +55,11 @@ class Session(DBHandler):
             raise HTTPException(status_code=404, detail="Item not found")
         finally:
             db_cursor.close()
+            db_conn.close()
     @staticmethod
     def getSessionBySessionId(id: str) -> "Session":
-        db_cursor = Session.db_connection.cursor(dictionary=True)
+        db_conn = get_db_connection()
+        db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("SELECT * FROM user_sessions WHERE session_id = %s AND expires_at > NOW() AND is_active = 1", (id,))
             result = db_cursor.fetchone()    
@@ -64,6 +69,7 @@ class Session(DBHandler):
             raise HTTPException(status_code=404, detail="Item not found")
         finally:
             db_cursor.close()
+            db_conn.close()
     
     @staticmethod
     def createNewSession(account : Account, req : Request) -> "Session":
@@ -81,27 +87,31 @@ class Session(DBHandler):
             return None
     @staticmethod
     def deactivate(session_id: str) -> bool:
-        db_cursor = Session.db_connection.cursor(dictionary=True)
+        db_conn = get_db_connection()
+        db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("UPDATE user_sessions SET is_active = 0 WHERE session_id = %s", (session_id,))
-            Session.db_connection.commit()
+            db_conn.commit()
             return True
         except Exception:
-            Session.db_connection.rollback()
+            db_conn.rollback()
             raise Exception("Failed to deactivate session")
         finally:
             db_cursor.close()
+            db_conn.close()
 
     @staticmethod
     def cleanUpExpiredSessions():
-        db_cursor = Session.db_connection.cursor(dictionary=True)
+        db_conn = get_db_connection()
+        db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("DELETE FROM user_sessions WHERE expires_at < NOW() OR is_active = 0")
-            Session.db_connection.commit()
+            db_conn.commit()
         except Exception as e:
-            Session.db_connection.rollback()
+            db_conn.rollback()
             raise Exception("Failed to clean up expired sessions")
         finally:
-            db_cursor.close()    
+            db_cursor.close()
+            db_conn.close()    
 
         

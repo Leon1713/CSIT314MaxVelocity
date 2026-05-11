@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.concurrency import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
-
+from db import close_pool
 from routes.signup import router as router_reg
 from routes.login import router as router_login
 from routes.getSession import router as router_me
@@ -12,7 +12,7 @@ async def lifespan(app: FastAPI):
     from Dependencies.CleanUpSession import SessionCleanUp
     await SessionCleanUp.cleanUpExpiredSessions()
     yield
-
+    close_pool()
 
 app = FastAPI(lifespan=lifespan)
 app.add_middleware(
