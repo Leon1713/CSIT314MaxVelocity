@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from Dependencies.Auth import require_permission
 from Controller.GetFundraiserStatsController import GetFundraiserStatsController
 from Controller.CreateFRAController import CreateFRAController
+from Controller.GetFRACategoriesController import GetFRACategoriesController
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -12,6 +13,7 @@ if TYPE_CHECKING:
 class CreateFRAInput(BaseModel):
     title: str
     service_type: str
+    category_id: int
     goal_amount: float
     start_date: str
     end_date: str
@@ -53,6 +55,15 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
         )
 
 
+@router.get("/categories")
+def get_categories():
+    controller = GetFRACategoriesController()
+    try:
+        return {"categories": controller.getCategories()}
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
 @router.post("/create_activity")
 def create_activity(
     data: CreateFRAInput,
@@ -64,6 +75,7 @@ def create_activity(
             fundraiser_id=user.user_id,
             title=data.title,
             service_type=data.service_type,
+            category_id=data.category_id,
             goal_amount=data.goal_amount,
             start_date=data.start_date,
             end_date=data.end_date,

@@ -62,9 +62,10 @@ class FundraisingActivity(DBHandler):
                 INSERT INTO fundraising_activities
                     (fundraiser_id, donee_id, category_id, description, service_type,
                      goal_amount, current_amount, status, start_date, end_date)
-                VALUES (%s, NULL, NULL, %s, %s, %s, 0, 'draft', %s, %s)
+                VALUES (%s, NULL, %s, %s, %s, %s, 0, 'draft', %s, %s)
             """, (
                 data["fundraiser_id"],
+                data["category_id"],
                 data["description"],
                 data["service_type"],
                 data["goal_amount"],

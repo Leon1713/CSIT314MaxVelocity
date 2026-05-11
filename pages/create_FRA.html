@@ -59,14 +59,25 @@
 
             <div class="fr-form-card">
 
-                <div class="fr-form-group">
-                    <label class="fr-form-label" for="fra-title">Campaign Title</label>
-                    <input
-                        type="text"
-                        id="fra-title"
-                        class="fr-form-input"
-                        placeholder="e.g., Help build a school in Bedok"
-                    />
+                <div class="fr-form-row">
+                    <div class="fr-form-group">
+                        <label class="fr-form-label" for="fra-title">Campaign Title</label>
+                        <input
+                            type="text"
+                            id="fra-title"
+                            class="fr-form-input"
+                            placeholder="e.g., Help build a school in Bedok"
+                        />
+                    </div>
+                    <div class="fr-form-group">
+                        <label class="fr-form-label" for="fra-service-type">Service Type</label>
+                        <input
+                            type="text"
+                            id="fra-service-type"
+                            class="fr-form-input"
+                            placeholder="e.g., Cancer treatment"
+                        />
+                    </div>
                 </div>
 
                 <div class="fr-form-group">
@@ -95,15 +106,7 @@
                     <div class="fr-form-group">
                         <label class="fr-form-label" for="fra-category">Category</label>
                         <select id="fra-category" class="fr-form-input fr-form-select">
-                            <option value="" disabled selected>Select category</option>
-                            <option value="Education">Education</option>
-                            <option value="Medical">Medical</option>
-                            <option value="Community">Community</option>
-                            <option value="Arts & Culture">Arts &amp; Culture</option>
-                            <option value="Environment">Environment</option>
-                            <option value="Sports">Sports</option>
-                            <option value="Animal Welfare">Animal Welfare</option>
-                            <option value="Others">Others</option>
+                            <option value="" disabled selected>Loading…</option>
                         </select>
                     </div>
                 </div>

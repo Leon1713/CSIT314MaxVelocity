@@ -16,6 +16,41 @@ document.getElementById('hub-logout-btn').addEventListener('click', async () => 
     window.location.href = 'login.html';
 });
 
+// ── Load categories into dropdown ─────────────────────────────────────────────
+async function loadCategories() {
+    const select = document.getElementById('fra-category');
+    try {
+        const res = await fetch('http://127.0.0.1:8000/fundraiser/categories', {
+            credentials: 'include'
+        });
+
+        if (res.status === 401 || res.status === 403) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const data = await res.json();
+        select.innerHTML = '<option value="" disabled selected>Select category</option>';
+
+        if (!data.categories || data.categories.length === 0) {
+            select.innerHTML = '<option value="" disabled selected>No categories available</option>';
+            return;
+        }
+
+        data.categories.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat.id;
+            opt.textContent = cat.category_name;
+            select.appendChild(opt);
+        });
+
+    } catch (err) {
+        select.innerHTML = '<option value="" disabled selected>Failed to load categories</option>';
+    }
+}
+
+loadCategories();
+
 // ── Form submission ────────────────────────────────────────────────────────────
 const errorEl = document.getElementById('fra-error');
 
@@ -32,18 +67,20 @@ function clearError() {
 document.getElementById('fra-submit-btn').addEventListener('click', async () => {
     clearError();
 
-    const title    = document.getElementById('fra-title').value.trim();
-    const goal     = document.getElementById('fra-goal').value.trim();
-    const category = document.getElementById('fra-category').value;
-    const start    = document.getElementById('fra-start').value;
-    const end      = document.getElementById('fra-end').value;
+    const title       = document.getElementById('fra-title').value.trim();
+    const serviceType = document.getElementById('fra-service-type').value.trim();
+    const goal        = document.getElementById('fra-goal').value.trim();
+    const categoryId  = document.getElementById('fra-category').value;
+    const start       = document.getElementById('fra-start').value;
+    const end         = document.getElementById('fra-end').value;
 
-    if (!title)    return showError('Campaign title is required.');
+    if (!title)                   return showError('Campaign title is required.');
+    if (!serviceType)             return showError('Service type is required.');
     if (!goal || Number(goal) <= 0) return showError('Please enter a valid goal amount.');
-    if (!category) return showError('Please select a category.');
-    if (!start)    return showError('Start date is required.');
-    if (!end)      return showError('End date is required.');
-    if (end < start) return showError('End date must be after start date.');
+    if (!categoryId)              return showError('Please select a category.');
+    if (!start)                   return showError('Start date is required.');
+    if (!end)                     return showError('End date is required.');
+    if (end < start)              return showError('End date must be after start date.');
 
     const btn = document.getElementById('fra-submit-btn');
     btn.disabled = true;
@@ -56,7 +93,8 @@ document.getElementById('fra-submit-btn').addEventListener('click', async () => 
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 title,
-                service_type: category,
+                service_type: serviceType,
+                category_id: Number(categoryId),
                 goal_amount: Number(goal),
                 start_date: start,
                 end_date: end,
