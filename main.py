@@ -7,6 +7,7 @@ from routes.login import router as router_login
 from routes.getSession import router as router_me
 from routes.admin import router as router_admin
 from routes.logout import router as router_logout
+from routes.fundraiser import router as router_fundraiser
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     from Dependencies.CleanUpSession import SessionCleanUp
@@ -33,6 +34,7 @@ app.include_router(router_login)
 app.include_router(router_me)
 app.include_router(router_admin)
 app.include_router(router_logout)
+app.include_router(router_fundraiser)
 
 
 # app.mount("/styles", StaticFiles(directory="styles"), name="styles")

@@ -59,23 +59,40 @@ function renderActivities(activities) {
     });
 }
 
-// ── Placeholder data (replace with real API calls later) ──────────────────────
-renderStats({ total: 4, active: 2, raised: 21000, donors: 170 });
+// ── Load dashboard data from API ──────────────────────────────────────────────
+async function loadDashboard() {
+    try {
+        const res = await fetch('http://127.0.0.1:8000/fundraiser/stats', {
+            method: 'GET',
+            credentials: 'include'
+        });
 
-renderActivities([
-    {
-        description: 'Community Garden',
-        category: 'Community',
-        status: 'draft',
-        created_at: '2026-04-01'
-    },
-    {
-        description: 'Medical Fund for Uncle Lim',
-        category: 'Medical',
-        status: 'completed',
-        created_at: '2026-03-26'
+        if (res.status === 401 || res.status === 403) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        if (!res.ok) throw new Error('Failed to load dashboard data');
+
+        const data = await res.json();
+
+        renderStats(data.stats);
+        renderActivities(data.recent_activities);
+
+        document.getElementById('dropdown-username').textContent = data.username;
+        document.getElementById('dropdown-role').textContent = 'Fundraiser';
+
+    } catch (err) {
+        console.error('Dashboard load error:', err);
     }
-]);
+}
+
+loadDashboard();
+
+// ── Overview button navigation ────────────────────────────────────────────────
+document.getElementById('btn-create-activity').addEventListener('click', () => {
+    window.location.href = 'create_FRA.html';
+});
 
 // ── Gear dropdown ──────────────────────────────────────────────────────────────
 const gearBtn  = document.getElementById('hub-gear-btn');
