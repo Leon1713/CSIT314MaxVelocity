@@ -48,7 +48,8 @@ async function loadActivity() {
         const a = await res.json();
 
         document.getElementById('fra-title').textContent        = a.title;
-        document.getElementById('fra-category').textContent     = a.category_name;
+        document.getElementById('fra-banner-service').textContent = a.service_type;
+        document.getElementById('fra-category').textContent        = a.category_name;
         document.getElementById('fra-raised').textContent       = formatCurrency(a.current_amount);
         document.getElementById('fra-goal').textContent         = formatCurrency(a.goal_amount);
         document.getElementById('fra-days').textContent         = daysLeft(a.end_date);
