@@ -19,8 +19,8 @@ class Session:
         db_cursor = db_conn.cursor(dictionary=True)
         
         session_id = secrets.token_hex(32)
-        expires = datetime.now(timezone.utc) + timedelta(seconds=secondsToExpire)
-        now = datetime.now(timezone.utc)
+        expires = datetime.now(timezone.utc) + timedelta(hours=8) + timedelta(seconds=secondsToExpire)
+        now = datetime.now(timezone.utc) + timedelta(hours=8)
         print(expires)
         temp = Session(session_id, user_id_,now,expires,ip_address)
         try:
@@ -66,7 +66,7 @@ class Session:
             session = Session(result["session_id"], result["user_id"], result["created_at"], result["expires_at"], result["ip_address"],result["is_active"])
             return session
         except Exception:
-            raise HTTPException(status_code=404, detail="Item not found")
+            raise HTTPException(status_code=404, detail=str("Item not found"))
         finally:
             db_cursor.close()
             db_conn.close()

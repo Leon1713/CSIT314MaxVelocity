@@ -16,7 +16,8 @@ class Profile:
                  can_view_fr_analytics: bool = False,
                  can_manage_donation: bool = False,
                  can_manage_fra_category: bool = False,
-                 can_generate_report: bool = False):
+                 can_generate_report: bool = False,
+                 is_active : bool = True):
         self.role_id = role_id
         self.role_name = role_name
         self.role_desc = description
@@ -33,6 +34,7 @@ class Profile:
         self.can_manage_donation = can_manage_donation
         self.can_manage_fra_category = can_manage_fra_category
         self.can_generate_report = can_generate_report
+        self.is_active = is_active
 
     @staticmethod
     def GetProfileByRoleId(role_id: int) -> "Profile":
@@ -214,8 +216,18 @@ VALUES (
             db_conn.close()
 
     @staticmethod
-    def suspend(profile_id: int):
-       db_conn = get_db_connection()
-       db_cursor = db_conn.cursor(dictionary=True)
-       db_cursor.execute("""UPDATE user_roles SET is_active = 0 WHERE role_id = %s""",(profile_id,))
-       db_conn.commit()
+    def suspend(profile_id: int) -> bool:
+        try:
+            db_conn = get_db_connection()
+            db_cursor = db_conn.cursor(dictionary=True)
+            db_cursor.execute("""UPDATE user_roles SET is_active = 0 WHERE role_id = %s""",(profile_id,))
+            db_conn.commit()
+            return True
+        except Exception as e:
+            print(f"Error suspending Profile: {e}")
+            db_conn.rollback()
+            raise
+        finally:
+            db_cursor.close()
+            db_conn.close()
+            

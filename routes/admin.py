@@ -10,6 +10,7 @@ from Controller.CreateUserAccountController import CreateUserAccountController
 from Controller.GetUserAccountListController import GetUserAccountListController
 from Controller.ReadUserAccountController import ReadUserAccountController
 from Controller.SuspendUserAccountController import SuspendUserAccountController
+from Controller.SuspendUserProfileController import SuspendUserProfileController
 from Controller.ViewUserProfileController import ViewUserProfileController
 from Controller.UpdateProfileController import UpdateProfileController
 from Dependencies.Auth import require_permission
@@ -168,5 +169,11 @@ def update_user_profile(profile_id : int, profile_modal : UpdateProfileModal):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Failed to update profile.")
 @router.post("/user_profiles/{profile_id}/suspend", dependencies=[Depends(require_permission("can_manage_user_profile"))])
 def suspend_user_profile(profile_id : int) -> bool:
-    NotImplemented
+    controller : SuspendUserProfileController = SuspendUserProfileController()
+    try:
+        return controller.suspend(profile_id)
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Failed to suspend user profile.")
+# Search User Profile (Frontend)
+    
     

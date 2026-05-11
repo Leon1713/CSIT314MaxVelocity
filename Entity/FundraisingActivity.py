@@ -1,14 +1,11 @@
-from Entity.DBHandler import DBHandler
-
-
-class FundraisingActivity(DBHandler):
-    def __init__(self, id, fundraiser_id, donee_id, category_id, description,
+from db import get_db_connection
+class FundraisingActivity():
+    def __init__(self, id, fundraiser_id, category_id, description,
                  service_type, goal_amount, current_amount, status,
                  start_date, end_date, created_at, updated_at):
         super().__init__()
         self.id = id
         self.fundraiser_id = fundraiser_id
-        self.donee_id = donee_id
         self.category_id = category_id
         self.description = description
         self.service_type = service_type
@@ -39,66 +36,75 @@ class FundraisingActivity(DBHandler):
 
     @staticmethod
     def getStatsByFundraiserId(fundraiser_id: int) -> dict:
-        db_cursor = FundraisingActivity.db_connection.cursor(dictionary=True)
+        db_conn = get_db_connection()
+        db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
                 SELECT
-                    COUNT(id)                                              AS total_activities,
-                    SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END)   AS active_activities,
-                    COALESCE(SUM(current_amount), 0)                       AS total_raised,
-                    COUNT(DISTINCT donee_id)                               AS donor_count
-                FROM fundraising_activities
-                WHERE fundraiser_id = %s
+                    COUNT(fundraising_activities.id)                                              AS total_activities,
+                    SUM(CASE WHEN fundraising_activities.status = 1 THEN 1 ELSE 0 END)   AS active_activities,
+                    COALESCE(SUM(fundraising_activities.current_amount), 0)                       AS total_raised,
+                    COUNT(DISTINCT donations.donee_id)                               AS donor_count
+                FROM fundraising_activities LEFT JOIN donations
+                ON fundraising_activities.id = donations.fra_id
+                WHERE fundraising_activities.fundraiser_id = %s
             """, (fundraiser_id,))
             return db_cursor.fetchone()
+        except Exception  as e:
+            print(e)
         finally:
             db_cursor.close()
+            db_conn.close()
 
     @staticmethod
     def create(data: dict) -> bool:
-        db_cursor = FundraisingActivity.db_connection.cursor(dictionary=True)
+        db_conn = get_db_connection()
+        db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
                 INSERT INTO fundraising_activities
-                    (fundraiser_id, donee_id, category_id, description, service_type,
+                    (fundraiser_id, category_id, description, service_type,
                      goal_amount, current_amount, status, start_date, end_date)
-                VALUES (%s, NULL, %s, %s, %s, %s, 0, 'active', %s, %s)
+                VALUES (%s, %s, %s, %s, %s, 0, 1, NOW(), %s)
             """, (
                 data["fundraiser_id"],
                 data["category_id"],
                 data["description"],
                 data["service_type"],
                 data["goal_amount"],
-                data["start_date"],
                 data["end_date"],
             ))
-            FundraisingActivity.db_connection.commit()
+            db_conn.commit()
             return True
         except Exception as e:
-            FundraisingActivity.db_connection.rollback()
+            db_conn.rollback()
             raise e
         finally:
             db_cursor.close()
+            db_conn.close()
 
     @staticmethod
     def deleteById(activity_id: int, fundraiser_id: int) -> bool:
-        db_cursor = FundraisingActivity.db_connection.cursor(dictionary=True)
+        db_conn = get_db_connection()
+        db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
                 DELETE FROM fundraising_activities
                 WHERE id = %s AND fundraiser_id = %s
             """, (activity_id, fundraiser_id))
-            FundraisingActivity.db_connection.commit()
+            db_conn.commit()
             return db_cursor.rowcount > 0
         except Exception as e:
-            FundraisingActivity.db_connection.rollback()
+            db_conn.rollback()
             raise e
         finally:
             db_cursor.close()
+            db_conn.close()
 
     @staticmethod
     def getByIdAndFundraiser(activity_id: int, fundraiser_id: int):
-        db_cursor = FundraisingActivity.db_connection.cursor(dictionary=True)
+        db_conn = get_db_connection()
+        db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
                 SELECT fa.*, fc.category_name
@@ -109,10 +115,12 @@ class FundraisingActivity(DBHandler):
             return db_cursor.fetchone()
         finally:
             db_cursor.close()
+            db_conn.close()
 
     @staticmethod
     def getRecentByFundraiserId(fundraiser_id: int, limit: int = 5) -> list:
-        db_cursor = FundraisingActivity.db_connection.cursor(dictionary=True)
+        db_conn = get_db_connection()
+        db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
                 SELECT id, description, service_type, status, created_at
@@ -124,3 +132,4 @@ class FundraisingActivity(DBHandler):
             return db_cursor.fetchall()
         finally:
             db_cursor.close()
+            db_conn.close()

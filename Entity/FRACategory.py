@@ -1,7 +1,6 @@
-from Entity.DBHandler import DBHandler
+from db import get_db_connection
 
-
-class FRACategory(DBHandler):
+class FRACategory:
     def __init__(self, id, category_name, category_description, is_active, created_at, updated_at):
         super().__init__()
         self.id = id
@@ -20,7 +19,8 @@ class FRACategory(DBHandler):
 
     @staticmethod
     def getAll() -> list:
-        db_cursor = FRACategory.db_connection.cursor(dictionary=True)
+        db_conn = get_db_connection()
+        db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
                 SELECT id, category_name, category_description
@@ -30,4 +30,6 @@ class FRACategory(DBHandler):
             """)
             return db_cursor.fetchall()
         finally:
+            db_conn.close()
             db_cursor.close()
+            
