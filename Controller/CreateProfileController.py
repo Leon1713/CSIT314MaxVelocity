@@ -13,6 +13,6 @@ class CreateProfileController:
             temp.can_access_platform_mgt_dashboard = temp.can_manage_fra_category or temp.can_generate_report
             temp = temp.to_dict()
             try:
-                return Profile.insertProfile(temp)
+                return Profile.insertProfile(temp,conn)
             except Exception as e:
                 raise e

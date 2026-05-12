@@ -1,4 +1,4 @@
-from db import get_db_connection
+from __future__ import annotations
 class Profile:
     def __init__(self,
                  role_id: str, role_name: str,
@@ -37,7 +37,7 @@ class Profile:
         self.is_active = is_active
 
     @staticmethod
-    def GetProfileByRoleId(role_id: int, conn) -> "Profile":
+    def GetProfileByRoleId(role_id: int, conn) -> Profile:
         db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
@@ -55,7 +55,7 @@ class Profile:
         return {
             "id": self.role_id,
             "role_name": self.role_name,
-            "role_desc": self.role_desc,
+            "description": self.role_desc,
             "can_access_admin_dashboard": self.can_access_admin_dashboard,
             "can_access_fr_dashboard": self.can_access_fr_dashboard,
             "can_access_donee_dashboard": self.can_access_donee_dashboard,
