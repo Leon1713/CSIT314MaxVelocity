@@ -1,6 +1,10 @@
+import os
 from fastapi import FastAPI
 from fastapi.concurrency import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+
+os.makedirs("uploads/profile_pictures", exist_ok=True)
 from db import close_pool
 from routes.signup import router as router_reg
 from routes.login import router as router_login
@@ -37,6 +41,7 @@ app.include_router(router_admin)
 app.include_router(router_logout)
 app.include_router(router_fundraiser)
 app.include_router(router_profile)
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 
 # app.mount("/styles", StaticFiles(directory="styles"), name="styles")

@@ -1,6 +1,8 @@
 from Entity.UserProfile import UserProfile
 from db import get_db_connection
 
+BASE_URL = "http://127.0.0.1:8000"
+
 
 class GetUserProfileController:
     def getProfile(self, user) -> dict:
@@ -18,6 +20,10 @@ class GetUserProfileController:
                     "address":    profile["address"] if profile else "",
                     "city":       profile["city"]    if profile else "",
                     "country":    profile["country"] if profile else "",
+                    "profile_picture_url": (
+                        f"{BASE_URL}/uploads/profile_pictures/{profile['profile_picture']}"
+                        if profile and profile.get("profile_picture") else None
+                    ),
                 }
             except Exception:
                 raise
