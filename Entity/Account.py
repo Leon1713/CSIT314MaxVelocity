@@ -43,9 +43,17 @@ class Account:
             db_conn = get_db_connection()
             db_cursor = db_conn.cursor(dictionary=True)
             # Check if the role exists, will raise an error if it doesn't
-            roleId = Account.getRoleId(role_input)
-            db_cursor.execute("SELECT user_accounts.* FROM user_accounts join user_roles ON user_accounts.role_id = user_roles.role_id WHERE (email = %s OR username = %s) AND user_roles.role_id = %s AND user_accounts.is_suspended = 0",
-                              (email_or_username, email_or_username, roleId))
+            # roleId = Account.getRoleId(role_input)
+            db_cursor.execute("""
+                              (SELECT u.* FROM user_accounts u
+                              JOIN user_roles r ON u.role_id = r.role_id
+                              WHERE u.email = %s AND r.role_name = %s AND u.is_suspended = 0)
+                              UNION ALL
+                              (SELECT u.* FROM user_accounts u
+                              JOIN user_roles r ON u.role_id = r.role_id
+                              WHERE u.username = %s AND r.role_name = %s AND u.is_suspended = 0)
+                              """,
+                              (email_or_username, role_input, email_or_username, role_input))
             user_data = db_cursor.fetchall()
             if user_data:
                 # For each user in the result, create an Account object and return a list of them

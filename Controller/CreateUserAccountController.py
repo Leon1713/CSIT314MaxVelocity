@@ -11,7 +11,7 @@ class CreateUserAccountController:
     def createAccount(self, username : str, password : str, email : str, role_name : str, first_name : str, last_name : str, phone : str) -> Account:
         try:
             hashedPw = self.pwd_context.hash(password)
-            now = datetime.datetime.now
+            now = datetime.datetime.now()
             roleId = Account.getRoleId(role_name)
             newAcc = Account(None, username, email, hashedPw, roleId,
                             first_name, last_name, phone, True, False, now, now, now)
