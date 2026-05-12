@@ -61,7 +61,7 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
 @router.get("/activity/{activity_id}")
 def get_activity_details(
     activity_id: int,
-    user: "Account" = Depends(require_permission("can_access_fr_dashboard"))
+    user: "Account" = Depends(require_permission("can_view_fr"))
 ):
     controller = GetFRADetailsController()
     try:
@@ -102,7 +102,7 @@ def delete_activity(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
-@router.get("/categories")
+@router.get("/categories") # move to unprotected route
 def get_categories():
     controller = GetFRACategoriesController()
     try:
@@ -133,3 +133,14 @@ def create_activity(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
+@router.get("/activity")
+def get_activity_list_fr(
+    user : Account = Depends(require_permission("can_view_fra"))
+    ):
+    controller = GetFRADetailsController()
+    try:
+        return controller.getActivityList(user.user_id)
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="failed to find activities")
+    

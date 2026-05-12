@@ -1,6 +1,6 @@
-from .DBHandler import DBHandler
+from __future__ import annotations
 
-class Donation(DBHandler):
+class Donation:
     def __init__(self, id, donee_id, fra_id, amount, created_at):
         super().__init__()
         self.id = id
@@ -19,8 +19,9 @@ class Donation(DBHandler):
         }
 
     @staticmethod
-    def getByDoneeId(donee_id: int):
-        cursor = Donation.db_connection.cursor(dictionary=True)
+    def getByDoneeId(donee_id: int, conn):
+        db_conn = conn
+        cursor = db_conn.cursor(dictionary=True)
         try:
             cursor.execute("SELECT * FROM donations WHERE donee_id = %s", (donee_id,))
             rows = cursor.fetchall()
@@ -29,17 +30,17 @@ class Donation(DBHandler):
             cursor.close()
 
     @staticmethod
-    def create(donee_id: int, fra_id: int, amount: float):
-        cursor = Donation.db_connection.cursor(dictionary=True)
+    def create(donee_id: int, fra_id: int, amount: float, conn):
+        cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute(
                 "INSERT INTO donations (donee_id, fra_id, amount) VALUES (%s, %s, %s)",
                 (donee_id, fra_id, amount)
             )
-            Donation.db_connection.commit()
+            conn.commit()
             return True
         except Exception:
-            Donation.db_connection.rollback()
-            raise
+           conn.rollback()
+           raise
         finally:
             cursor.close()

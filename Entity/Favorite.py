@@ -1,6 +1,5 @@
-from .DBHandler import DBHandler
-
-class Favorite(DBHandler):
+from __future__ import annotations
+class Favorite:
     def __init__(self, id, donee_id, fra_id, created_at):
         super().__init__()
         self.id = id
@@ -17,8 +16,8 @@ class Favorite(DBHandler):
         }
 
     @staticmethod
-    def getByDoneeId(donee_id: int):
-        cursor = Favorite.db_connection.cursor(dictionary=True)
+    def getByDoneeId(donee_id: int, conn):
+        cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute("SELECT * FROM favorites WHERE donee_id = %s", (donee_id,))
             rows = cursor.fetchall()
@@ -27,33 +26,33 @@ class Favorite(DBHandler):
             cursor.close()
 
     @staticmethod
-    def create(donee_id: int, fra_id: int):
-        cursor = Favorite.db_connection.cursor(dictionary=True)
+    def create(donee_id: int, fra_id: int, conn):
+        cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute(
                 "INSERT INTO favorites (donee_id, fra_id) VALUES (%s, %s)",
                 (donee_id, fra_id)
             )
-            Favorite.db_connection.commit()
+            conn.commit()
             return True
         except Exception:
-            Favorite.db_connection.rollback()
+            conn.rollback()
             raise
         finally:
             cursor.close()
 
     @staticmethod
-    def delete(donee_id: int, fra_id: int):
-        cursor = Favorite.db_connection.cursor(dictionary=True)
+    def delete(donee_id: int, fra_id: int, conn):
+        cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute(
                 "DELETE FROM favorites WHERE donee_id = %s AND fra_id = %s",
                 (donee_id, fra_id)
             )
-            Favorite.db_connection.commit()
+            conn.commit()
             return True
         except Exception:
-            Favorite.db_connection.rollback()
+            conn.rollback()
             raise
         finally:
             cursor.close()

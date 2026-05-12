@@ -128,3 +128,16 @@ class FundraisingActivity():
             return db_cursor.fetchall()
         finally:
             db_cursor.close()
+    @staticmethod
+    def getFundRaiserActivitiesByFundRaiserId(user_id : int, conn):
+        db_conn = conn
+        db_cursor = db_conn.cursor(dictionary=True)
+        try:
+            db_cursor.execute("""
+            SELECT * FROM fundraising_activities
+            WHERE fundraiser_id = %s
+            ORDER BY created_at DESC
+            """, (user_id,))
+            return db_cursor.fetchall()
+        finally:
+            db_cursor.close()        

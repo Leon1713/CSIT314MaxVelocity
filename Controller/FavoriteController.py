@@ -1,3 +1,4 @@
+from db import get_db_connection
 from Entity.Favorite import Favorite
 
 class FavoriteController:
@@ -5,10 +6,13 @@ class FavoriteController:
         pass
 
     def getFavorites(self, donee_id: int):
-        return Favorite.getByDoneeId(donee_id)
+        with get_db_connection() as conn:
+            return Favorite.getByDoneeId(donee_id,conn)
 
     def addFavorite(self, donee_id: int, fra_id: int):
-        return Favorite.create(donee_id, fra_id)
+        with get_db_connection() as conn:
+            return Favorite.create(donee_id, fra_id, conn)
 
     def removeFavorite(self, donee_id: int, fra_id: int):
-        return Favorite.delete(donee_id, fra_id)
+        with get_db_connection() as conn:
+            return Favorite.delete(donee_id, fra_id, conn)
