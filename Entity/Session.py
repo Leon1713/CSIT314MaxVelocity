@@ -1,9 +1,9 @@
+from __future__ import annotations
 from Entity.Account import Account
-
 from datetime import datetime, timezone, timedelta
 from fastapi import HTTPException, Request
-from db import get_db_connection
 import secrets
+
 class Session:
     def __init__(self, session_id, user_id, created_at = None,expires_at = None, ip_address = None, is_active = True ):
         super().__init__()

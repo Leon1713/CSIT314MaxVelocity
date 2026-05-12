@@ -1,5 +1,4 @@
-from db import get_db_connection
-from passlib.context import CryptContext
+from __future__ import annotations
 
 
 class Account:

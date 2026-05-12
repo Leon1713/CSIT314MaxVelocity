@@ -1,4 +1,4 @@
-from db import get_db_connection
+from __future__ import annotations
 class FundraisingActivity():
     def __init__(self, id, fundraiser_id, category_id, description,
                  service_type, goal_amount, current_amount, status,

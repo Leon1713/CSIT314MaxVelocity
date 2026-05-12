@@ -1,4 +1,4 @@
-from db import get_db_connection
+from __future__ import annotations
 
 class FRACategory:
     def __init__(self, id, category_name, category_description, is_active, created_at, updated_at):
