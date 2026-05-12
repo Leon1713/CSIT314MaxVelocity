@@ -5,11 +5,9 @@ class ReadUserAccountController:
         pass
 
     def getUserAccount(self, account_id):
-            db_conn = get_db_connection()
+        with get_db_connection() as db_conn:
             try:
-                acc : Account = Account.getUsersById(account_id)
+                acc : Account = Account.getUsersById(account_id, db_conn)
                 return acc
             except Exception:
                 raise
-            finally:
-                db_conn.close()

@@ -1,15 +1,17 @@
 from Entity.FundraisingActivity import FundraisingActivity
-
+from db import get_db_connection
 
 class GetFundraiserStatsController:
     def getStats(self, fundraiser_id: int) -> dict:
-        try:
-            return FundraisingActivity.getStatsByFundraiserId(fundraiser_id)
-        except Exception:
-            raise
+        with get_db_connection() as conn:
+            try:
+                return FundraisingActivity.getStatsByFundraiserId(fundraiser_id,conn)
+            except Exception:
+                raise
 
     def getRecentActivities(self, fundraiser_id: int, limit: int = 5) -> list:
-        try:
-            return FundraisingActivity.getRecentByFundraiserId(fundraiser_id, limit)
-        except Exception:
-            raise
+        with get_db_connection() as conn:
+            try:
+                return FundraisingActivity.getRecentByFundraiserId(fundraiser_id, conn, limit)
+            except Exception:
+                raise

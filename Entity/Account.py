@@ -123,11 +123,12 @@ class Account:
     @staticmethod
     def authenticate(email: str, password: str, role: str, hasher, conn):
         users = Account.findUsersByEmailOrUsername(email, role, conn)
-        if users and users.__len__() != 0 and (authenticated_user := users[0].auth(password, hasher)):
-            authenticated_user.SetLastLogin()
+
+        if users and (authenticated_user := users[0].auth(password, hasher)):
+            authenticated_user.SetLastLogin(conn)
             return authenticated_user
-        else:
-            raise Exception("Authentication Failure")
+
+        raise Exception("Invalid email or password")
 
     @staticmethod
     def getUsersById(id: str, conn):
