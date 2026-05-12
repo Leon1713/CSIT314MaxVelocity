@@ -9,34 +9,31 @@ class LoginData(BaseModel):
     email: str
     password: str
     role: str
-
-
+    
 router = APIRouter()
 @router.post("/login")
 def login(data: LoginData, req : Request, res : Response) -> dict:
     print(f"Received login data: {data.email}, {data.password}, {data.role}")
     controller = LoginController()
-    result = controller.authLogin(data.email, data.password, data.role)
-    if isinstance(result, Account) and result:
-        session : Session = controller.getCurrentSession(req) # Session need to be in check session 
-        if not session:
-            session = controller.createNewSession(result,req,res)
-            
+    try:
+        result = controller.Login(data.email, data.password, data.role, req.client.host)
         res = JSONResponse(
-            content={   "success" : True,
-                "session_id" : session.session_id,
-                "user_id" : session.user_id,
+            content={  "success" : True,
+                "session_id" : result.session_id,
+                "user_id" : result.user_id,
+                "role_id" : result.role_id,
                 "message" : "Login Successful"
             }
         )
         res.set_cookie(
-            key="session_token",
-            value=session.session_id,
+            key="token",
+            value=result.session_id,
             httponly=True,
             samesite="lax",
             secure=False #test only
-        )   
-    else:
+        )
+        return res
+    except Exception:   
         res = JSONResponse(
             content={"error" : "Invalid email/username or password"}
         )
