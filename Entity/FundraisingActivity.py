@@ -123,6 +123,7 @@ class FundraisingActivity():
             "goal_amount":  "goal_amount",
             "start_date":   "start_date",
             "end_date":     "end_date",
+            "status":       "status",
         }
         set_parts = ["updated_at = NOW()"]
         values = []

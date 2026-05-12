@@ -38,6 +38,7 @@ document.getElementById('fra-back-link').href  = backHref;
 document.getElementById('fra-close-btn').href  = backHref;
 let activityData = null;
 let categories   = [];
+let editStatus   = null;
 
 async function loadActivity() {
     if (!activityId) { window.location.href = 'fundraiser_dashboard.html'; return; }
@@ -112,6 +113,10 @@ function enterEditMode() {
         sel.appendChild(opt);
     });
 
+    // Initialise editable status
+    editStatus = a.status;
+    updateStatusBadge(editStatus, true);
+
     // Toggle elements
     document.querySelectorAll('.fra-view').forEach(el => el.classList.add('hidden'));
     document.querySelectorAll('.fra-edit').forEach(el => el.classList.remove('hidden'));
@@ -122,11 +127,37 @@ function exitEditMode() {
     document.querySelectorAll('.fra-edit').forEach(el => el.classList.add('hidden'));
     document.querySelectorAll('.fra-view').forEach(el => el.classList.remove('hidden'));
     document.querySelector('.hub-nav-title').textContent = 'View Fund Raising Activity';
+    editStatus = null;
+    updateStatusBadge(activityData.status, false);
+}
+
+function updateStatusBadge(status, editable) {
+    const isActive = status === 1;
+    const dot   = document.getElementById('fra-status-dot');
+    const text  = document.getElementById('fra-status-text');
+    const badge = document.getElementById('fra-status-badge');
+
+    dot.style.background  = isActive ? '#22c55e' : '#ef4444';
+    text.textContent      = isActive ? 'Active' : 'Inactive';
+    badge.style.cursor    = editable ? 'pointer' : 'default';
+    badge.style.opacity   = editable ? '0.9' : '1';
+    badge.title           = editable ? 'Click to toggle status' : '';
+    // Update badge colours to match status
+    badge.style.background   = isActive ? '#dcfce7' : '#fee2e2';
+    badge.style.border       = isActive ? '1.5px solid #bbf7d0' : '1.5px solid #fecaca';
+    badge.style.color        = isActive ? '#166534' : '#991b1b';
 }
 
 // ── Modals ────────────────────────────────────────────────────────────────────
 const saveModal   = new bootstrap.Modal(document.getElementById('saveModal'));
 const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+
+// Status badge toggle (only active in edit mode)
+document.getElementById('fra-status-badge').addEventListener('click', () => {
+    if (editStatus === null) return; // not in edit mode
+    editStatus = editStatus === 1 ? 0 : 1;
+    updateStatusBadge(editStatus, true);
+});
 
 // Edit button
 document.getElementById('fra-edit-btn').addEventListener('click', enterEditMode);
@@ -154,6 +185,7 @@ document.getElementById('save-confirm-btn').addEventListener('click', async () =
         goal_amount:  Number(document.getElementById('edit-goal').value)        || undefined,
         start_date:   document.getElementById('edit-start').value               || undefined,
         end_date:     document.getElementById('edit-end').value                 || undefined,
+        status:       editStatus ?? undefined,
     };
     // Remove undefined keys
     Object.keys(payload).forEach(k => payload[k] === undefined && delete payload[k]);

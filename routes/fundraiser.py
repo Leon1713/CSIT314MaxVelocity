@@ -31,6 +31,7 @@ class UpdateFRAInput(BaseModel):
     goal_amount: Optional[float] = None
     start_date: Optional[str] = None
     end_date: Optional[str] = None
+    status: Optional[int] = None
 
 router = APIRouter(
     prefix="/fundraiser",
