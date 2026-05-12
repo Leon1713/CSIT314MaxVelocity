@@ -57,11 +57,11 @@ async function loadActivity() {
         document.getElementById('fra-start').textContent        = formatDate(a.start_date);
         document.getElementById('fra-end').textContent          = formatDate(a.end_date);
 
-        const statusKey = a.status?.toLowerCase();
+        const statusKey = typeof a.status === 'number'
+            ? (a.status === 1 ? 'active' : 'inactive')
+            : String(a.status ?? '').toLowerCase();
         const color = STATUS_COLORS[statusKey] || '#aaa';
-        const label = a.status
-            ? a.status.charAt(0).toUpperCase() + a.status.slice(1)
-            : '—';
+        const label = statusKey.charAt(0).toUpperCase() + statusKey.slice(1) || '—';
         document.getElementById('fra-status-dot').style.background = color;
         document.getElementById('fra-status-text').textContent     = label;
 

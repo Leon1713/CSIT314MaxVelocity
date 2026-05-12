@@ -6,6 +6,7 @@ from Controller.CreateFRAController import CreateFRAController
 from Controller.GetFRACategoriesController import GetFRACategoriesController
 from Controller.GetFRADetailsController import GetFRADetailsController
 from Controller.DeleteFRAController import DeleteFRAController
+from Controller.GetAllFRAController import GetAllFRAController
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -31,7 +32,7 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
     controller = GetFundraiserStatsController()
     try:
         stats = controller.getStats(user.user_id)
-        recent = controller.getRecentActivities(user.user_id)
+        recent = controller.getRecentActivities(user.user_id, limit=3)
         return {
             "username": user.username,
             "stats": {
@@ -56,6 +57,30 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve fundraiser data"
         )
+
+
+@router.get("/activities")
+def get_all_activities(user: "Account" = Depends(require_permission("can_access_fr_dashboard"))):
+    controller = GetAllFRAController()
+    try:
+        activities = controller.getAllActivities(user.user_id)
+        return {
+            "username": user.username,
+            "activities": [
+                {
+                    "id":             act["id"],
+                    "title":          act["description"],
+                    "category_name":  act.get("category_name") or "—",
+                    "current_amount": float(act["current_amount"] or 0),
+                    "goal_amount":    float(act["goal_amount"] or 0),
+                    "status":         act["status"],
+                    "end_date":       str(act["end_date"]) if act["end_date"] else None,
+                }
+                for act in (activities or [])
+            ]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 @router.get("/activity/{activity_id}")

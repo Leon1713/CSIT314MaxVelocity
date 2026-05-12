@@ -114,6 +114,23 @@ class FundraisingActivity():
             db_cursor.close()
 
     @staticmethod
+    def getAllByFundraiserId(fundraiser_id: int, conn) -> list:
+        db_cursor = conn.cursor(dictionary=True)
+        try:
+            db_cursor.execute("""
+                SELECT fa.id, fa.description, fa.service_type, fa.status,
+                       fa.current_amount, fa.goal_amount, fa.end_date, fa.created_at,
+                       fc.category_name
+                FROM fundraising_activities fa
+                LEFT JOIN fra_categories fc ON fa.category_id = fc.id
+                WHERE fa.fundraiser_id = %s
+                ORDER BY fa.created_at DESC
+            """, (fundraiser_id,))
+            return db_cursor.fetchall()
+        finally:
+            db_cursor.close()
+
+    @staticmethod
     def getRecentByFundraiserId(fundraiser_id: int, conn, limit: int = 5, ) -> list:
         db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
