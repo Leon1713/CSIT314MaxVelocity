@@ -38,9 +38,9 @@ class Account:
         }
 
     @staticmethod
-    def findUsersByEmailOrUsername(email_or_username: str, role_input: str):
+    def findUsersByEmailOrUsername(email_or_username: str, role_input: str, conn):
         try:
-            db_conn = get_db_connection()
+            db_conn = conn
             db_cursor = db_conn.cursor(dictionary=True)
             # Check if the role exists, will raise an error if it doesn't
             # roleId = Account.getRoleId(role_input)
@@ -63,12 +63,11 @@ class Account:
             raise
         finally:
             db_cursor.close()
-            db_conn.close()
 
     @staticmethod
-    def getRoleId(role_name: str) -> int:
+    def getRoleId(role_name: str, conn) -> int:
         try:
-            db_conn = get_db_connection()
+            db_conn = conn
             db_cursor = db_conn.cursor(dictionary=True)
             db_cursor.execute(
                 "SELECT role_id FROM user_roles WHERE role_name = %s", (role_name,))
@@ -82,12 +81,11 @@ class Account:
             raise
         finally:
             db_cursor.close()
-            db_conn.close()
         
 
     @staticmethod
-    def insertNewUser(account_data: dict) -> bool:
-        db_conn = get_db_connection()
+    def insertNewUser(account_data: dict, conn) -> bool:
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -115,7 +113,6 @@ class Account:
             return False  # Return False to indicate failure
         finally:
             db_cursor.close()  # Close the cursor to free up resources
-            db_conn.close()
 
     def auth(self, password: str, hasher):
         if hasher.verify(password, self.password_hash):
@@ -124,8 +121,8 @@ class Account:
             return None  # Return None to indicate authentication failure
 
     @staticmethod
-    def authenticate(email: str, password: str, role: str, hasher):
-        users = Account.findUsersByEmailOrUsername(email, role)
+    def authenticate(email: str, password: str, role: str, hasher, conn):
+        users = Account.findUsersByEmailOrUsername(email, role, conn)
         if users and users.__len__() != 0 and (authenticated_user := users[0].auth(password, hasher)):
             authenticated_user.SetLastLogin()
             return authenticated_user
@@ -133,8 +130,8 @@ class Account:
             raise Exception("Authentication Failure")
 
     @staticmethod
-    def getUsersById(id: str):
-        db_conn = get_db_connection()
+    def getUsersById(id: str, conn):
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute(
@@ -146,11 +143,10 @@ class Account:
             raise Exception("User account with id = %s is not found", (id,))
         finally:
             db_cursor.close()
-            db_conn.close()
 
     @staticmethod
-    def getAllUsers():
-        db_conn = get_db_connection()
+    def getAllUsers(conn):
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""SELECT * FROM user_accounts""")
@@ -161,10 +157,9 @@ class Account:
             return None
         finally:
             db_cursor.close()
-            db_conn.close()
 
-    def update(self) -> bool:
-        db_conn = get_db_connection()
+    def update(self, conn) -> bool:
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -192,11 +187,10 @@ class Account:
                 "Error updating Account with id = %s", (self.user_id,))
         finally:
             db_cursor.close()
-            db_conn.close()
 
     @staticmethod
-    def suspend(user_id: int):
-        db_conn = get_db_connection()
+    def suspend(user_id: int, conn):
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""UPDATE user_accounts
@@ -209,10 +203,8 @@ class Account:
                 "Error Suspending Account with id = %s", (user_id,))
         finally:
             db_cursor.close()
-            db_conn.close()
-
-    def SetLastLogin(self: "Account"):
-        db_conn = get_db_connection()
+    def SetLastLogin(self: "Account", conn):
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute(
@@ -221,4 +213,3 @@ class Account:
             raise
         finally:
             db_cursor.close()
-            db_conn.close()

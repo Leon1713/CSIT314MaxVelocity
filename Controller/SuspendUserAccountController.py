@@ -8,7 +8,7 @@ class SuspendUserAccountController:
         db_con = get_db_connection()
         try:
             Account.suspend(user_id, db_con)
-            Session.deactivate(Session.findSessionByUserId(user_id).session_id)
+            Session.deactivate(Session.findSessionByUserId(user_id, db_con).session_id, db_con)
             return True
         except Exception:
             raise
