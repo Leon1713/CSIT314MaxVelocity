@@ -83,10 +83,10 @@ function renderList(activities) {
         `;
 
         card.querySelector('.manage-btn-view').onclick = () => {
-            window.location.href = `view_FRA.html?id=${act.id}`;
+            window.location.href = `view_FRA.html?id=${act.id}&from=manage`;
         };
         card.querySelector('.manage-btn-edit').onclick = () => {
-            window.location.href = `edit_FRA.html?id=${act.id}`;
+            window.location.href = `view_FRA.html?id=${act.id}&edit=true`;
         };
         card.querySelector('.manage-btn-delete').onclick = () => {
             pendingDeleteId = act.id;

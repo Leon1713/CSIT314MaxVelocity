@@ -114,6 +114,37 @@ class FundraisingActivity():
             db_cursor.close()
 
     @staticmethod
+    def updateById(activity_id: int, fundraiser_id: int, data: dict, conn) -> bool:
+        db_cursor = conn.cursor(dictionary=True)
+        field_map = {
+            "title":        "description",
+            "service_type": "service_type",
+            "category_id":  "category_id",
+            "goal_amount":  "goal_amount",
+            "start_date":   "start_date",
+            "end_date":     "end_date",
+        }
+        set_parts = ["updated_at = NOW()"]
+        values = []
+        for key, col in field_map.items():
+            if key in data and data[key] is not None:
+                set_parts.append(f"{col} = %s")
+                values.append(data[key])
+        values.extend([activity_id, fundraiser_id])
+        try:
+            db_cursor.execute(
+                f"UPDATE fundraising_activities SET {', '.join(set_parts)} WHERE id = %s AND fundraiser_id = %s",
+                values
+            )
+            conn.commit()
+            return db_cursor.rowcount > 0
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            db_cursor.close()
+
+    @staticmethod
     def getAllByFundraiserId(fundraiser_id: int, conn) -> list:
         db_cursor = conn.cursor(dictionary=True)
         try:

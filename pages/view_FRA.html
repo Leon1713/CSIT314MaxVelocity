@@ -53,15 +53,20 @@
 
         <main class="fr-create-main">
 
-            <a href="fundraiser_dashboard.html" class="fr-back-link">
+            <a href="fundraiser_dashboard.html" class="fr-back-link" id="fra-back-link">
                 <i class="bi bi-arrow-left-circle"></i> Back
             </a>
 
             <!-- Title banner -->
             <div class="fra-banner">
-                <span class="fra-banner-title" id="fra-title">—</span>
-                <span class="fra-banner-service" id="fra-banner-service">—</span>
-                <span class="fra-banner-category" id="fra-category">—</span>
+                <span class="fra-banner-title fra-view" id="fra-title">—</span>
+                <span class="fra-banner-service fra-view" id="fra-banner-service">—</span>
+                <span class="fra-banner-category fra-view" id="fra-category">—</span>
+                <input type="text" class="fra-edit-banner-input fra-edit hidden" id="edit-title" placeholder="Campaign title" />
+                <input type="text" class="fra-edit-banner-input fra-edit-service-input fra-edit hidden" id="edit-service" placeholder="Service type" />
+                <select class="fra-edit-banner-select fra-edit hidden" id="edit-category">
+                    <option value="" disabled>Loading categories…</option>
+                </select>
             </div>
 
             <!-- Raised / Goal / Days Left -->
@@ -71,7 +76,8 @@
                     <span class="fra-stat-label">Raised</span>
                 </div>
                 <div class="fra-stat-card">
-                    <span class="fra-stat-value" id="fra-goal">—</span>
+                    <span class="fra-stat-value fra-view" id="fra-goal">—</span>
+                    <input type="number" class="fra-edit-stat-input fra-edit hidden" id="edit-goal" min="0" placeholder="0" />
                     <span class="fra-stat-label">Goal</span>
                 </div>
                 <div class="fra-stat-card">
@@ -84,7 +90,8 @@
             <div class="fra-desc-card">
                 <div class="fra-desc-body">
                     <span class="fra-desc-label">Description</span>
-                    <p class="fra-desc-text" id="fra-service-type">—</p>
+                    <p class="fra-desc-text fra-view" id="fra-service-type">—</p>
+                    <textarea class="fra-edit-desc-textarea fra-edit hidden" id="edit-service-desc" rows="3" placeholder="Service type / description"></textarea>
                 </div>
                 <div class="fra-status-badge" id="fra-status-badge">
                     <span class="fra-status-dot" id="fra-status-dot"></span>
@@ -96,19 +103,23 @@
             <div class="fr-form-row">
                 <div class="fra-date-card">
                     <span class="fra-date-label">Start Date</span>
-                    <span class="fra-date-value" id="fra-start">—</span>
+                    <span class="fra-date-value fra-view" id="fra-start">—</span>
+                    <input type="date" class="fra-edit-date-input fra-edit hidden" id="edit-start" />
                 </div>
                 <div class="fra-date-card">
                     <span class="fra-date-label">End Date</span>
-                    <span class="fra-date-value" id="fra-end">—</span>
+                    <span class="fra-date-value fra-view" id="fra-end">—</span>
+                    <input type="date" class="fra-edit-date-input fra-edit hidden" id="edit-end" />
                 </div>
             </div>
 
             <!-- Actions -->
             <div class="fr-form-actions">
-                <a href="fundraiser_dashboard.html" class="fr-cancel-btn">Close</a>
-                <button class="fra-delete-btn" id="fra-delete-btn">Delete</button>
-                <button class="fr-submit-btn" id="fra-edit-btn">Edit</button>
+                <a href="fundraiser_dashboard.html" class="fr-cancel-btn fra-view" id="fra-close-btn">Close</a>
+                <button class="fr-cancel-btn fra-edit hidden" id="fra-cancel-edit-btn">Cancel</button>
+                <button class="fra-delete-btn fra-view" id="fra-delete-btn">Delete</button>
+                <button class="fr-submit-btn fra-view" id="fra-edit-btn">Edit</button>
+                <button class="fr-submit-btn fra-edit hidden" id="fra-save-btn">Save Changes</button>
             </div>
 
         </main>
@@ -134,6 +145,25 @@
             </div>
 
         </footer>
+
+        <!-- Save confirmation modal -->
+        <div class="modal fade" id="saveModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content fra-delete-modal">
+                    <div class="modal-header fra-delete-modal-header border-0">
+                        <i class="bi bi-floppy-fill fra-save-modal-icon"></i>
+                        <h5 class="modal-title fra-delete-modal-title">Save Changes</h5>
+                    </div>
+                    <div class="modal-body fra-delete-modal-body">
+                        <p class="fra-save-modal-msg">Save changes to this activity?</p>
+                    </div>
+                    <div class="modal-footer fra-delete-modal-footer border-0">
+                        <button type="button" class="fr-cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="fr-submit-btn" id="save-confirm-btn">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Delete confirmation modal -->
         <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
