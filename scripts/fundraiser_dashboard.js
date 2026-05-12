@@ -40,10 +40,11 @@ function renderActivities(activities) {
             list.appendChild(divider);
         }
 
-        const color  = STATUS_COLORS[act.status?.toLowerCase()] || '#aaa';
-        const status = act.status
-            ? act.status.charAt(0).toUpperCase() + act.status.slice(1)
-            : '—';
+        const statusStr = typeof act.status === 'number'
+            ? (act.status === 1 ? 'active' : 'inactive')
+            : String(act.status ?? '').toLowerCase();
+        const color  = STATUS_COLORS[statusStr] || '#aaa';
+        const status = statusStr.charAt(0).toUpperCase() + statusStr.slice(1) || '—';
 
         const item = document.createElement('div');
         item.className = 'fr-activity-item';
@@ -95,6 +96,10 @@ loadDashboard();
 // ── Overview button navigation ────────────────────────────────────────────────
 document.getElementById('btn-create-activity').addEventListener('click', () => {
     window.location.href = 'create_FRA.html';
+});
+
+document.getElementById('btn-manage-activities').addEventListener('click', () => {
+    window.location.href = 'manage_FRA.html';
 });
 
 // ── Gear dropdown ──────────────────────────────────────────────────────────────

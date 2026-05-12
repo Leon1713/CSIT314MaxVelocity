@@ -6,11 +6,15 @@ from Controller.CreateFRAController import CreateFRAController
 from Controller.GetFRACategoriesController import GetFRACategoriesController
 from Controller.GetFRADetailsController import GetFRADetailsController
 from Controller.DeleteFRAController import DeleteFRAController
+from Controller.GetAllFRAController import GetAllFRAController
+from Controller.UpdateFRAController import UpdateFRAController
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from Entity.Account import Account
 
+
+from typing import Optional
 
 class CreateFRAInput(BaseModel):
     title: str
@@ -19,6 +23,15 @@ class CreateFRAInput(BaseModel):
     goal_amount: float
     start_date: str
     end_date: str
+
+class UpdateFRAInput(BaseModel):
+    title: Optional[str] = None
+    service_type: Optional[str] = None
+    category_id: Optional[int] = None
+    goal_amount: Optional[float] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    status: Optional[int] = None
 
 router = APIRouter(
     prefix="/fundraiser",
@@ -31,7 +44,7 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
     controller = GetFundraiserStatsController()
     try:
         stats = controller.getStats(user.user_id)
-        recent = controller.getRecentActivities(user.user_id)
+        recent = controller.getRecentActivities(user.user_id, limit=3)
         return {
             "username": user.username,
             "stats": {
@@ -58,6 +71,30 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
         )
 
 
+@router.get("/activities")
+def get_all_activities(user: "Account" = Depends(require_permission("can_access_fr_dashboard"))):
+    controller = GetAllFRAController()
+    try:
+        activities = controller.getAllActivities(user.user_id)
+        return {
+            "username": user.username,
+            "activities": [
+                {
+                    "id":             act["id"],
+                    "title":          act["description"],
+                    "category_name":  act.get("category_name") or "—",
+                    "current_amount": float(act["current_amount"] or 0),
+                    "goal_amount":    float(act["goal_amount"] or 0),
+                    "status":         act["status"],
+                    "end_date":       str(act["end_date"]) if act["end_date"] else None,
+                }
+                for act in (activities or [])
+            ]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
 @router.get("/activity/{activity_id}")
 def get_activity_details(
     activity_id: int,
@@ -71,6 +108,7 @@ def get_activity_details(
         return {
             "id":            activity["id"],
             "title":         activity["description"],
+            "category_id":   activity.get("category_id"),
             "category_name": activity.get("category_name") or "—",
             "service_type":  activity.get("service_type") or "—",
             "current_amount": float(activity["current_amount"] or 0),
@@ -79,6 +117,26 @@ def get_activity_details(
             "start_date":     str(activity["start_date"]) if activity["start_date"] else None,
             "end_date":       str(activity["end_date"]) if activity["end_date"] else None,
         }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
+@router.patch("/activity/{activity_id}")
+def update_activity(
+    activity_id: int,
+    data: UpdateFRAInput,
+    user: "Account" = Depends(require_permission("can_manage_fr"))
+):
+    controller = UpdateFRAController()
+    try:
+        success = controller.updateActivity(
+            activity_id, user.user_id, data.model_dump(exclude_none=True)
+        )
+        if not success:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found")
+        return {"success": True}
     except HTTPException:
         raise
     except Exception as e:
