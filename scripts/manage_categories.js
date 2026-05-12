@@ -2,6 +2,12 @@ let allCategories = [];
 let pendingDeleteId = null;
 let editingId = null;
 
+function showSuccess(msg) {
+    document.getElementById('cat-toast-msg').textContent = msg;
+    const toast = new bootstrap.Toast(document.getElementById('cat-success-toast'), { delay: 3000 });
+    toast.show();
+}
+
 const viewModal   = new bootstrap.Modal(document.getElementById('viewModal'));
 const editModal   = new bootstrap.Modal(document.getElementById('editModal'));
 const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
@@ -149,6 +155,7 @@ document.getElementById('edit-save-btn').addEventListener('click', async () => {
         if (!res.ok) { const e = await res.json(); errEl.textContent = e.detail || 'Failed.'; errEl.classList.remove('hidden'); return; }
         editModal.hide();
         loadCategories();
+        showSuccess(editingId ? 'Category updated successfully.' : 'Category created successfully.');
     } catch { errEl.textContent = 'Could not connect.'; errEl.classList.remove('hidden'); }
 });
 
