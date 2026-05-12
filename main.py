@@ -8,6 +8,7 @@ from routes.getSession import router as router_me
 from routes.admin import router as router_admin
 from routes.logout import router as router_logout
 from routes.fundraiser import router as router_fundraiser
+from routes.donee import router as router_donee
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     from Dependencies.CleanUpSession import SessionCleanUp
@@ -32,6 +33,7 @@ app.add_middleware(
 app.include_router(router_reg)
 app.include_router(router_login)
 app.include_router(router_me)
+app.include_router(router_donee)
 app.include_router(router_admin)
 app.include_router(router_logout)
 app.include_router(router_fundraiser)
