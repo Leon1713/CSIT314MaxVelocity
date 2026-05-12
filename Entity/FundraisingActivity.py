@@ -35,8 +35,8 @@ class FundraisingActivity():
         }
 
     @staticmethod
-    def getStatsByFundraiserId(fundraiser_id: int) -> dict:
-        db_conn = get_db_connection()
+    def getStatsByFundraiserId(fundraiser_id: int, conn) -> dict:
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -54,7 +54,6 @@ class FundraisingActivity():
             print(e)
         finally:
             db_cursor.close()
-            db_conn.close()
 
     @staticmethod
     def create(data: dict, conn) -> bool:

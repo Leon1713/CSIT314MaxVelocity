@@ -14,7 +14,7 @@ class Session:
         self.ip_address = ip_address
         self.is_active = is_active
     @staticmethod
-    def create(user_id_, ip_address, secondsToExpire = 5*60, conn) -> "Session":
+    def create(user_id_, ip_address, conn, secondsToExpire = 5*60) -> "Session":
         db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         
@@ -70,7 +70,7 @@ class Session:
     
     @staticmethod
     def createNewSession(account : Account, req : Request, conn) -> "Session":
-        session = Session.create(account.user_id, req.client.host, conn)
+        session = Session.create(account.user_id, req.client.host,conn)
         return session
     @staticmethod
     def getCurrentSession(request: Request, conn) -> "Session":
@@ -94,7 +94,7 @@ class Session:
             db_conn.rollback()
             raise Exception("Failed to deactivate session")
         finally:
-            db_conn.close()
+            db_cursor.close()
 
     @staticmethod
     def cleanUpExpiredSessions(conn):

@@ -3,7 +3,7 @@ from db import get_db_connection
 class LogoutController:
     def __init__(self):
         pass
-    def logout(self, session_id : int) -> bool:
+    def logout(self, session_id : str) -> bool:
         with get_db_connection() as conn:
             try:
                 return Session.deactivate(session_id, conn)
