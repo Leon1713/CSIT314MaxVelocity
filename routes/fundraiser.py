@@ -44,7 +44,7 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
     controller = GetFundraiserStatsController()
     try:
         stats = controller.getStats(user.user_id)
-        recent = controller.getRecentActivities(user.user_id, limit=3)
+        recent = controller.getRecentActivities(user.user_id, limit=5)
         return {
             "username": user.username,
             "stats": {

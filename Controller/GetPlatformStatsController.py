@@ -10,7 +10,7 @@ class GetPlatformStatsController:
             except Exception:
                 raise
 
-    def getRecentActivity(self, limit: int = 6) -> list:
+    def getRecentActivity(self, limit: int = 5) -> list:
         with get_db_connection() as conn:
             try:
                 return PlatformStats.getRecentCategoryActivity(conn, limit)
