@@ -18,6 +18,21 @@ class FRACategory:
         }
 
     @staticmethod
+    def getById(category_id: int, conn):
+        db_cursor = conn.cursor(dictionary=True)
+        try:
+            db_cursor.execute("""
+                SELECT fc.*, COUNT(fa.id) AS campaign_count
+                FROM fra_categories fc
+                LEFT JOIN fundraising_activities fa ON fc.id = fa.category_id
+                WHERE fc.id = %s
+                GROUP BY fc.id
+            """, (category_id,))
+            return db_cursor.fetchone()
+        finally:
+            db_cursor.close()
+
+    @staticmethod
     def getAllWithCampaignCount(conn) -> list:
         db_cursor = conn.cursor(dictionary=True)
         try:

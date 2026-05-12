@@ -45,7 +45,11 @@ function renderActivity(items) {
 
         const meta = activityMeta(act);
         const item = document.createElement('div');
-        item.className = 'platform-activity-item';
+        item.className = 'platform-activity-item platform-activity-item--clickable';
+        item.style.cursor = 'pointer';
+        item.addEventListener('click', () => {
+            window.location.href = `view_category.html?id=${act.id}`;
+        });
         item.innerHTML = `
             <div class="platform-activity-icon" style="background:${meta.color}20;color:${meta.color};">
                 <i class="bi bi-tag-fill"></i>

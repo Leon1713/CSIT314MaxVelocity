@@ -4,6 +4,7 @@ from typing import Optional
 from Dependencies.Auth import require_permission
 from Controller.GetPlatformStatsController import GetPlatformStatsController
 from Controller.ManageCategoriesController import ManageCategoriesController
+from Controller.GetCategoryDetailsController import GetCategoryDetailsController
 
 
 class CreateCategoryInput(BaseModel):
@@ -45,6 +46,7 @@ def get_platform_stats(
             },
             "recent_activity": [
                 {
+                    "id":            act["id"],
                     "category_name": act["category_name"],
                     "is_active":     bool(act["is_active"]),
                     "created_at":    str(act["created_at"])  if act["created_at"]  else None,
@@ -53,6 +55,31 @@ def get_platform_stats(
                 for act in (recent or [])
             ]
         }
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
+@router.get("/categories/{category_id}")
+def get_category(
+    category_id: int,
+    _=Depends(require_permission("can_manage_fra_category"))
+):
+    ctrl = GetCategoryDetailsController()
+    try:
+        cat = ctrl.getCategory(category_id)
+        if not cat:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not found")
+        return {
+            "id":                   cat["id"],
+            "category_name":        cat["category_name"],
+            "category_description": cat.get("category_description") or "",
+            "is_active":            bool(cat["is_active"]),
+            "campaign_count":       int(cat["campaign_count"] or 0),
+            "created_at":           str(cat["created_at"])  if cat["created_at"]  else None,
+            "updated_at":           str(cat["updated_at"])  if cat["updated_at"]  else None,
+        }
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 

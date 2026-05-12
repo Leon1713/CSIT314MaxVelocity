@@ -48,7 +48,7 @@ function renderTable(cats) {
             </td>
         `;
 
-        tr.querySelector('.manage-btn-view').onclick   = () => openView(c);
+        tr.querySelector('.manage-btn-view').onclick   = () => { window.location.href = `view_category.html?id=${c.id}`; };
         tr.querySelector('.manage-btn-edit').onclick   = () => openEdit(c);
         tr.querySelector('.manage-btn-delete').onclick = () => openDelete(c);
 

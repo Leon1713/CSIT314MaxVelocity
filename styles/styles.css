@@ -529,6 +529,15 @@ body.platform-page {
   flex-shrink: 0;
 }
 
+.platform-activity-item--clickable {
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.platform-activity-item--clickable:hover {
+  background: #fdf3f3;
+}
+
 .platform-activity-divider {
   height: 1px;
   background: #f5eaea;
@@ -896,6 +905,11 @@ body.fr-dashboard-page {
   font-size: 1rem;
   font-weight: 700;
   color: var(--fundly-text);
+}
+
+/* Date values in fra-stat-card (view_category) */
+.cat-stat-date {
+  font-size: 1.1rem !important;
 }
 
 /* ── Edit mode inputs ── */

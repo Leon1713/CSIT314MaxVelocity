@@ -1,9 +1,9 @@
 const STATUS_COLORS = {
     active:    '#22c55e',
+    inactive:  '#f97316',
     pending:   '#f97316',
     completed: '#f59e0b',
     cancelled: '#ef4444',
-    inactive:  '#f97316',
 };
 
 function formatCurrency(amount) {
@@ -19,7 +19,7 @@ function formatDate(dateStr) {
 
 function toInputDate(dateStr) {
     if (!dateStr) return '';
-    return dateStr.split('T')[0].split(' ')[0]; // ensure YYYY-MM-DD
+    return dateStr.split('T')[0].split(' ')[0];
 }
 
 function daysLeft(endDateStr) {
@@ -28,44 +28,17 @@ function daysLeft(endDateStr) {
     return diff > 0 ? diff : 0;
 }
 
-// ── Load activity details ──────────────────────────────────────────────────────
+// ── Routing ───────────────────────────────────────────────────────────────────
 const params     = new URLSearchParams(window.location.search);
 const activityId = params.get('id');
-const fromManage = params.get('edit') === 'true' || params.get('from') === 'manage';
+const fromManage = params.get('from') === 'manage';
 const backHref   = fromManage ? 'manage_FRA.html' : 'fundraiser_dashboard.html';
 
-document.getElementById('fra-back-link').href  = backHref;
-document.getElementById('fra-close-btn').href  = backHref;
+document.getElementById('fra-back-link').href = backHref;
+document.getElementById('fra-close-btn').href = backHref;
+
+// ── Render view ───────────────────────────────────────────────────────────────
 let activityData = null;
-let categories   = [];
-let editStatus   = null;
-
-async function loadActivity() {
-    if (!activityId) { window.location.href = 'fundraiser_dashboard.html'; return; }
-
-    try {
-        const [actRes, catRes] = await Promise.all([
-            fetch(`http://127.0.0.1:8000/fundraiser/activity/${activityId}`, { credentials: 'include' }),
-            fetch('http://127.0.0.1:8000/fundraiser/categories',             { credentials: 'include' })
-        ]);
-
-        if (actRes.status === 401 || actRes.status === 403) { window.location.href = 'login.html'; return; }
-        if (actRes.status === 404) { window.location.href = 'fundraiser_dashboard.html'; return; }
-        if (!actRes.ok) throw new Error('Failed to load activity');
-
-        activityData = await actRes.json();
-        if (catRes.ok) {
-            const catData = await catRes.json();
-            categories = catData.categories || [];
-        }
-
-        renderView(activityData);
-        if (fromManage) enterEditMode();
-
-    } catch (err) {
-        console.error('Failed to load activity:', err);
-    }
-}
 
 function renderView(a) {
     document.getElementById('fra-title').textContent          = a.title;
@@ -90,132 +63,99 @@ function renderView(a) {
     document.getElementById('dropdown-role').textContent     = 'Fundraiser';
 }
 
-// ── Edit mode toggle ──────────────────────────────────────────────────────────
-function enterEditMode() {
-    const a = activityData;
-
-    // Populate inputs with current values
-    document.getElementById('edit-title').value        = a.title        || '';
-    document.getElementById('edit-service').value      = a.service_type || '';
-    document.getElementById('edit-goal').value         = a.goal_amount  || '';
-    document.getElementById('edit-service-desc').value = a.service_type || '';
-    document.getElementById('edit-start').value        = toInputDate(a.start_date);
-    document.getElementById('edit-end').value          = toInputDate(a.end_date);
-
-    // Populate category dropdown
-    const sel = document.getElementById('edit-category');
-    sel.innerHTML = '<option value="" disabled>Select category</option>';
-    categories.forEach(cat => {
-        const opt = document.createElement('option');
-        opt.value = cat.id;
-        opt.textContent = cat.category_name;
-        if (cat.id === a.category_id) opt.selected = true;
-        sel.appendChild(opt);
-    });
-
-    // Initialise editable status
-    editStatus = a.status;
-    updateStatusBadge(editStatus, true);
-
-    // Toggle elements
-    document.querySelectorAll('.fra-view').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.fra-edit').forEach(el => el.classList.remove('hidden'));
-    document.querySelector('.hub-nav-title').textContent = 'Edit Fund Raising Activity';
+async function loadActivity() {
+    if (!activityId) { window.location.href = 'fundraiser_dashboard.html'; return; }
+    try {
+        const res = await fetch(`http://127.0.0.1:8000/fundraiser/activity/${activityId}`, {
+            credentials: 'include'
+        });
+        if (res.status === 401 || res.status === 403) { window.location.href = 'login.html'; return; }
+        if (res.status === 404) { window.location.href = 'fundraiser_dashboard.html'; return; }
+        if (!res.ok) throw new Error();
+        activityData = await res.json();
+        renderView(activityData);
+    } catch (err) {
+        console.error('Failed to load activity:', err);
+    }
 }
 
-function exitEditMode() {
-    document.querySelectorAll('.fra-edit').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.fra-view').forEach(el => el.classList.remove('hidden'));
-    document.querySelector('.hub-nav-title').textContent = 'View Fund Raising Activity';
-    editStatus = null;
-    updateStatusBadge(activityData.status, false);
-}
-
-function updateStatusBadge(status, editable) {
-    const isActive = status === 1;
-    const dot   = document.getElementById('fra-status-dot');
-    const text  = document.getElementById('fra-status-text');
-    const badge = document.getElementById('fra-status-badge');
-
-    dot.style.background  = isActive ? '#22c55e' : '#ef4444';
-    text.textContent      = isActive ? 'Active' : 'Inactive';
-    badge.style.cursor    = editable ? 'pointer' : 'default';
-    badge.style.opacity   = editable ? '0.9' : '1';
-    badge.title           = editable ? 'Click to toggle status' : '';
-    // Update badge colours to match status
-    badge.style.background   = isActive ? '#dcfce7' : '#fee2e2';
-    badge.style.border       = isActive ? '1.5px solid #bbf7d0' : '1.5px solid #fecaca';
-    badge.style.color        = isActive ? '#166534' : '#991b1b';
-}
+loadActivity();
 
 // ── Modals ────────────────────────────────────────────────────────────────────
-const saveModal   = new bootstrap.Modal(document.getElementById('saveModal'));
+const editModal   = new bootstrap.Modal(document.getElementById('editModal'));
 const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
 
-// Status badge toggle (only active in edit mode)
-document.getElementById('fra-status-badge').addEventListener('click', () => {
-    if (editStatus === null) return; // not in edit mode
-    editStatus = editStatus === 1 ? 0 : 1;
-    updateStatusBadge(editStatus, true);
+// ── Edit ──────────────────────────────────────────────────────────────────────
+document.getElementById('fra-edit-btn').addEventListener('click', async () => {
+    const a = activityData;
+    if (!a) return;
+
+    // Pre-fill fields
+    document.getElementById('edit-title').value   = a.title || '';
+    document.getElementById('edit-service').value = a.service_type || '';
+    document.getElementById('edit-goal').value    = a.goal_amount || '';
+    document.getElementById('edit-start').value   = toInputDate(a.start_date);
+    document.getElementById('edit-end').value     = toInputDate(a.end_date);
+    document.getElementById('edit-status').value  = (a.status === 1 || a.status === true) ? '1' : '0';
+    document.getElementById('edit-error').classList.add('hidden');
+
+    // Load categories into select
+    const sel = document.getElementById('edit-category');
+    sel.innerHTML = '<option value="" disabled>Loading…</option>';
+    try {
+        const res = await fetch('http://127.0.0.1:8000/fundraiser/categories', { credentials: 'include' });
+        if (res.ok) {
+            const data = await res.json();
+            sel.innerHTML = '<option value="" disabled>Select category</option>';
+            (data.categories || []).forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat.id;
+                opt.textContent = cat.category_name;
+                if (cat.id === a.category_id) opt.selected = true;
+                sel.appendChild(opt);
+            });
+        }
+    } catch (_) { sel.innerHTML = '<option value="" disabled>Failed to load</option>'; }
+
+    editModal.show();
 });
 
-// Edit button
-document.getElementById('fra-edit-btn').addEventListener('click', enterEditMode);
-
-// Cancel edit — go back to manage page if we came from there, otherwise stay on view
-document.getElementById('fra-cancel-edit-btn').addEventListener('click', () => {
-    if (fromManage) {
-        window.location.href = 'manage_FRA.html';
-    } else {
-        exitEditMode();
-    }
-});
-
-// Save Changes → show modal
-document.getElementById('fra-save-btn').addEventListener('click', () => saveModal.show());
-
-// Save confirmed → PATCH
-document.getElementById('save-confirm-btn').addEventListener('click', async () => {
-    saveModal.hide();
+document.getElementById('edit-save-btn').addEventListener('click', async () => {
+    const errEl = document.getElementById('edit-error');
+    errEl.classList.add('hidden');
 
     const payload = {
-        title:        document.getElementById('edit-title').value.trim()        || undefined,
-        service_type: document.getElementById('edit-service').value.trim()      || undefined,
-        category_id:  Number(document.getElementById('edit-category').value)    || undefined,
-        goal_amount:  Number(document.getElementById('edit-goal').value)        || undefined,
-        start_date:   document.getElementById('edit-start').value               || undefined,
-        end_date:     document.getElementById('edit-end').value                 || undefined,
-        status:       editStatus ?? undefined,
+        title:        document.getElementById('edit-title').value.trim()   || undefined,
+        service_type: document.getElementById('edit-service').value.trim() || undefined,
+        category_id:  Number(document.getElementById('edit-category').value) || undefined,
+        goal_amount:  Number(document.getElementById('edit-goal').value)   || undefined,
+        start_date:   document.getElementById('edit-start').value          || undefined,
+        end_date:     document.getElementById('edit-end').value            || undefined,
+        status:       Number(document.getElementById('edit-status').value),
     };
-    // Remove undefined keys
     Object.keys(payload).forEach(k => payload[k] === undefined && delete payload[k]);
 
     try {
         const res = await fetch(`http://127.0.0.1:8000/fundraiser/activity/${activityId}`, {
-            method: 'PATCH',
-            credentials: 'include',
+            method: 'PATCH', credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-
         if (!res.ok) {
-            const err = await res.json();
-            alert(err.detail || 'Failed to save changes.');
+            const e = await res.json();
+            errEl.textContent = e.detail || 'Failed to save.';
+            errEl.classList.remove('hidden');
             return;
         }
-
-        // Refresh activity data and return to view mode
-        const updated = await fetch(`http://127.0.0.1:8000/fundraiser/activity/${activityId}`, { credentials: 'include' });
-        activityData = await updated.json();
-        renderView(activityData);
-        exitEditMode();
-
+        editModal.hide();
+        loadActivity(); // refresh displayed values
     } catch (_) {
-        alert('Could not connect to the server.');
+        errEl.textContent = 'Could not connect to the server.';
+        errEl.classList.remove('hidden');
     }
 });
 
-// Delete
+// ── Delete ────────────────────────────────────────────────────────────────────
 document.getElementById('fra-delete-btn').addEventListener('click', () => {
     document.getElementById('delete-modal-msg').textContent =
         `Delete "${activityData?.title}"? This cannot be undone.`;
@@ -229,14 +169,12 @@ document.getElementById('delete-confirm-btn').addEventListener('click', async ()
             method: 'DELETE', credentials: 'include'
         });
         if (del.ok) {
-            window.location.href = 'fundraiser_dashboard.html';
+            window.location.href = backHref;
         } else {
             const err = await del.json();
             alert(err.detail || 'Failed to delete activity.');
         }
-    } catch (_) {
-        alert('Could not connect to the server.');
-    }
+    } catch (_) { alert('Could not connect to the server.'); }
 });
 
 // ── Gear dropdown ─────────────────────────────────────────────────────────────
@@ -249,5 +187,3 @@ document.getElementById('hub-logout-btn').addEventListener('click', async () => 
     try { await fetch('http://127.0.0.1:8000/logout', { method: 'POST', credentials: 'include' }); } catch (_) {}
     window.location.href = 'login.html';
 });
-
-loadActivity();
