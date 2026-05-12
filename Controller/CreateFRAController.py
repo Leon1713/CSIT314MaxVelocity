@@ -3,14 +3,15 @@ from db import get_db_connection
 
 class CreateFRAController:
     def createActivity(self, fundraiser_id: int, title: str, service_type: str,
-                       category_id: int, goal_amount: float,
+                       description: str, category_id: int, goal_amount: float,
                        start_date: str, end_date: str) -> bool:
         with get_db_connection() as conn:
             data = {
                 "fundraiser_id": fundraiser_id,
-                "description":   title,
-                "service_type":  service_type,
                 "category_id":   category_id,
+                "campaign_title":   title,
+                "description" : description,
+                "service_type":  service_type,
                 "goal_amount":   goal_amount,
                 "start_date":    start_date,
                 "end_date":      end_date,

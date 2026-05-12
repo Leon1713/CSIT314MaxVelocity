@@ -16,9 +16,11 @@ class CreateFRAInput(BaseModel):
     title: str
     service_type: str
     category_id: int
+    description: str
     goal_amount: float
     start_date: str
     end_date: str
+
 
 router = APIRouter(
     prefix="/fundraiser",
@@ -43,15 +45,18 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
             "recent_activities": [
                 {
                     "id":          act["id"],
+                    "title":        act["campaign_title"],
                     "description": act["description"],
-                    "category":    act.get("service_type") or "—",
+                    "category":  act["category_name"],
+                    "service-type":    act.get("service_type") or "—",
                     "status":      act["status"],
                     "created_at":  str(act["created_at"]),
                 }
                 for act in (recent or [])
             ]
         }
-    except Exception:
+    except Exception as e:
+        print(e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve fundraiser data"
@@ -61,13 +66,14 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
 @router.get("/activity/{activity_id}")
 def get_activity_details(
     activity_id: int,
-    user: "Account" = Depends(require_permission("can_view_fr"))
+    user: "Account" = Depends(require_permission("can_view_fra"))
 ):
     controller = GetFRADetailsController()
     try:
         activity = controller.getActivity(activity_id, user.user_id)
         if not activity:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found")
         return {
             "id":            activity["id"],
             "title":         activity["description"],
@@ -82,7 +88,8 @@ def get_activity_details(
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 @router.delete("/activity/{activity_id}")
@@ -94,21 +101,24 @@ def delete_activity(
     try:
         deleted = controller.deleteActivity(activity_id, user.user_id)
         if not deleted:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found")
         return {"success": True}
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
-@router.get("/categories") # move to unprotected route
+@router.get("/categories")  # move to unprotected route
 def get_categories():
     controller = GetFRACategoriesController()
     try:
         return {"categories": controller.getCategories()}
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 @router.post("/create_activity")
@@ -122,6 +132,7 @@ def create_activity(
             fundraiser_id=user.user_id,
             title=data.title,
             service_type=data.service_type,
+            description=data.description,
             category_id=data.category_id,
             goal_amount=data.goal_amount,
             start_date=data.start_date,
@@ -133,14 +144,16 @@ def create_activity(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
+
+
 @router.get("/activity")
 def get_activity_list_fr(
-    user : Account = Depends(require_permission("can_view_fra"))
-    ):
+    user: Account = Depends(require_permission("can_view_fra"))
+):
     controller = GetFRADetailsController()
     try:
         return controller.getActivityList(user.user_id)
     except Exception as e:
         print(e)
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="failed to find activities")
-    
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="failed to find activities")

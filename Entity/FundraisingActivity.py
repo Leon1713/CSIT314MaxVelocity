@@ -62,12 +62,13 @@ class FundraisingActivity():
         try:
             db_cursor.execute("""
                 INSERT INTO fundraising_activities
-                    (fundraiser_id, category_id, description, service_type,
+                    (fundraiser_id, category_id,campaign_title, description, service_type,
                      goal_amount, current_amount, status, start_date, end_date)
-                VALUES (%s, %s, %s, %s, %s, 0, 1, NOW(), %s)
+                VALUES (%s, %s, %s, %s, %s,%s, 0, 'active', NOW(), %s)
             """, (
                 data["fundraiser_id"],
                 data["category_id"],
+                data["campaign_title"],
                 data["description"],
                 data["service_type"],
                 data["goal_amount"],
@@ -119,8 +120,9 @@ class FundraisingActivity():
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
-                SELECT id, description, service_type, status, created_at
-                FROM fundraising_activities
+                SELECT fa.id, fa.campaign_title, fa.description,fc.category_name, fa.service_type, fa.status, fa.created_at
+                FROM fundraising_activities fa LEFT JOIN
+                fra_categories fc ON fa.category_id = fc.id
                 WHERE fundraiser_id = %s
                 ORDER BY created_at DESC
                 LIMIT %s
@@ -141,3 +143,17 @@ class FundraisingActivity():
             return db_cursor.fetchall()
         finally:
             db_cursor.close()        
+    @staticmethod
+    def getAllFundRaisingActivities(pages : int, limitPerPage : int, conn):
+        offset = (pages - 1) * limitPerPage
+        db_conn = conn
+        db_cursor = db_conn.cursor(dictionary=True)
+        try:
+            db_cursor.execute("""
+                              SELECT * FROM fundraising_activities
+                              ORDER BY created_at DESC
+                              LIMIT %s OFFSET %s
+                              """,(limitPerPage, offset,))
+        except Exception as e:
+            print(e)
+            raise

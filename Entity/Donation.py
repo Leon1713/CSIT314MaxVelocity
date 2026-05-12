@@ -25,7 +25,7 @@ class Donation:
         try:
             cursor.execute("SELECT * FROM donations WHERE donee_id = %s", (donee_id,))
             rows = cursor.fetchall()
-            return [Donation(**row) for row in rows]
+            return rows
         finally:
             cursor.close()
 

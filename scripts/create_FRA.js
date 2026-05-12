@@ -69,6 +69,7 @@ document.getElementById('fra-submit-btn').addEventListener('click', async () => 
 
     const title       = document.getElementById('fra-title').value.trim();
     const serviceType = document.getElementById('fra-service-type').value.trim();
+    const description = document.getElementById('fra-description').value.trim()
     const goal        = document.getElementById('fra-goal').value.trim();
     const categoryId  = document.getElementById('fra-category').value;
     const start       = document.getElementById('fra-start').value;
@@ -76,6 +77,7 @@ document.getElementById('fra-submit-btn').addEventListener('click', async () => 
 
     if (!title)                   return showError('Campaign title is required.');
     if (!serviceType)             return showError('Service type is required.');
+    if(!description)              return showError('description is required');
     if (!goal || Number(goal) <= 0) return showError('Please enter a valid goal amount.');
     if (!categoryId)              return showError('Please select a category.');
     if (!start)                   return showError('Start date is required.');
@@ -94,6 +96,7 @@ document.getElementById('fra-submit-btn').addEventListener('click', async () => 
             body: JSON.stringify({
                 title,
                 service_type: serviceType,
+                description,
                 category_id: Number(categoryId),
                 goal_amount: Number(goal),
                 start_date: start,

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from Controller.ViewFRAController import ViewFRAController
+from Controller.GetFRADetailsController import GetFRADetailsController
 from Controller.DonationController import DonationController
 from Controller.FavoriteController import FavoriteController
 from Dependencies.Auth import require_permission
@@ -16,15 +16,15 @@ router = APIRouter(prefix="/donee", dependencies=[Depends(require_donee)])
 
 
 # --- FRA ---
-@router.get("/fundraising_activities")
+@router.get("/fundraising_activities", dependencies=[Depends(require_permission("can_view_fra"))])
 def get_fra_list():
-    controller = ViewFRAController()
-    fras = controller.getFRAList()
-    return [fra.to_dict() for fra in fras]
+    controller = GetFRADetailsController()
+    fras = controller.getAllActivities()
+    return fras
 
-@router.get("/fundraising_activities/{fra_id}")
+@router.get("/fundraising_activities/{fra_id}", dependencies=[Depends(require_permission("can_view_fra"))])
 def get_fra(fra_id: int):
-    controller = ViewFRAController()
+    controller = GetFRADetailsController()
     fra = controller.getFRA(fra_id)
     if fra is None:
         raise HTTPException(status_code=404, detail="Fundraising activity not found")
@@ -32,21 +32,19 @@ def get_fra(fra_id: int):
 
 
 # --- Donations ---
-class DonationInput(BaseModel):
-    fra_id: int
-    amount: float
+
 
 @router.get("/donations")
 def get_donations(user=Depends(require_permission("can_manage_donation"))):
     controller = DonationController()
     donations = controller.getDonations(user.user_id)
-    return [d.to_dict() for d in donations]
+    return donations
 
-@router.post("/donations")
-def make_donation(input: DonationInput, user=Depends(require_permission("can_manage_donation"))):
+@router.post("/donations/{fra_id}")
+def make_donation(fra_id, amount, user : Account = Depends(require_permission("can_manage_donation"))):
     controller = DonationController()
     try:
-        controller.makeDonation(user.user_id, input.fra_id, input.amount)
+        controller.makeDonation(user.user_id, fra_id, amount)
         return {"success": True}
     except Exception:
         raise HTTPException(status_code=400, detail="Failed to make donation")
