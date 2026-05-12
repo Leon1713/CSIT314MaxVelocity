@@ -51,7 +51,7 @@ function renderActivities(activities) {
         item.innerHTML = `
             <span class="fr-status-dot" style="background:${color}"></span>
             <div class="fr-activity-info">
-                <span class="fr-activity-name">${act.description || 'Untitled'}</span>
+                <span class="fr-activity-name">${act.title || 'Untitled'}</span>
                 <span class="fr-activity-meta">${act.category || '—'} · ${status}</span>
             </div>
             <span class="fr-activity-date">${formatDate(act.created_at)}</span>

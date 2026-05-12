@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+
 class FundraisingActivity():
     def __init__(self, id, fundraiser_id, category_id, description,
                  service_type, goal_amount, current_amount, status,
@@ -9,8 +11,10 @@ class FundraisingActivity():
         self.category_id = category_id
         self.description = description
         self.service_type = service_type
-        self.goal_amount = float(goal_amount) if goal_amount is not None else 0.0
-        self.current_amount = float(current_amount) if current_amount is not None else 0.0
+        self.goal_amount = float(
+            goal_amount) if goal_amount is not None else 0.0
+        self.current_amount = float(
+            current_amount) if current_amount is not None else 0.0
         self.status = status
         self.start_date = start_date
         self.end_date = end_date
@@ -50,7 +54,7 @@ class FundraisingActivity():
                 WHERE fundraising_activities.fundraiser_id = %s
             """, (fundraiser_id,))
             return db_cursor.fetchone()
-        except Exception  as e:
+        except Exception as e:
             print(e)
         finally:
             db_cursor.close()
@@ -118,7 +122,8 @@ class FundraisingActivity():
     def updateById(activity_id: int, fundraiser_id: int, data: dict, conn) -> bool:
         db_cursor = conn.cursor(dictionary=True)
         field_map = {
-            "title":        "description",
+            "title":        "campaign_title",
+            "description": "description",
             "service_type": "service_type",
             "category_id":  "category_id",
             "goal_amount":  "goal_amount",
@@ -151,7 +156,7 @@ class FundraisingActivity():
         db_cursor = conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
-                SELECT fa.id, fa.description, fa.service_type, fa.status,
+                SELECT fa.id, fa.description, fa.campaign_title, fa.service_type, fa.status,
                        fa.current_amount, fa.goal_amount, fa.end_date, fa.created_at,
                        fc.category_name
                 FROM fundraising_activities fa
@@ -179,8 +184,9 @@ class FundraisingActivity():
             return db_cursor.fetchall()
         finally:
             db_cursor.close()
+
     @staticmethod
-    def getFundRaiserActivitiesByFundRaiserId(user_id : int, conn):
+    def getFundRaiserActivitiesByFundRaiserId(user_id: int, conn):
         db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
@@ -191,9 +197,10 @@ class FundraisingActivity():
             """, (user_id,))
             return db_cursor.fetchall()
         finally:
-            db_cursor.close()        
+            db_cursor.close()
+
     @staticmethod
-    def getAllFundRaisingActivities(pages : int, limitPerPage : int, conn):
+    def getAllFundRaisingActivities(pages: int, limitPerPage: int, conn):
         offset = (pages - 1) * limitPerPage
         db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
@@ -202,7 +209,7 @@ class FundraisingActivity():
                               SELECT * FROM fundraising_activities
                               ORDER BY created_at DESC
                               LIMIT %s OFFSET %s
-                              """,(limitPerPage, offset,))
+                              """, (limitPerPage, offset,))
         except Exception as e:
             print(e)
             raise

@@ -1,6 +1,6 @@
 const STATUS_COLORS = {
-    1: '#22c55e',
-    0: '#f97316',
+    "active": '#22c55e',
+    "inactive": '#f97316',
 };
 
 const STATUS_LABELS = {
@@ -9,9 +9,11 @@ const STATUS_LABELS = {
 };
 
 const BADGE_CLASSES = {
-    1: 'manage-badge-active',
-    0: 'manage-badge-inactive',
+    "active" : 'manage-badge-active',
+    "inactive": 'manage-badge-inactive',
 };
+
+
 
 function formatCurrency(amount) {
     return '$' + Number(amount).toLocaleString();

@@ -68,15 +68,16 @@ async function loadActivity() {
 }
 
 function renderView(a) {
-    document.getElementById('fra-title').textContent          = a.title;
-    document.getElementById('fra-banner-service').textContent = a.service_type;
-    document.getElementById('fra-category').textContent       = a.category_name;
-    document.getElementById('fra-raised').textContent         = formatCurrency(a.current_amount);
-    document.getElementById('fra-goal').textContent           = formatCurrency(a.goal_amount);
-    document.getElementById('fra-days').textContent           = daysLeft(a.end_date);
-    document.getElementById('fra-service-type').textContent   = a.service_type;
-    document.getElementById('fra-start').textContent          = formatDate(a.start_date);
-    document.getElementById('fra-end').textContent            = formatDate(a.end_date);
+    document.getElementById('fra-title').innerText          = a.title;
+    document.getElementById('fra-description').innerText                = a.description;
+    document.getElementById('fra-banner-service').innerText = a.service_type;
+    document.getElementById('fra-category').innerText       = a.category_name;
+    document.getElementById('fra-raised').innerText         = formatCurrency(a.current_amount);
+    document.getElementById('fra-goal').innerText           = formatCurrency(a.goal_amount);
+    document.getElementById('fra-days').innerText           = daysLeft(a.end_date);
+    //document.getElementById('fra-service-type').textContent   = a.service_type;
+    document.getElementById('fra-start').innerText          = formatDate(a.start_date);
+    document.getElementById('fra-end').innerText            = formatDate(a.end_date);
 
     const statusKey = typeof a.status === 'number'
         ? (a.status === 1 ? 'active' : 'inactive')
@@ -132,7 +133,7 @@ function exitEditMode() {
 }
 
 function updateStatusBadge(status, editable) {
-    const isActive = status === 1;
+    const isActive = status === 'active';
     const dot   = document.getElementById('fra-status-dot');
     const text  = document.getElementById('fra-status-text');
     const badge = document.getElementById('fra-status-badge');
@@ -155,7 +156,7 @@ const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
 // Status badge toggle (only active in edit mode)
 document.getElementById('fra-status-badge').addEventListener('click', () => {
     if (editStatus === null) return; // not in edit mode
-    editStatus = editStatus === 1 ? 0 : 1;
+    editStatus = editStatus === 'active' ? 'inactive' : 'active';
     updateStatusBadge(editStatus, true);
 });
 
@@ -185,6 +186,7 @@ document.getElementById('save-confirm-btn').addEventListener('click', async () =
         goal_amount:  Number(document.getElementById('edit-goal').value)        || undefined,
         start_date:   document.getElementById('edit-start').value               || undefined,
         end_date:     document.getElementById('edit-end').value                 || undefined,
+        description:  document.getElementById('edit-service-desc').value              || undefined,
         status:       editStatus ?? undefined,
     };
     // Remove undefined keys

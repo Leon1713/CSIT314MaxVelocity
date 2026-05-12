@@ -28,11 +28,12 @@ class CreateFRAInput(BaseModel):
 class UpdateFRAInput(BaseModel):
     title: Optional[str] = None
     service_type: Optional[str] = None
+    description: Optional[str] = None
     category_id: Optional[int] = None
     goal_amount: Optional[float] = None
     start_date: Optional[str] = None
     end_date: Optional[str] = None
-    status: Optional[int] = None
+    status: Optional[str] = None
 
 router = APIRouter(
     prefix="/fundraiser",
@@ -85,7 +86,8 @@ def get_all_activities(user: "Account" = Depends(require_permission("can_access_
             "activities": [
                 {
                     "id":             act["id"],
-                    "title":          act["description"],
+                    "title":          act["campaign_title"],
+                    "description":    act["description"],
                     "category_name":  act.get("category_name") or "—",
                     "current_amount": float(act["current_amount"] or 0),
                     "goal_amount":    float(act["goal_amount"] or 0),
@@ -112,7 +114,8 @@ def get_activity_details(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found")
         return {
             "id":            activity["id"],
-            "title":         activity["description"],
+            "title":         activity["campaign_title"],
+            "description":   activity["description"],
             "category_id":   activity.get("category_id"),
             "category_name": activity.get("category_name") or "—",
             "service_type":  activity.get("service_type") or "—",
@@ -125,6 +128,7 @@ def get_activity_details(
     except HTTPException:
         raise
     except Exception as e:
+        print(e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
