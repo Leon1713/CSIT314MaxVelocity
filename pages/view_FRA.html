@@ -23,7 +23,6 @@
                 <div class="hub-nav-logo">
                     <img src="../img/fundly-logo.png" alt="Fundly Logo"
                         class="fundly-logo-img" />
-                    <span class="hub-nav-brand">Fundly</span>
                 </div>
                 <span class="hub-nav-title">View Fund Raising Activity</span>
                 <div class="hub-gear-wrap ms-auto">
@@ -214,6 +213,17 @@
                         <button type="button" class="fr-cancel-btn" data-bs-dismiss="modal">Cancel</button>
                         <button type="button" class="fra-delete-confirm-btn" id="delete-confirm-btn">Delete</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success toast -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:1100">
+            <div id="fra-success-toast" class="toast cat-toast border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="cat-toast-inner">
+                    <div class="cat-toast-icon"><i class="bi bi-check-lg"></i></div>
+                    <span class="cat-toast-msg" id="fra-toast-msg"></span>
+                    <button type="button" class="cat-toast-close" data-bs-dismiss="toast"><i class="bi bi-x"></i></button>
                 </div>
             </div>
         </div>

@@ -42,7 +42,7 @@ class FundraisingActivity():
             db_cursor.execute("""
                 SELECT
                     COUNT(fundraising_activities.id)                                              AS total_activities,
-                    SUM(CASE WHEN fundraising_activities.status = 1 THEN 1 ELSE 0 END)   AS active_activities,
+                    SUM(CASE WHEN fundraising_activities.status = 1 OR LOWER(fundraising_activities.status) = 'active' THEN 1 ELSE 0 END) AS active_activities,
                     COALESCE(SUM(fundraising_activities.current_amount), 0)                       AS total_raised,
                     COUNT(DISTINCT donations.donee_id)                               AS donor_count
                 FROM fundraising_activities LEFT JOIN donations

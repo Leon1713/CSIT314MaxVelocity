@@ -1,6 +1,6 @@
 const STATUS_COLORS = {
     active:    '#22c55e',
-    inactive:  '#f97316',
+    inactive:  '#ef4444',
     pending:   '#f97316',
     completed: '#f59e0b',
     cancelled: '#ef4444',
@@ -54,10 +54,15 @@ function renderView(a) {
     const statusKey = typeof a.status === 'number'
         ? (a.status === 1 ? 'active' : 'inactive')
         : String(a.status ?? '').toLowerCase();
-    const color = STATUS_COLORS[statusKey] || '#aaa';
-    const label = statusKey.charAt(0).toUpperCase() + statusKey.slice(1) || '—';
+    const isActive = a.status === 1 || statusKey === 'active';
+    const color    = STATUS_COLORS[statusKey] || '#aaa';
+    const label    = statusKey.charAt(0).toUpperCase() + statusKey.slice(1) || '—';
     document.getElementById('fra-status-dot').style.background = color;
     document.getElementById('fra-status-text').textContent     = label;
+    const badge = document.getElementById('fra-status-badge');
+    badge.style.background = isActive ? '#f0fdf4' : '#fee2e2';
+    badge.style.border     = isActive ? '1.5px solid #bbf7d0' : '1.5px solid #fecaca';
+    badge.style.color      = isActive ? '#166534' : '#991b1b';
 
     document.getElementById('dropdown-username').textContent = a.username || '';
     document.getElementById('dropdown-role').textContent     = 'Fundraiser';
@@ -80,6 +85,11 @@ async function loadActivity() {
 }
 
 loadActivity();
+
+function showToast(msg, delay = 2500) {
+    document.getElementById('fra-toast-msg').textContent = msg;
+    new bootstrap.Toast(document.getElementById('fra-success-toast'), { delay }).show();
+}
 
 // ── Modals ────────────────────────────────────────────────────────────────────
 const editModal   = new bootstrap.Modal(document.getElementById('editModal'));
@@ -148,7 +158,8 @@ document.getElementById('edit-save-btn').addEventListener('click', async () => {
             return;
         }
         editModal.hide();
-        loadActivity(); // refresh displayed values
+        loadActivity();
+        showToast('Activity updated successfully.');
     } catch (_) {
         errEl.textContent = 'Could not connect to the server.';
         errEl.classList.remove('hidden');
@@ -169,7 +180,8 @@ document.getElementById('delete-confirm-btn').addEventListener('click', async ()
             method: 'DELETE', credentials: 'include'
         });
         if (del.ok) {
-            window.location.href = backHref;
+            showToast('Activity deleted successfully.', 1800);
+            setTimeout(() => { window.location.href = backHref; }, 1800);
         } else {
             const err = await del.json();
             alert(err.detail || 'Failed to delete activity.');

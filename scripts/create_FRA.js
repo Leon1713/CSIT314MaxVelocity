@@ -113,7 +113,9 @@ document.getElementById('fra-submit-btn').addEventListener('click', async () => 
             return;
         }
 
-        window.location.href = 'fundraiser_dashboard.html';
+        document.getElementById('fra-toast-msg').textContent = 'Activity created successfully.';
+        new bootstrap.Toast(document.getElementById('fra-success-toast'), { delay: 1800 }).show();
+        setTimeout(() => { window.location.href = 'fundraiser_dashboard.html'; }, 1800);
 
     } catch (err) {
         showError('Could not connect to the server. Please try again later.');

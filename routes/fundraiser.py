@@ -38,6 +38,13 @@ router = APIRouter(
     dependencies=[Depends(require_permission("can_access_fr_dashboard"))]
 )
 
+def _norm_status(raw) -> int:
+    """Normalise DB status (int 1/0 or legacy string 'active'/'inactive') to int."""
+    if isinstance(raw, int):
+        return raw
+    s = str(raw).lower()
+    return 1 if s in ('active', '1') else 0
+
 
 @router.get("/stats")
 def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_access_fr_dashboard"))):
@@ -58,7 +65,7 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
                     "id":          act["id"],
                     "description": act["description"],
                     "category":    act.get("service_type") or "—",
-                    "status":      act["status"],
+                    "status":      _norm_status(act["status"]),
                     "created_at":  str(act["created_at"]),
                 }
                 for act in (recent or [])
@@ -85,7 +92,7 @@ def get_all_activities(user: "Account" = Depends(require_permission("can_access_
                     "category_name":  act.get("category_name") or "—",
                     "current_amount": float(act["current_amount"] or 0),
                     "goal_amount":    float(act["goal_amount"] or 0),
-                    "status":         act["status"],
+                    "status":         _norm_status(act["status"]),
                     "end_date":       str(act["end_date"]) if act["end_date"] else None,
                 }
                 for act in (activities or [])
@@ -113,7 +120,7 @@ def get_activity_details(
             "service_type":  activity.get("service_type") or "—",
             "current_amount": float(activity["current_amount"] or 0),
             "goal_amount":    float(activity["goal_amount"] or 0),
-            "status":         activity["status"],
+            "status":         _norm_status(activity["status"]),
             "start_date":     str(activity["start_date"]) if activity["start_date"] else None,
             "end_date":       str(activity["end_date"]) if activity["end_date"] else None,
         }

@@ -10,7 +10,7 @@ class PlatformStats:
             cursor.execute("""
                 SELECT
                     (SELECT COUNT(*)          FROM fra_categories       WHERE is_active = 1)        AS total_categories,
-                    (SELECT COUNT(*)          FROM fundraising_activities WHERE status = 1)          AS active_campaigns,
+                    (SELECT COUNT(*)          FROM fundraising_activities WHERE status = 1 OR LOWER(status) = 'active') AS active_campaigns,
                     (SELECT COALESCE(SUM(current_amount), 0) FROM fundraising_activities)           AS total_raised,
                     (SELECT COUNT(*)          FROM user_accounts        WHERE is_suspended = 0)      AS platform_users
             """)

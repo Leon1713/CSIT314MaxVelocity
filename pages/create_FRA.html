@@ -23,7 +23,6 @@
                 <div class="hub-nav-logo">
                     <img src="../img/fundly-logo.png" alt="Fundly Logo"
                         class="fundly-logo-img" />
-                    <span class="hub-nav-brand">Fundly</span>
                 </div>
                 <span class="hub-nav-title">Create Fund Raising Activity</span>
                 <div class="hub-gear-wrap ms-auto">
@@ -160,6 +159,17 @@
             </div>
 
         </footer>
+
+        <!-- Success toast -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:1100">
+            <div id="fra-success-toast" class="toast cat-toast border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="cat-toast-inner">
+                    <div class="cat-toast-icon"><i class="bi bi-check-lg"></i></div>
+                    <span class="cat-toast-msg" id="fra-toast-msg"></span>
+                    <button type="button" class="cat-toast-close" data-bs-dismiss="toast"><i class="bi bi-x"></i></button>
+                </div>
+            </div>
+        </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="/scripts/create_FRA.js"></script>
