@@ -144,7 +144,8 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
         const error = errors[fieldMap[email.id]];
         error.classList.remove("hidden");
         text = document.querySelector("#" + error.id + " .error-text");
-        text.innerText = "Invalid email format";
+        email.classList.add("input-error-border")
+        text.innerText = "Please enter a valid email.";
         valid = false;
     }
 
