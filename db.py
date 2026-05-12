@@ -1,27 +1,38 @@
 import os
-import mysql.connector
 from mysql.connector import Error
+from mysql.connector.pooling import MySQLConnectionPool
 from dotenv import load_dotenv
 
-loaded = load_dotenv()  # reads from .env file automatically
-
+load_dotenv()
 
 DB_CONFIG = {
     "host": os.getenv("DB_HOST"),
-    "port": int(os.getenv("DB_PORT", 3306)),  # Default to 3306 if not provided
+    "port": int(os.getenv("DB_PORT", 3306)),
     "user": os.getenv("DB_USER", "root"),
     "password": os.getenv("DB_PASSWORD"),
     "database": os.getenv("DB_NAME", "fundraising_db"),
     "autocommit": False,
 }
 
-_connection = None
+try:
+    pool = MySQLConnectionPool(
+        pool_name="app_pool",
+        pool_size=10,
+        pool_reset_session=True,
+        **DB_CONFIG
+    )
+except Error as e:
+    raise RuntimeError(f"Database pool initialization failed: {e}")
+
 
 def get_db_connection():
-    global _connection
+    """
+    Borrow a connection from the pool.
+    IMPORTANT: caller must close() it to return to pool.
+    """
     try:
-        if _connection is None or not _connection.is_connected():
-            _connection = mysql.connector.connect(**DB_CONFIG)
+        return pool.get_connection()
     except Error as e:
         raise RuntimeError(f"Database connection failed: {e}")
-    return _connection
+def close_pool():
+    pool._remove_connections()

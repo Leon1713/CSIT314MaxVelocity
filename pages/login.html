@@ -12,7 +12,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
 
-<body class="login-page">
+<body class="login-page" id="login-page">
+
+
 
   <!--Error modal-->
   <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
@@ -23,76 +25,72 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="errorModalMessage">
-           <!-- Error message will be injected here -->
+          <!-- Error message will be injected here -->
         </div>
       </div>
     </div>
   </div>
 
   <div class="login-bg-pattern"></div>
- 
+
   <!-- Centred login card -->
   <div class="login-wrapper d-flex align-items-center justify-content-center">
     <div class="login-card">
- 
+
       <div class="login-logo-wrap">
-        <img src="/img/fundly-logo.png" alt="Fundly Logo" class="login-logo-img"/>
+        <img src="/img/fundly-logo.png" alt="Fundly Logo" class="login-logo-img" />
       </div>
- 
-      <h1 class="login-title">Sign In</h1>
-      <p class="login-subtitle">Sign in, or sign up to continue.</p>
- 
-      <!-- Form -->
-      <form class="login-form" id="login-form" novalidate>
- 
-        <div class="login-field-wrap">
-          <input
-            type="email"
-            id="loginEmail"
-            class="login-input"
-            placeholder="Email"
-            autocomplete="email"
-            required
-          />
-        </div>
- 
-        <div class="login-field-wrap">
-          <input
-            type="password"
-            id="loginPassword"
-            class="login-input"
-            placeholder="Password"
-            autocomplete="current-password"
-            required
-          />
-        </div>
- 
-        <div class="login-divider"></div>
- 
-        <div class="login-role-row">
-          <label for="loginRole" class="login-role-label">Log in as a...</label>
-          <select id="loginRole" class="login-role-select">
-            <option value="user_admin">User Admin</option>
-            <option value="donee">Donee</option>
-            <option value="fund_raiser">Fund Raiser</option>
-            <option value="platform_mgmt">Platform Mgmt</option>
-          </select>
-        </div>
- 
-        <button type="submit" class="login-btn" id="login-btn-id">Sign In</button>
- 
-      </form>
- 
-      <!-- Footer link -->
-      <p class="login-footer-text">
-        Don't have an account?
-        <a href="signup.html" class="login-signup-link">Sign up.</a>
-      </p>
- 
+      <div class="login-modal-page hidden" id="login-modal-page">
+        <h1 class="login-title">Sign In</h1>
+        <p class="login-subtitle">Sign in, or sign up to continue.</p>
+
+        <!-- Form -->
+        <form class="login-form" id="login-form" novalidate>
+
+          <div class="login-field-wrap">
+            <input type="email" id="loginEmail" class="login-input" placeholder="Email" autocomplete="email" required />
+          </div>
+
+          <div class="login-field-wrap">
+            <input type="password" id="loginPassword" class="login-input" placeholder="Password"
+              autocomplete="current-password" required />
+          </div>
+
+          <div class="login-divider"></div>
+
+          <div class="login-role-row">
+            <label for="loginRole" class="login-role-label">Log in as a...</label>
+            <select id="loginRole" class="login-role-select">
+              <option value="user_admin">User Admin</option>
+              <option value="donee">Donee</option>
+              <option value="fund_raiser">Fund Raiser</option>
+              <option value="platform_mgmt">Platform Mgmt</option>
+            </select>
+          </div>
+          <button type="submit" class="login-btn" id="login-btn-id">
+            <div id="sign-in-text">
+              Sign In
+            </div>
+            <div class="loader-ctn hidden" id="login-loader">
+              <span class="loader-btn login-loader"></span>
+            </div>
+          </button>
+        </form>
+
+        <!-- Footer link -->
+        <p class="login-footer-text">
+          Don't have an account?
+          <a href="sign_up.html" class="login-signup-link">Sign up.</a>
+        </p>
+      </div>
+      <div class="loader-ctn" id="loader">
+        <div class="loader"></div>
+      </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/scripts/check_login.js"></script>
   <script src="/scripts/login.js"></script>
 </body>
 

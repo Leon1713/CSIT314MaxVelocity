@@ -16,7 +16,7 @@ class signupController:
             if Account.insertNewUser(newAcc.to_dict()):
                 return {"success": True}
             else:
-                return {"success": False, "error": "Failed to insert user"}
+                return {"success": False, "error": "username/email already exists"}
         except ValueError as e:
             return {"success": False, "error": str(e)}
         except Exception as e:

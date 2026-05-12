@@ -1,30 +1,4 @@
 // check if login
-async function start() {
-  try {
-    res = await fetch("http://127.0.0.1:8000/me", { // send session cookie to backend
-      method: "GET",
-      credentials: "include"
-    })
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(errText);
-    }
-    const result = await res.json().then(data => {
-      if(data.error)
-      {
-        console.log("no result found");
-      }
-      else if(data.success)
-      {
-        console.log(data);
-      }
-    })
-  }
-  catch (err) {
-    console.log("Failed to connect to server. Please try again later.")
-  }
-}
-start();
 document.getElementById("login-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -45,6 +19,8 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
   // UI: disable button
   btn.disabled = true;
   btn.classList.add("login-btn-fetching");
+  document.getElementById("sign-in-text").classList.add("hidden");
+  document.getElementById("login-loader").classList.remove("hidden");
 
   try {
     const res = await fetch("http://127.0.0.1:8000/login", {
@@ -72,6 +48,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
       }
       else if (data.success == true) {
         console.log("Logged in");
+        window.location.href = "hub.html";
       }
     });
 
@@ -82,5 +59,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     // UI: always restore button
     btn.disabled = false;
     btn.classList.remove("login-btn-fetching");
+    document.getElementById("sign-in-text").classList.remove("hidden");
+    document.getElementById("login-loader").classList.add("hidden");
   }
 });
