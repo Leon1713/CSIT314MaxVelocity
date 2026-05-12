@@ -1,44 +1,39 @@
-from typing import Annotated
-
-from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel, StringConstraints, field_validator, EmailStr
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, field_validator, EmailStr
 import re
 from Controller.signupController import signupController
 
-NonEmptyString = Annotated[
-    str,
-    StringConstraints(strip_whitespace=True, min_length=1)
-]
-
-
 class signUpData(BaseModel):
-    first_name: NonEmptyString
+    username: str
+    email: str
+    password: str
+    role: str
+    first_name: str
     last_name: str
-    username: NonEmptyString
-    email: NonEmptyString
-    password: NonEmptyString
-    role: NonEmptyString
-    phone: NonEmptyString
+    phone: str
+
+    @field_validator('username', 'email', 'password', 'role', 'first_name', 'last_name', 'phone')
+    @classmethod
+    def not_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError('Field cannot be empty')
+        return v.strip()
 
     @field_validator('password')
+    @classmethod
     def password_strength(cls, v: str) -> str:
         if len(v) < 6:
-            raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail={
-                                "type": "PASSWORD_ERROR", "msg": "Password must be at least 6 characters long"})
+            raise ValueError('Password must be at least 6 characters long')
         if not re.search(r'[A-Z]', v):
-            HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail={
-                          "type": "PASSWORD_ERROR", "msg": 'Password must contain at least one uppercase letter'})
+            raise ValueError('Password must contain at least one uppercase letter')
         if not re.search(r'[0-9]', v):
-            raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail={
-                                "type": "PASSWORD_ERROR", "msg": "Password must contain at least one number"})
+            raise ValueError('Password must contain at least one number')
         if not re.search(r'[!@#$%^&*(),.?":{}|<>]', v):
-            raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail={
-                                "type": "PASSWORD_ERROR", "msg": "Password must contain at least one special character"})
+            raise ValueError('Password must contain at least one special character')
         return v
 
 
 router = APIRouter()
-
 
 @router.post("/signup")
 def signup(data: signUpData):

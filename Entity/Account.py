@@ -1,8 +1,7 @@
+from .DBHandler import DBHandler
 from db import get_db_connection
 from passlib.context import CryptContext
-
-
-class Account:
+class Account(DBHandler):
     # Define the attributes of the Account class
     def __init__(self, user_id: int, username: str, email: str, password_hash: str, role_id: int, first_name: str, last_name: str, phone: str, is_active: bool, is_suspended: bool, created_at, updated_at, last_login):
         super().__init__()
@@ -19,7 +18,7 @@ class Account:
         self.created_at = created_at
         self.updated_at = updated_at
         self.last_login = last_login
-
+        
     def to_dict(self):
         return {
             "user_id": self.user_id,
@@ -36,51 +35,31 @@ class Account:
             "updated_at": self.updated_at,
             "last_login": self.last_login
         }
-
     @staticmethod
     def findUsersByEmailOrUsername(email_or_username: str, role_input: str):
-        try:
-            db_conn = get_db_connection()
-            db_cursor = db_conn.cursor(dictionary=True)
-            # Check if the role exists, will raise an error if it doesn't
-            roleId = Account.getRoleId(role_input)
-            db_cursor.execute("SELECT user_accounts.* FROM user_accounts join user_roles ON user_accounts.role_id = user_roles.role_id WHERE (email = %s OR username = %s) AND user_roles.role_id = %s AND user_accounts.is_suspended = 0",
-                              (email_or_username, email_or_username, roleId))
-            user_data = db_cursor.fetchall()
-            if user_data:
-                # For each user in the result, create an Account object and return a list of them
-                return [Account(**user) for user in user_data]
-        except Exception as e:
-            print(e)
-            raise
-        finally:
-            db_cursor.close()
-            db_conn.close()
-
+        db_cursor = Account.db_connection.cursor(dictionary=True)
+        roleId = Account.getRoleId(role_input) # Check if the role exists, will raise an error if it doesn't
+        db_cursor.execute("SELECT user_accounts.* FROM user_accounts join user_roles ON user_accounts.role_id = user_roles.role_id WHERE (email = %s OR username = %s) AND user_roles.role_id = %s", (email_or_username, email_or_username, roleId))
+        user_data = db_cursor.fetchall()
+        db_cursor.close()
+        if user_data:
+            return [Account(**user) for user in user_data] # For each user in the result, create an Account object and return a list of them
+        return None # same as NULL
+    
     @staticmethod
     def getRoleId(role_name: str) -> int:
-        try:
-            db_conn = get_db_connection()
-            db_cursor = db_conn.cursor(dictionary=True)
-            db_cursor.execute(
-                "SELECT role_id FROM user_roles WHERE role_name = %s", (role_name,))
-            result = db_cursor.fetchone()
-            if result:
-                return result["role_id"]
-            else:
-                raise ValueError(f"Role '{role_name}' not found in the database.")
-        except Exception as e:
-            print(e)
-            raise
-        finally:
-            db_cursor.close()
-            db_conn.close()
-        
-
+        db_cursor = Account.db_connection.cursor(dictionary=True)
+        db_cursor.execute("SELECT role_id FROM user_roles WHERE role_name = %s", (role_name,))
+        result = db_cursor.fetchone()
+        db_cursor.close()
+        if result:
+            return result["role_id"]
+        else:
+            raise ValueError(f"Role '{role_name}' not found in the database.")
+    
     @staticmethod
-    def insertNewUser(account_data: dict) -> bool:
-        db_conn = get_db_connection()
-        db_cursor = db_conn.cursor(dictionary=True)
+    def insertNewUser(account_data: dict)-> bool:
+        db_cursor = Account.db_connection.cursor(dictionary=True)
         try:
             db_cursor.execute("""
                 INSERT INTO user_accounts (username, email, password_hash, role_id, first_name, last_name, phone, is_active, is_suspended)
@@ -93,124 +72,20 @@ class Account:
                 account_data["first_name"],
                 account_data["last_name"],
                 account_data["phone"],
-                # Default to True if not provided
-                account_data.get("is_active", True),
-                # Default to False if not provided
-                account_data.get("is_suspended", False)
+                account_data.get("is_active", True),  # Default to True if not provided
+                account_data.get("is_suspended", False)  # Default to False if not provided
             ))
 
-            # Commit the transaction to save the new user in the database
-            db_conn.commit()
-            return True
+            Account.db_connection.commit() # Commit the transaction to save the new user in the database
         except Exception as e:
             print(f"Error inserting new user: {e}")
-            return False  # Return False to indicate failure
+            return False # Return False to indicate failure
         finally:
-            db_cursor.close()  # Close the cursor to free up resources
-            db_conn.close()
+            db_cursor.close() # Close the cursor to free up resources
+        return True # Return True to indicate successful insertion
 
-    def auth(self, password: str, hasher):
+    def authenticate(self, password:str, hasher):
         if hasher.verify(password, self.password_hash):
             return self
         else:
-            return None  # Return None to indicate authentication failure
-
-    @staticmethod
-    def authenticate(email: str, password: str, role: str, hasher):
-        users = Account.findUsersByEmailOrUsername(email, role)
-        if users and users.__len__() != 0 and (authenticated_user := users[0].auth(password, hasher)):
-            authenticated_user.SetLastLogin()
-            return authenticated_user
-        else:
-            raise Exception("Authentication Failure")
-
-    @staticmethod
-    def getUsersById(id: str):
-        db_conn = get_db_connection()
-        db_cursor = db_conn.cursor(dictionary=True)
-        try:
-            db_cursor.execute(
-                """SELECT * FROM user_accounts where user_id = %s""", (id,))
-            account_dict = db_cursor.fetchone()
-            result = Account(**account_dict)
-            return result
-        except Exception:
-            raise Exception("User account with id = %s is not found", (id,))
-        finally:
-            db_cursor.close()
-            db_conn.close()
-
-    @staticmethod
-    def getAllUsers():
-        db_conn = get_db_connection()
-        db_cursor = db_conn.cursor(dictionary=True)
-        try:
-            db_cursor.execute("""SELECT * FROM user_accounts""")
-            accounts = db_cursor.fetchall()
-            list_account: list[Account] = [Account(**acc) for acc in accounts]
-            return list_account
-        except Exception:
-            return None
-        finally:
-            db_cursor.close()
-            db_conn.close()
-
-    def update(self) -> bool:
-        db_conn = get_db_connection()
-        db_cursor = db_conn.cursor(dictionary=True)
-        try:
-            db_cursor.execute("""
-                UPDATE user_accounts
-                SET username = %s, email = %s, password_hash = %s, role_id = %s, first_name = %s, last_name = %s, phone = %s, is_active = %s, is_suspended = %s, updated_at = NOW()
-                WHERE user_id = %s
-            """, (
-                self.username,
-                self.email,
-                self.password_hash,
-                self.role_id,
-                self.first_name,
-                self.last_name,
-                self.phone,
-                self.is_active,
-                self.is_suspended,
-                self.user_id
-            ))
-            db_conn.commit()
-            return True
-        except Exception as e:
-            print(f"Error updating user: {e}")
-            db_conn.rollback()
-            raise Exception(
-                "Error updating Account with id = %s", (self.user_id,))
-        finally:
-            db_cursor.close()
-            db_conn.close()
-
-    @staticmethod
-    def suspend(user_id: int):
-        db_conn = get_db_connection()
-        db_cursor = db_conn.cursor(dictionary=True)
-        try:
-            db_cursor.execute("""UPDATE user_accounts
-                              SET is_suspended = 1, is_active = 0
-                              WHERE user_id = %s""", (user_id,))
-            db_conn.commit()
-        except Exception:
-            db_conn.rollback()
-            raise Exception(
-                "Error Suspending Account with id = %s", (user_id,))
-        finally:
-            db_cursor.close()
-            db_conn.close()
-
-    def SetLastLogin(self: "Account"):
-        db_conn = get_db_connection()
-        db_cursor = db_conn.cursor(dictionary=True)
-        try:
-            db_cursor.execute(
-                """UPDATE user_accounts SET last_login = NOW() WHERE user_id = %s""", (self.user_id,))
-        except Exception:
-            raise
-        finally:
-            db_cursor.close()
-            db_conn.close()
+            return None # Return None to indicate authentication failure
