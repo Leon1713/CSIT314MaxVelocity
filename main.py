@@ -13,6 +13,7 @@ from routes.admin import router as router_admin
 from routes.logout import router as router_logout
 from routes.fundraiser import router as router_fundraiser
 from routes.profile import router as router_profile
+from routes.platform import router as router_platform
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     from Dependencies.CleanUpSession import SessionCleanUp
@@ -41,6 +42,7 @@ app.include_router(router_admin)
 app.include_router(router_logout)
 app.include_router(router_fundraiser)
 app.include_router(router_profile)
+app.include_router(router_platform)
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 

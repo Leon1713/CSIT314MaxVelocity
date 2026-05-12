@@ -83,8 +83,9 @@ async function loadDashboard() {
         renderStats(data.stats);
         renderActivities(data.recent_activities);
 
-        document.getElementById('dropdown-username').textContent = data.username;
-        document.getElementById('dropdown-role').textContent = 'Fundraiser';
+        document.getElementById('dropdown-username').textContent = data.username || '';
+        document.getElementById('dropdown-role').textContent     = 'Fundraiser';
+        document.getElementById('fr-username').textContent       = data.username || '';
 
     } catch (err) {
         console.error('Dashboard load error:', err);

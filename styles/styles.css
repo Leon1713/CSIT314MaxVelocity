@@ -56,6 +56,7 @@
   aspect-ratio: 1;
   display:grid;
   -webkit-mask: conic-gradient(from 15deg,#0000,#000);
+  mask: conic-gradient(from 15deg,#0000,#000);
   animation: l26 1s infinite steps(12);
 }
 .loader,
@@ -308,6 +309,241 @@ body {
 
 
 /* ══════════════════════════════════════════════
+   PLATFORM DASHBOARD  (platform_dashboard.html)
+   ══════════════════════════════════════════════ */
+
+body.platform-page {
+  background: #f9f3f3;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.platform-main {
+  flex: 1;
+  padding: 20px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Welcome card */
+.platform-welcome-card {
+  background: var(--fundly-primary);
+  border-radius: 14px;
+  padding: 28px 28px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.platform-welcome-card::before,
+.platform-welcome-card::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
+.platform-welcome-card::before {
+  width: 220px;
+  height: 220px;
+  right: -40px;
+  top: -90px;
+}
+
+.platform-welcome-card::after {
+  width: 130px;
+  height: 130px;
+  right: 140px;
+  top: -20px;
+}
+
+.platform-welcome-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.platform-welcome-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+}
+
+.platform-welcome-sub {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 10px;
+}
+
+.platform-welcome-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.platform-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.18s;
+}
+
+.platform-action-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+/* Stats */
+.platform-stats-row {
+  display: flex;
+  gap: 12px;
+}
+
+.platform-stat-card {
+  flex: 1;
+  background: #fff;
+  border: 1.5px solid rgba(201, 107, 107, 0.25);
+  border-radius: 12px;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.platform-stat-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #aaa;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.platform-stat-value {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--fundly-text);
+  line-height: 1;
+}
+
+.platform-stat-sub {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--fundly-primary);
+}
+
+/* Activity section */
+.platform-activity-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.platform-section-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--fundly-text);
+  margin: 0;
+}
+
+.platform-activity-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 8px rgba(201, 107, 107, 0.06);
+}
+
+.platform-activity-subtitle {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--fundly-text);
+  margin: 0 0 14px;
+}
+
+.platform-activity-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.platform-activity-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+}
+
+.platform-activity-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.platform-activity-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.platform-activity-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.platform-activity-meta {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: #aaa;
+}
+
+.platform-activity-time {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #aaa;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.platform-activity-divider {
+  height: 1px;
+  background: #f5eaea;
+}
+
+.platform-empty {
+  font-size: 0.88rem;
+  color: #aaa;
+  text-align: center;
+  padding: 20px 0;
+  margin: 0;
+}
+
+
+/* ══════════════════════════════════════════════
    FUNDRAISER DASHBOARD  (fundraiser_dashboard.html)
    ══════════════════════════════════════════════ */
 
@@ -337,8 +573,42 @@ body.fr-dashboard-page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
+  gap: 10px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.fr-overview-card::before,
+.fr-overview-card::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
+.fr-overview-card::before {
+  width: 220px;
+  height: 220px;
+  right: -40px;
+  top: -90px;
+}
+
+.fr-overview-card::after {
+  width: 130px;
+  height: 130px;
+  right: 140px;
+  top: -20px;
+}
+
+.fr-overview-welcome {
+  position: relative;
+  z-index: 1;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
 }
 
 .fr-overview-text {
