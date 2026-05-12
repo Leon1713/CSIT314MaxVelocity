@@ -628,6 +628,413 @@ body.fr-dashboard-page {
   color: var(--fundly-text);
 }
 
+/* ── Edit mode inputs ── */
+.fra-edit-banner-input,
+.fra-edit-banner-select {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 6px;
+  padding: 5px 10px;
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  width: 100%;
+  outline: none;
+  transition: background 0.18s;
+}
+
+.fra-edit-banner-input:focus,
+.fra-edit-banner-select:focus {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.fra-edit-service-input { font-size: 0.88rem; font-weight: 600; }
+
+.fra-edit-banner-input::placeholder { color: rgba(255, 255, 255, 0.65); }
+
+.fra-edit-banner-select option { color: var(--fundly-text); background: #fff; }
+
+.fra-edit-stat-input {
+  width: 100%;
+  border: 1.5px solid rgba(201, 107, 107, 0.4);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--fundly-primary);
+  text-align: center;
+  outline: none;
+}
+
+.fra-edit-stat-input:focus { border-color: var(--fundly-primary); }
+
+.fra-edit-desc-textarea {
+  width: 100%;
+  border: 1.5px solid #e8d8d8;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--fundly-text);
+  resize: vertical;
+  outline: none;
+}
+
+.fra-edit-desc-textarea:focus { border-color: var(--fundly-primary); }
+
+.fra-edit-date-input {
+  width: 100%;
+  border: 1.5px solid #e8d8d8;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--fundly-text);
+  outline: none;
+}
+
+.fra-edit-date-input:focus { border-color: var(--fundly-primary); }
+
+.fra-save-modal-icon {
+  font-size: 1.1rem;
+  color: var(--fundly-primary);
+}
+
+.fra-save-modal-msg {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--fundly-text);
+  margin: 0;
+}
+
+
+/* ══════════════════════════════════════════════
+   PROFILE PAGE  (profile.html)
+   ══════════════════════════════════════════════ */
+
+.profile-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(201, 107, 107, 0.1);
+  padding: 28px 28px 24px;
+  width: 100%;
+  max-width: 805px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(201, 107, 107, 0.15);
+  color: var(--fundly-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.profile-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.profile-username {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--fundly-text);
+}
+
+.profile-email {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #999;
+}
+
+.profile-divider {
+  height: 1px;
+  background: #f0e8e8;
+}
+
+.profile-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.profile-readonly {
+  background: #fafafa;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.profile-error {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #c0392b;
+  margin: 0;
+}
+
+.profile-success {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #166534;
+  margin: 0;
+}
+
+
+/* ══════════════════════════════════════════════
+   MANAGE FRA PAGE  (manage_FRA.html)
+   ══════════════════════════════════════════════ */
+
+body.manage-fra-page {
+  background: #f9f3f3;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.manage-main {
+  flex: 1;
+  padding: 20px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 805px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.manage-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.manage-header-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--fundly-text);
+  margin: 0;
+}
+
+.manage-new-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--fundly-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+
+.manage-new-btn:hover {
+  background: var(--fundly-primary-dark);
+}
+
+.manage-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.manage-search-wrap {
+  position: relative;
+  flex: 1;
+}
+
+.manage-search-wrap i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #bbb;
+  font-size: 0.88rem;
+  pointer-events: none;
+}
+
+.manage-search-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px 0 34px;
+  border: 1.5px solid #e8d8d8;
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.88rem;
+  color: var(--fundly-text);
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.manage-search-input:focus {
+  border-color: var(--fundly-primary);
+}
+
+.manage-status-filter {
+  height: 38px;
+  padding: 0 28px 0 10px;
+  border: 1.5px solid #e8d8d8;
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fundly-text);
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23c96b6b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  appearance: none;
+  cursor: pointer;
+  min-width: 110px;
+}
+
+.manage-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.manage-activity-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 2px 8px rgba(201, 107, 107, 0.07);
+}
+
+.manage-card-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(201, 107, 107, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--fundly-primary);
+  font-size: 1.3rem;
+}
+
+.manage-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.manage-card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--fundly-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.manage-card-meta {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: #aaa;
+}
+
+.manage-progress-wrap {
+  height: 5px;
+  background: #f0e8e8;
+  border-radius: 999px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.manage-progress-fill {
+  height: 100%;
+  background: var(--fundly-primary);
+  border-radius: 999px;
+}
+
+.manage-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.manage-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.manage-badge-active    { background: #dcfce7; color: #166534; }
+.manage-badge-inactive  { background: #fee2e2; color: #991b1b; }
+.manage-badge-completed { background: #fef9c3; color: #854d0e; }
+.manage-badge-pending   { background: #ffedd5; color: #9a3412; }
+
+.manage-amount {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--fundly-primary);
+}
+
+.manage-card-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.manage-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: opacity 0.18s, transform 0.15s;
+}
+
+.manage-btn:hover {
+  opacity: 0.85;
+  transform: scale(1.12);
+}
+
+.manage-btn-view   { background: #3b82f6; color: #fff; }
+.manage-btn-edit   { background: #f59e0b; color: #fff; }
+.manage-btn-delete { background: #ef4444; color: #fff; }
+
+.manage-empty {
+  text-align: center;
+  color: #aaa;
+  font-size: 0.88rem;
+  padding: 32px 0;
+}
+
 
 /* ══════════════════════════════════════════════
    CREATE FRA PAGE  (create_FRA.html)
