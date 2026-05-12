@@ -6,11 +6,9 @@ class GetUserAccountListController:
         pass
 
     def getUserAccountList(self):
-        db_conn =get_db_connection()
-        try:
-            accounts = Account.getAllUsers(db_conn)
-            return accounts
-        except Exception:
-            raise
-        finally:
-            db_conn.close()
+        with get_db_connection() as db_conn:
+            try:
+                accounts = Account.getAllUsers(db_conn)
+                return accounts
+            except Exception:
+                raise

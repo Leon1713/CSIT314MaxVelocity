@@ -35,8 +35,8 @@ class FundraisingActivity():
         }
 
     @staticmethod
-    def getStatsByFundraiserId(fundraiser_id: int) -> dict:
-        db_conn = get_db_connection()
+    def getStatsByFundraiserId(fundraiser_id: int, conn) -> dict:
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -54,11 +54,10 @@ class FundraisingActivity():
             print(e)
         finally:
             db_cursor.close()
-            db_conn.close()
 
     @staticmethod
-    def create(data: dict) -> bool:
-        db_conn = get_db_connection()
+    def create(data: dict, conn) -> bool:
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -81,11 +80,10 @@ class FundraisingActivity():
             raise e
         finally:
             db_cursor.close()
-            db_conn.close()
 
     @staticmethod
-    def deleteById(activity_id: int, fundraiser_id: int) -> bool:
-        db_conn = get_db_connection()
+    def deleteById(activity_id: int, fundraiser_id: int, conn) -> bool:
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -99,11 +97,10 @@ class FundraisingActivity():
             raise e
         finally:
             db_cursor.close()
-            db_conn.close()
 
     @staticmethod
-    def getByIdAndFundraiser(activity_id: int, fundraiser_id: int):
-        db_conn = get_db_connection()
+    def getByIdAndFundraiser(activity_id: int, fundraiser_id: int, conn):
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -115,11 +112,10 @@ class FundraisingActivity():
             return db_cursor.fetchone()
         finally:
             db_cursor.close()
-            db_conn.close()
 
     @staticmethod
-    def getRecentByFundraiserId(fundraiser_id: int, limit: int = 5) -> list:
-        db_conn = get_db_connection()
+    def getRecentByFundraiserId(fundraiser_id: int, conn, limit: int = 5, ) -> list:
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -132,4 +128,3 @@ class FundraisingActivity():
             return db_cursor.fetchall()
         finally:
             db_cursor.close()
-            db_conn.close()

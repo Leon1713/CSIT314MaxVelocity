@@ -1,9 +1,10 @@
 from Entity.FRACategory import FRACategory
-
+from db import get_db_connection
 
 class GetFRACategoriesController:
     def getCategories(self) -> list:
-        try:
-            return FRACategory.getAll()
-        except Exception:
-            raise
+        with get_db_connection() as conn:
+            try:
+                return FRACategory.getAll(conn)
+            except Exception:
+                raise

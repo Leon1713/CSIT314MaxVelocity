@@ -18,8 +18,8 @@ class FRACategory:
         }
 
     @staticmethod
-    def getAll() -> list:
-        db_conn = get_db_connection()
+    def getAll(conn) -> list:
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -30,6 +30,5 @@ class FRACategory:
             """)
             return db_cursor.fetchall()
         finally:
-            db_conn.close()
             db_cursor.close()
             

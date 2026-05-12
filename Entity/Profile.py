@@ -37,8 +37,8 @@ class Profile:
         self.is_active = is_active
 
     @staticmethod
-    def GetProfileByRoleId(role_id: int) -> "Profile":
-        db_conn = get_db_connection()
+    def GetProfileByRoleId(role_id: int, conn) -> "Profile":
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute(
@@ -50,7 +50,6 @@ class Profile:
             raise e
         finally:
             db_cursor.close()
-            db_conn.close()
 
     def to_dict(self):
         return {
@@ -73,8 +72,8 @@ class Profile:
         }
 
     @staticmethod
-    def insertProfile(profile: dict) -> bool:
-        db_conn = get_db_connection()
+    def insertProfile(profile: dict, conn) -> bool:
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         data = profile
         values = (
@@ -129,11 +128,10 @@ VALUES (
             raise
         finally:
             db_cursor.close()
-            db_conn.close()
 
     @staticmethod
-    def getAllProfiles() -> list[Profile]:
-        db_conn = get_db_connection()
+    def getAllProfiles(conn) -> list[Profile]:
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("SELECT * FROM user_roles")
@@ -145,11 +143,10 @@ VALUES (
             raise
         finally:
             db_cursor.close()
-            db_conn.close()
 
     @staticmethod
-    def getProfileById(id: int):
-        db_conn = get_db_connection()
+    def getProfileById(id: int, conn):
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute(
@@ -159,10 +156,9 @@ VALUES (
             raise
         finally:
             db_cursor.close()
-            db_conn.close()
 
-    def update(self) -> bool:
-        db_conn = get_db_connection()
+    def update(self, conn) -> bool:
+        db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             params = {
@@ -213,12 +209,11 @@ VALUES (
                 "Error updating Profile with profile id = %s", (self.role_id,))
         finally:
             db_cursor.close()
-            db_conn.close()
 
     @staticmethod
-    def suspend(profile_id: int) -> bool:
+    def suspend(profile_id: int, conn) -> bool:
         try:
-            db_conn = get_db_connection()
+            db_conn = conn
             db_cursor = db_conn.cursor(dictionary=True)
             db_cursor.execute("""UPDATE user_roles SET is_active = 0 WHERE role_id = %s""",(profile_id,))
             db_conn.commit()
@@ -229,5 +224,4 @@ VALUES (
             raise
         finally:
             db_cursor.close()
-            db_conn.close()
             
