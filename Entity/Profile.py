@@ -17,7 +17,7 @@ class Profile:
                  can_manage_donation: bool = False,
                  can_manage_fra_category: bool = False,
                  can_generate_report: bool = False,
-                 is_active : bool = True):
+                 is_active : bool = True, is_user = False):
         self.role_id = role_id
         self.role_name = role_name
         self.role_desc = description
@@ -35,6 +35,7 @@ class Profile:
         self.can_manage_fra_category = can_manage_fra_category
         self.can_generate_report = can_generate_report
         self.is_active = is_active
+        self.is_user = not (can_access_admin_dashboard or can_access_platform_mgt_dashboard)
 
     @staticmethod
     def GetProfileByRoleId(role_id: int, conn) -> Profile:
@@ -47,13 +48,14 @@ class Profile:
             result = Profile(**profile_dict)
             return result
         except Exception as e:
+            print(e)
             raise e
         finally:
             db_cursor.close()
 
     def to_dict(self):
         return {
-            "id": self.role_id,
+            "role_id": self.role_id,
             "role_name": self.role_name,
             "description": self.role_desc,
             "can_access_admin_dashboard": self.can_access_admin_dashboard,
@@ -92,7 +94,8 @@ class Profile:
             data["can_manage_donation"],
             data["can_manage_fra_category"],
             data["can_generate_report"],
-            data.get("is_active",True)
+            data.get("is_active",True),
+            data["can_access_admin_dashboard"] or data["can_access_platform_mgt_dashboard"]
         )
         try:
             db_cursor.execute("""
@@ -112,19 +115,21 @@ class Profile:
     can_manage_donation,
     can_manage_fra_category,
     can_generate_report,
-    is_active
+    is_active,
+    is_user
 )
 VALUES (
     %s, %s,
     %s, %s, %s, %s,
     %s, %s, %s, %s,
     %s, %s, %s, %s, %s,
-    %s
+    %s, %s
 )
 """, values)
             db_conn.commit()
             return True
         except Exception as e:
+            print(e)
             raise
         finally:
             db_cursor.close()
@@ -140,6 +145,7 @@ VALUES (
                 Profile(**profile) for profile in profiles]
             return list_profiles
         except Exception as e:
+            print(e)
             raise
         finally:
             db_cursor.close()
@@ -152,7 +158,7 @@ VALUES (
             db_cursor.execute(
                 "SELECT * FROM user_roles WHERE role_id = %s", (id,))
         except Exception as e:
-            print(e.msg)
+            print(e)
             raise
         finally:
             db_cursor.close()
@@ -177,7 +183,8 @@ VALUES (
                 "can_view_fr_analytics": self.can_view_fr_analytics,
                 "can_manage_donation": self.can_manage_donation,
                 "can_manage_fra_category": self.can_manage_fra_category,
-                "can_generate_report": self.can_generate_report
+                "can_generate_report": self.can_generate_report,
+                "is_user" : self.can_access_admin_dashboard or self.can_access_platform_mgt_dashboard
             }
             db_cursor.execute
             ("""
@@ -197,7 +204,8 @@ VALUES (
                     can_view_fr_analytics = %(can_view_fr_analytics)s,
                     can_manage_donation = %(can_manage_donation)s,
                     can_manage_fra_category = %(can_manage_fra_category)s,
-                    can_generate_report = %(can_generate_report)s
+                    can_generate_report = %(can_generate_report)s,
+                    is_user = %(is_user)s
                 WHERE role_id = %(role_id)s""",
                 params)
             db_conn.commit()
