@@ -13,6 +13,7 @@ async function loadCategories() {
   catch(err)
   {
     console.log(err);
+    populateCategories([]);
   }
 }
 function populateCategories(categories) {
@@ -28,7 +29,7 @@ function populateCategories(categories) {
   }
   else
   {
-    cat_dropdown.innerHTML = '<option value="" disabled>error connecting</option>';
+    cat_dropdown.innerHTML = '<option value="" Select>error connecting</option>';
     throw new Error("Failed to retrieve category");
   }
 }
