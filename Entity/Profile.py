@@ -157,6 +157,7 @@ VALUES (
         try:
             db_cursor.execute(
                 "SELECT * FROM user_roles WHERE role_id = %s", (id,))
+            return Profile(**db_cursor.fetchone())
         except Exception as e:
             print(e)
             raise
@@ -186,9 +187,8 @@ VALUES (
                 "can_generate_report": self.can_generate_report,
                 "is_user" : self.can_access_admin_dashboard or self.can_access_platform_mgt_dashboard
             }
-            db_cursor.execute
-            ("""
-             UPDATE roles
+            db_cursor.execute("""
+             UPDATE user_roles
                 SET
                     role_name = %(role_name)s,
                     description = %(description)s,
