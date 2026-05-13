@@ -166,7 +166,7 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
     btn.disabled = true;
 
     try {
-        const res = await fetch("http://127.0.0.1:8000/signup", {
+        const res = await fetch("https://fastapi-app-production-9d4a.up.railway.app/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

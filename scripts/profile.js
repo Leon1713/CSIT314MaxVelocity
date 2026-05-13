@@ -1,6 +1,6 @@
 async function loadProfile() {
     try {
-        const res = await fetch('http://127.0.0.1:8000/profile', { credentials: 'include' });
+        const res = await fetch('https://fastapi-app-production-9d4a.up.railway.app/profile', { credentials: 'include' });
 
         if (res.status === 401) { window.location.href = 'login.html'; return; }
         if (!res.ok) throw new Error('Failed to load profile');
@@ -58,7 +58,7 @@ document.getElementById('profile-save-btn').addEventListener('click', async () =
     btn.disabled = true;
 
     try {
-        const res = await fetch('http://127.0.0.1:8000/profile', {
+        const res = await fetch('https://fastapi-app-production-9d4a.up.railway.app/profile', {
             method: 'PATCH',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },

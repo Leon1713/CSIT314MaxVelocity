@@ -117,7 +117,7 @@ function applyFilters() {
 // ── Load from API ──────────────────────────────────────────────────────────────
 async function loadActivities() {
     try {
-        const res = await fetch('http://127.0.0.1:8000/fundraiser/activities', {
+        const res = await fetch('https://fastapi-app-production-9d4a.up.railway.app/fundraiser/activities', {
             credentials: 'include'
         });
 
@@ -157,7 +157,7 @@ document.getElementById('delete-confirm-btn').addEventListener('click', async ()
     if (!pendingDeleteId) return;
     deleteModal.hide();
     try {
-        const res = await fetch(`http://127.0.0.1:8000/fundraiser/activity/${pendingDeleteId}`, {
+        const res = await fetch(`https://fastapi-app-production-9d4a.up.railway.app/fundraiser/activity/${pendingDeleteId}`, {
             method: 'DELETE',
             credentials: 'include'
         });
@@ -188,7 +188,7 @@ dropdown.addEventListener('click', (e) => e.stopPropagation());
 
 document.getElementById('hub-logout-btn').addEventListener('click', async () => {
     try {
-        await fetch('http://127.0.0.1:8000/logout', { method: 'POST', credentials: 'include' });
+        await fetch('https://fastapi-app-production-9d4a.up.railway.app/logout', { method: 'POST', credentials: 'include' });
     } catch (_) {}
     window.location.href = 'login.html';
 });

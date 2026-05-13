@@ -26,7 +26,7 @@ function getButtonsByPermission(data) {
 }
 async function loadHub() {
     try {
-        const res = await fetch('http://127.0.0.1:8000/hub', {
+        const res = await fetch('https://fastapi-app-production-9d4a.up.railway.app/hub', {
             method: 'GET',
             credentials: 'include'
         });
@@ -85,7 +85,7 @@ function setupDropdown() {
 
     document.getElementById('hub-logout-btn').addEventListener('click', async () => {
         try {
-            await fetch('http://127.0.0.1:8000/logout', {
+            await fetch('https://fastapi-app-production-9d4a.up.railway.app/logout', {
                 method: 'POST',
                 credentials: 'include'
             });

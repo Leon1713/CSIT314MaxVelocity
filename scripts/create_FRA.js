@@ -11,7 +11,7 @@ dropdown.addEventListener('click', (e) => e.stopPropagation());
 
 document.getElementById('hub-logout-btn').addEventListener('click', async () => {
     try {
-        await fetch('http://127.0.0.1:8000/logout', { method: 'POST', credentials: 'include' });
+        await fetch('http://fastapi-app-production-9d4a.up.railway.app/logout', { method: 'POST', credentials: 'include' });
     } catch (_) {}
     window.location.href = 'login.html';
 });
@@ -20,7 +20,7 @@ document.getElementById('hub-logout-btn').addEventListener('click', async () => 
 async function loadCategories() {
     const select = document.getElementById('fra-category');
     try {
-        const res = await fetch('http://127.0.0.1:8000/fundraiser/categories', {
+        const res = await fetch('https://fastapi-app-production-9d4a.up.railway.app/fundraiser/categories', {
             credentials: 'include'
         });
 
@@ -89,7 +89,7 @@ document.getElementById('fra-submit-btn').addEventListener('click', async () => 
     btn.textContent = 'Submitting…';
 
     try {
-        const res = await fetch('http://127.0.0.1:8000/fundraiser/create_activity', {
+        const res = await fetch('https://fastapi-app-production-9d4a.up.railway.app/fundraiser/create_activity', {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },

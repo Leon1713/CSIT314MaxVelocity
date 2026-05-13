@@ -45,8 +45,8 @@ async function loadActivity() {
 
     try {
         const [actRes, catRes] = await Promise.all([
-            fetch(`http://127.0.0.1:8000/fundraiser/activity/${activityId}`, { credentials: 'include', method: 'GET' }),
-            fetch('http://127.0.0.1:8000/fundraiser/categories',             { credentials: 'include', method: 'GET' })
+            fetch(`https://fastapi-app-production-9d4a.up.railway.app/fundraiser/activity/${activityId}`, { credentials: 'include', method: 'GET' }),
+            fetch('https://fastapi-app-production-9d4a.up.railway.app/fundraiser/categories',             { credentials: 'include', method: 'GET' })
         ]);
 
         if (actRes.status === 401 || actRes.status === 403) { window.location.href = 'login.html'; return; }
@@ -193,7 +193,7 @@ document.getElementById('save-confirm-btn').addEventListener('click', async () =
     Object.keys(payload).forEach(k => payload[k] === undefined && delete payload[k]);
 
     try {
-        const res = await fetch(`http://127.0.0.1:8000/fundraiser/activity/${activityId}`, {
+        const res = await fetch(`https://fastapi-app-production-9d4a.up.railway.app/fundraiser/activity/${activityId}`, {
             method: 'PATCH',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
@@ -207,7 +207,7 @@ document.getElementById('save-confirm-btn').addEventListener('click', async () =
         }
 
         // Refresh activity data and return to view mode
-        const updated = await fetch(`http://127.0.0.1:8000/fundraiser/activity/${activityId}`, { credentials: 'include' });
+        const updated = await fetch(`https://fastapi-app-production-9d4a.up.railway.app/fundraiser/activity/${activityId}`, { credentials: 'include' });
         activityData = await updated.json();
         renderView(activityData);
         exitEditMode();
@@ -227,7 +227,7 @@ document.getElementById('fra-delete-btn').addEventListener('click', () => {
 document.getElementById('delete-confirm-btn').addEventListener('click', async () => {
     deleteModal.hide();
     try {
-        const del = await fetch(`http://127.0.0.1:8000/fundraiser/activity/${activityId}`, {
+        const del = await fetch(`https://fastapi-app-production-9d4a.up.railway.app/fundraiser/activity/${activityId}`, {
             method: 'DELETE', credentials: 'include'
         });
         if (del.ok) {
@@ -248,7 +248,7 @@ gearBtn.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classLi
 document.addEventListener('click', () => dropdown.classList.add('hidden'));
 dropdown.addEventListener('click', (e) => e.stopPropagation());
 document.getElementById('hub-logout-btn').addEventListener('click', async () => {
-    try { await fetch('http://127.0.0.1:8000/logout', { method: 'POST', credentials: 'include' }); } catch (_) {}
+    try { await fetch('https://fastapi-app-production-9d4a.up.railway.app/logout', { method: 'POST', credentials: 'include' }); } catch (_) {}
     window.location.href = 'login.html';
 });
 

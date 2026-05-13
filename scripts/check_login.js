@@ -1,6 +1,6 @@
 async function loadCategories() {
   try {
-    const catRes = await fetch("http://127.0.0.1:8000/login-roles/login", { method: 'GET', credentials: 'include' }).then(res => {
+    const catRes = await fetch("https://fastapi-app-production-9d4a.up.railway.app/login-roles/login", { method: 'GET', credentials: 'include' }).then(res => {
       if (!res.ok) {
         const errText = catRes.detail;
         throw new Error(errText);
@@ -10,8 +10,7 @@ async function loadCategories() {
       populateCategories(categories);
     })
   }
-  catch(err)
-  {
+  catch (err) {
     console.log(err);
     populateCategories([]);
   }
@@ -27,31 +26,30 @@ function populateCategories(categories) {
       cat_dropdown.appendChild(opt);
     });
   }
-  else
-  {
+  else {
     cat_dropdown.innerHTML = '<option value="" Select>error connecting</option>';
     throw new Error("Failed to retrieve category");
   }
 }
 async function check_session() {
   try {
-    const sesRes = await fetch("http://127.0.0.1:8000/session", { credentials: 'include', method: 'GET' })
+    const sesRes = await fetch("https://fastapi-app-production-9d4a.up.railway.app/session", { credentials: 'include', method: 'GET' })
       .then(ses => {
-      if (!ses.ok) {
-        const errText = ses.detail;
-        throw new Error(errText);
-      }
-      return ses.json()
-    }).then(session => {
-      if (!session.success) {
-        document.getElementById("login-modal-page").classList.remove("hidden");
-        document.getElementById("loader").classList.add("hidden");
-        console.log("no result found");
-      }
-      else if (session.success) {
-        window.location.href = "hub.html";
-      }
-    })
+        if (!ses.ok) {
+          const errText = ses.detail;
+          throw new Error(errText);
+        }
+        return ses.json()
+      }).then(session => {
+        if (!session.success) {
+          document.getElementById("login-modal-page").classList.remove("hidden");
+          document.getElementById("loader").classList.add("hidden");
+          console.log("no result found");
+        }
+        else if (session.success) {
+          window.location.href = "hub.html";
+        }
+      })
   }
   catch (_) {
     document.getElementById("login-modal-page").classList.remove("hidden");

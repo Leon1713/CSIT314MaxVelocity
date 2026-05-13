@@ -66,7 +66,7 @@ function renderActivities(activities) {
 // ── Load dashboard data from API ──────────────────────────────────────────────
 async function loadDashboard() {
     try {
-        const res = await fetch('http://127.0.0.1:8000/fundraiser/stats', {
+        const res = await fetch('https://fastapi-app-production-9d4a.up.railway.app/fundraiser/stats', {
             method: 'GET',
             credentials: 'include'
         });
@@ -116,7 +116,7 @@ dropdown.addEventListener('click', (e) => e.stopPropagation());
 
 document.getElementById('hub-logout-btn').addEventListener('click', async () => {
     try {
-        await fetch('http://127.0.0.1:8000/logout', { method: 'POST', credentials: 'include' });
+        await fetch('https://fastapi-app-production-9d4a.up.railway.app/logout', { method: 'POST', credentials: 'include' });
     } catch (_) {}
     window.location.href = 'login.html';
 });
