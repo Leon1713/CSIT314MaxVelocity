@@ -1,31 +1,32 @@
-const ROLE_NAMES = {
-    1: 'User Admin',
-    2: 'Fundraiser',
-    3: 'Donee',
-    4: 'Platform Mgmt',
-};
 
-const ROLE_BUTTONS = {
-    1: [ // user_admin — sees all roles
-        { icon: 'bi-cash-stack',    label: 'Fundraiser',    href: 'fundraiser_dashboard.html' },
-        { icon: 'bi-heart-fill',    label: 'Donee',         href: 'donee_dashboard.html' },
-        { icon: 'bi-people-fill',   label: 'User Admin',    href: 'admin_dashboard.html' },
-        { icon: 'bi-speedometer2',  label: 'Platform Mgmt', href: 'platform_dashboard.html' },
-    ],
-    2: [ // fund_raiser
-        { icon: 'bi-cash-stack', label: 'Fundraiser', href: 'fundraiser_dashboard.html' },
-    ],
-    3: [ // donee
-        { icon: 'bi-hand-heart', label: 'Donee', href: 'donee_dashboard.html' },
-    ],
-    4: [ // platform_mgmt
-        { icon: 'bi-speedometer2', label: 'Platform Mgmt', href: 'platform_dashboard.html' },
-    ],
-};
-
+// const ROLE_BUTTONS = {
+//     1: [ // user_admin — sees all roles
+//         { icon: 'bi-cash-stack',    label: 'Fundraiser',    href: 'fundraiser_dashboard.html' },
+//         { icon: 'bi-heart-fill',    label: 'Donee',         href: 'donee_dashboard.html' },
+//         { icon: 'bi-people-fill',   label: 'User Admin',    href: 'admin_dashboard.html' },
+//         { icon: 'bi-speedometer2',  label: 'Platform Mgmt', href: 'platform_dashboard.html' },
+//     ],
+//     2: [ // fund_raiser
+//         { icon: 'bi-cash-stack', label: 'Fundraiser', href: 'fundraiser_dashboard.html' },
+//     ],
+//     3: [ // donee
+//         { icon: 'bi-hand-heart', label: 'Donee', href: 'donee_dashboard.html' },
+//     ],
+//     4: [ // platform_mgmt
+//         { icon: 'bi-speedometer2', label: 'Platform Mgmt', href: 'platform_dashboard.html' },
+//     ],
+// };
+function getButtonsByPermission(data) {
+    let buttons = [
+        [data.can_access_admin_dashboard, { icon: 'bi-cash-stack',label: 'Fundraiser',href: 'fundraiser_dashboard.html' }],
+        [data.can_access_fr_dashboard,{ icon: 'bi-cash-stack', label: 'Fundraiser', href: 'fundraiser_dashboard.html' } ],
+        [data.can_access_donee_dashboard,{icon: 'bi-hand-heart', label: 'Donee', href: 'donee_dashboard.html'}],
+        [data.can_access_platform_mgt_dashboard, {icon: 'bi-speedometer2', label: 'Platform Mgmt', href: 'platform_dashboard.html'}]]
+        return buttons;
+}
 async function loadHub() {
     try {
-        const res = await fetch('http://127.0.0.1:8000/session', {
+        const res = await fetch('http://127.0.0.1:8000/hub', {
             method: 'GET',
             credentials: 'include'
         });
@@ -40,10 +41,12 @@ async function loadHub() {
         }
 
         document.getElementById('hub-username').textContent = data.username;
-
-        const buttons = ROLE_BUTTONS[data.role_id] || []; // need to fetch permissions to get role
+        const buttons = getButtonsByPermission(data);
         const container = document.getElementById('hub-buttons');
-        buttons.forEach(btn => {
+        buttons.forEach(([condition, btn]) => {
+            if(!condition)
+                return;
+
             const a = document.createElement('a');
             a.href = btn.href;
             a.className = 'hub-btn';
@@ -53,7 +56,7 @@ async function loadHub() {
 
         // Populate settings dropdown
         document.getElementById('dropdown-username').textContent = data.username;
-        document.getElementById('dropdown-role').textContent = ROLE_NAMES[data.role_id] || '';
+        document.getElementById('dropdown-role').textContent = data.role_name || '';
 
         document.getElementById('hub-loader').classList.add('hidden');
         document.getElementById('hub-page').classList.remove('hidden');
@@ -86,7 +89,7 @@ function setupDropdown() {
                 method: 'POST',
                 credentials: 'include'
             });
-        } catch (_) {}
+        } catch (_) { }
         window.location.href = 'login.html';
     });
 }
