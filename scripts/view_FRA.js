@@ -99,7 +99,7 @@ function enterEditMode() {
     document.getElementById('edit-title').value        = a.title        || '';
     document.getElementById('edit-service').value      = a.service_type || '';
     document.getElementById('edit-goal').value         = a.goal_amount  || '';
-    document.getElementById('edit-service-desc').value = a.service_type || '';
+    document.getElementById('edit-service-desc').value = a.description || '';
     document.getElementById('edit-start').value        = toInputDate(a.start_date);
     document.getElementById('edit-end').value          = toInputDate(a.end_date);
 
