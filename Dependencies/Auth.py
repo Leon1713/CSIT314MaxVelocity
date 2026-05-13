@@ -6,7 +6,7 @@ def get_current_users(session_id : str = Cookie(None, alias="token")):
         user = controller.AuthSession(session_id)
         return user
     except Exception:
-        return None
+        raise
     
 def require_permission(permissions : str):
     def checker(user = Depends(get_current_users)):
