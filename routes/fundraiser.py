@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
+from Entity.Account import Account
 from Dependencies.Auth import require_permission
 from Controller.GetFundraiserStatsController import GetFundraiserStatsController
 from Controller.CreateFRAController import CreateFRAController
@@ -8,10 +9,6 @@ from Controller.GetFRADetailsController import GetFRADetailsController
 from Controller.DeleteFRAController import DeleteFRAController
 from Controller.GetAllFRAController import GetAllFRAController
 from Controller.UpdateFRAController import UpdateFRAController
-
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from Entity.Account import Account
 
 
 from typing import Optional

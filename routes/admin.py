@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Annotated, Optional
 
+from Entity.Account import Account
+from Entity.Profile import Profile
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, StringConstraints
 from Controller.CreateProfileController import CreateProfileController
@@ -14,11 +16,7 @@ from Controller.SuspendUserProfileController import SuspendUserProfileController
 from Controller.ViewUserProfileController import ViewUserProfileController
 from Controller.UpdateProfileController import UpdateProfileController
 from Dependencies.Auth import require_permission
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from Entity.Account import Account
-    from Entity.Profile import Profile
 
 strictStr = Annotated[str,StringConstraints(strip_whitespace=True, min_length=1)]
 
@@ -150,7 +148,7 @@ def view_user_profiles_list():
         print(e.msg)
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No Profiles found")
 @router.get("/user_profiles/{profile_id}", dependencies=[Depends(require_permission("can_manage_user_profile"))])
-def view_user_profile(profile_id : int) -> "Profile":
+def view_user_profile(profile_id : int):
     controller : ViewUserProfileController = ViewUserProfileController()
     try:
         profile : Profile = controller.getUserProfile(profile_id)

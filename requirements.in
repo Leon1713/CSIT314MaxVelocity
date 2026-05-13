@@ -1,8 +1,6 @@
 fastapi
-uvicorn
+uvicorn[standard]
 mysql-connector-python
-passlib
-bcrypt
 python-dotenv
+passlib[argon2]
 requests
-argon2-cffi

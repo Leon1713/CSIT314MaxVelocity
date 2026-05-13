@@ -1,13 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
 from Controller.GetFRADetailsController import GetFRADetailsController
 from Controller.DonationController import DonationController
 from Controller.FavoriteController import FavoriteController
 from Dependencies.Auth import require_permission
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from Entity.Account import Account
+from Entity.Account import Account
 
 def require_donee(user=Depends(require_permission("can_access_donee_dashboard"))):
     return user

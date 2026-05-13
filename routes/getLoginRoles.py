@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 from Controller.ViewUserProfileController import ViewUserProfileController
 

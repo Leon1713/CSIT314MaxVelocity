@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel, StringConstraints, field_validator, EmailStr
+from pydantic import BaseModel, StringConstraints, field_validator
 import re
 from Controller.signupController import signupController
 

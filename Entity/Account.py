@@ -45,10 +45,10 @@ class Account:
             # roleId = Account.getRoleId(role_input)
             db_cursor.execute("""
                               (SELECT * FROM user_accounts
-                              WHERE username = %s AND role_id = %s AND u.is_suspended = 0)
+                              WHERE username = %s AND role_id = %s AND is_suspended = 0)
                               UNION ALL
                               (SELECT * FROM user_accounts
-                              WHERE email = %s AND role_id = %s AND u.is_suspended = 0)
+                              WHERE email = %s AND role_id = %s AND is_suspended = 0)
                               """,
                               (email_or_username, role_input, email_or_username, role_input))
             user_data = db_cursor.fetchall()
