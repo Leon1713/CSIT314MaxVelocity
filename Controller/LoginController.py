@@ -8,7 +8,7 @@ class LoginController:
     
     def __init__(self):
         self.pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
-    def Login(self, email: str, password: str, role: str, ip_address : str):
+    def Login(self, email: str, password: str, role: int, ip_address : str):
         with get_db_connection() as conn:
             try:
                 res : LoginResponse

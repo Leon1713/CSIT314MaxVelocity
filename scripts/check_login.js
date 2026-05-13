@@ -1,28 +1,62 @@
-async function start() {
+async function loadCategories() {
   try {
-    const res = await fetch("http://127.0.0.1:8000/session", { // send session cookie to backend
-      method: "GET",
-      credentials: "include"
+    const catRes = await fetch("http://127.0.0.1:8000/login-roles/login", { method: 'GET', credentials: 'include' }).then(res => {
+      if (!res.ok) {
+        const errText = catRes.detail;
+        throw new Error(errText);
+      }
+      return res.json();
+    }).then(categories => {
+      populateCategories(categories);
     })
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(errText);
-    }
-    const result = await res.json().then(data => {
-      if (!data.success) {
+  }
+  catch(err)
+  {
+    console.log(err);
+  }
+}
+function populateCategories(categories) {
+  cat_dropdown = document.getElementById("loginRole");
+  if (categories.length > 0) {
+    cat_dropdown.innerHTML = '<option value="" disabled>Select category</option>';
+    categories.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat.role_id;
+      opt.innerText = cat.role_name;
+      cat_dropdown.appendChild(opt);
+    });
+  }
+  else
+  {
+    cat_dropdown.innerHTML = '<option value="" disabled>error connecting</option>';
+    throw new Error("Failed to retrieve category");
+  }
+}
+async function check_session() {
+  try {
+    const sesRes = await fetch("http://127.0.0.1:8000/session", { credentials: 'include', method: 'GET' })
+      .then(ses => {
+      if (!ses.ok) {
+        const errText = ses.detail;
+        throw new Error(errText);
+      }
+      return ses.json()
+    }).then(session => {
+      if (!session.success) {
         document.getElementById("login-modal-page").classList.remove("hidden");
         document.getElementById("loader").classList.add("hidden");
         console.log("no result found");
       }
-      else if (data.success) {
+      else if (session.success) {
         window.location.href = "hub.html";
       }
     })
   }
-  catch (err) {
+  catch (_) {
     document.getElementById("login-modal-page").classList.remove("hidden");
     document.getElementById("loader").classList.add("hidden");
     console.log("Failed to connect to server. Please try again later.")
   }
 }
-start();
+loadCategories();
+check_session();

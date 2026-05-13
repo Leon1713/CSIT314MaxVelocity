@@ -37,20 +37,18 @@ class Account:
         }
 
     @staticmethod
-    def findUsersByEmailOrUsername(email_or_username: str, role_input: str, conn):
+    def findUsersByEmailOrUsername(email_or_username: str, role_input: int, conn):
         try:
             db_conn = conn
             db_cursor = db_conn.cursor(dictionary=True)
             # Check if the role exists, will raise an error if it doesn't
             # roleId = Account.getRoleId(role_input)
             db_cursor.execute("""
-                              (SELECT u.* FROM user_accounts u
-                              JOIN user_roles r ON u.role_id = r.role_id
-                              WHERE u.email = %s AND r.role_name = %s AND u.is_suspended = 0)
+                              (SELECT * FROM user_accounts
+                              WHERE username = %s AND role_id = %s AND u.is_suspended = 0)
                               UNION ALL
-                              (SELECT u.* FROM user_accounts u
-                              JOIN user_roles r ON u.role_id = r.role_id
-                              WHERE u.username = %s AND r.role_name = %s AND u.is_suspended = 0)
+                              (SELECT * FROM user_accounts
+                              WHERE email = %s AND role_id = %s AND u.is_suspended = 0)
                               """,
                               (email_or_username, role_input, email_or_username, role_input))
             user_data = db_cursor.fetchall()
@@ -74,13 +72,13 @@ class Account:
             if result:
                 return result["role_id"]
             else:
-                raise ValueError(f"Role '{role_name}' not found in the database.")
+                raise ValueError(
+                    f"Role '{role_name}' not found in the database.")
         except Exception as e:
             print(e)
             raise
         finally:
             db_cursor.close()
-        
 
     @staticmethod
     def insertNewUser(account_data: dict, conn) -> bool:
@@ -203,6 +201,7 @@ class Account:
                 "Error Suspending Account with id = %s", (user_id,))
         finally:
             db_cursor.close()
+
     def SetLastLogin(self: "Account", conn):
         db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)

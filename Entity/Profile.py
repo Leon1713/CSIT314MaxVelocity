@@ -224,4 +224,15 @@ VALUES (
             raise
         finally:
             db_cursor.close()
+    @staticmethod
+    def GetAllProfileNameAndId(conn, is_signup = True):
+        try:
+            db_cursor = conn.cursor(dictionary=True)
+            db_cursor.execute(f"SELECT role_id, role_name FROM user_roles{' WHERE is_user = 1' if is_signup else ''} ORDER BY role_id ASC")
+            return db_cursor.fetchall()
+        except Exception as e:
+            print(e)
+            raise
+        finally:
+            db_cursor.close()
             
