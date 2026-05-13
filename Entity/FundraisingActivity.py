@@ -210,6 +210,24 @@ class FundraisingActivity():
                               ORDER BY created_at DESC
                               LIMIT %s OFFSET %s
                               """, (limitPerPage, offset,))
+            return db_cursor.fetchall()
         except Exception as e:
             print(e)
             raise
+        finally:
+            db_cursor.close()
+    @staticmethod
+    def getFundRaisingActivityById(fra_id : int, conn):
+        db_conn = conn
+        db_cursor = db_conn.cursor(dictionary=True)
+        try:
+            db_cursor.execute("""
+                              SELECT * FROM fundraising_activities
+                              WHERE id = %s
+                              """, (fra_id,))
+            return db_cursor.fetchone()
+        except Exception as e:
+            print(e)
+            raise
+        finally:
+            db_cursor.close()

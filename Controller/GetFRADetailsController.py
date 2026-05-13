@@ -22,4 +22,12 @@ class GetFRADetailsController:
                 return FundraisingActivity.getAllFundRaisingActivities(page, limit, conn)
             except Exception as e:
                 print(e)
-                raise    
+                raise
+    def getActivityByFRAId(self, act_id : int):
+        with get_db_connection() as conn:
+            try:
+                return FundraisingActivity.getFundRaisingActivityById(act_id, conn)
+            except Exception as e:
+                print(e)
+                raise
+            

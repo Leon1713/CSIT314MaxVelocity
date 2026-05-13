@@ -25,10 +25,10 @@ def get_fra_list():
 @router.get("/fundraising_activities/{fra_id}", dependencies=[Depends(require_permission("can_view_fra"))])
 def get_fra(fra_id: int):
     controller = GetFRADetailsController()
-    fra = controller.getFRA(fra_id)
+    fra = controller.getActivityByFRAId(fra_id)
     if fra is None:
         raise HTTPException(status_code=404, detail="Fundraising activity not found")
-    return fra.to_dict()
+    return fra
 
 
 # --- Donations ---
@@ -40,7 +40,7 @@ def get_donations(user=Depends(require_permission("can_manage_donation"))):
     donations = controller.getDonations(user.user_id)
     return donations
 
-@router.post("/donations/{fra_id}")
+@router.post("/donations/{fra_id}") # might implement stripe
 def make_donation(fra_id, amount, user : Account = Depends(require_permission("can_manage_donation"))):
     controller = DonationController()
     try:
