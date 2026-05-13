@@ -23,7 +23,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
   document.getElementById("login-loader").classList.remove("hidden");
 
   try {
-    const res = await fetch("http://127.0.0.1:8000/login", {
+    const res = await fetch("https://fastapi-app-production-9d4a.up.railway.app/login", {
       method: "POST",
       credentials: "include",
       headers: {
