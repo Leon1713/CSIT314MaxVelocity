@@ -30,7 +30,7 @@ def login(data: LoginData, req : Request, res : Response) -> dict:
             value=result.session_id,
             httponly=True,
             samesite="lax",
-            secure=False #test only
+            secure=True #test only
         )
         return res
     except Exception:   
