@@ -30,7 +30,7 @@ jobs:
 
       - name: Runs Docker image as test
         run: |
-          docker run -d --name test -p 8000:8000 -e DB_HOST=$DB_HOST -e DB_USER=$DB_USER -e DB_PORT=$DB_PORT -e DB_PASSWORD=$DB_PASSWORD -e DB_NAME = $DB_NAME fastapi-ci
+          docker run -d --name test -p 8000:8000 -e DB_HOST=$DB_HOST -e DB_USER=$DB_USER -e DB_PORT=$DB_PORT -e DB_PASSWORD=$DB_PASSWORD -e DB_NAME=$DB_NAME fastapi-ci
           sleep 5
           docker logs test
           docker stop test
