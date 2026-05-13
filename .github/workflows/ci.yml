@@ -1,5 +1,10 @@
-name: Build and Push Docker Image
-
+name: CI - Test build
+env:
+    DB_HOST: ${{ secrets.DB_HOST }}
+    DB_USER: ${{ secrets.DB_USER }}
+    DB_PORT: ${{secrets.DB_PORT}}
+    DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+    DB_NAME: ${{DB_NAME}}
 on:
   push:
     branches:
@@ -17,13 +22,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Log in to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/fastapi-app:latest .
+          docker build -t fastapi-ci
 
-      - name: Push Docker image
+      - name: Runs Docker image as test
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/fastapi-app:latest
+          docker run -d --name test -p 8000:8000 fastapi-ci
+          sleep 5
+          docker logs test
+          docker stop test
