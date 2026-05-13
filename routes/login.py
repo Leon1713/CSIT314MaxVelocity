@@ -29,7 +29,7 @@ def login(data: LoginData, req : Request, res : Response) -> dict:
             key="token",
             value=result.session_id,
             httponly=True,
-            samesite="lax",
+            samesite="none",
             secure=True #test only
         )
         return res
