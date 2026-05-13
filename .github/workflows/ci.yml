@@ -24,7 +24,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t fastapi-ci
+          docker build -t fastapi-ci .
 
       - name: Runs Docker image as test
         run: |
