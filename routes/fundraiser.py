@@ -50,15 +50,15 @@ def _norm_status(raw) -> int:
 def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_access_fr_dashboard"))):
     controller = GetFundraiserStatsController()
     try:
-        stats = controller.getStats(user.user_id)
-        recent = controller.getRecentActivities(user.user_id, limit=5)
+        stats  = controller.getStats(user.user_id) or {}
+        recent = controller.getRecentActivities(user.user_id, limit=5) or []
         return {
             "username": user.username,
             "stats": {
-                "total_activities": int(stats["total_activities"] or 0),
-                "active":           int(stats["active_activities"] or 0),
-                "total_raised":     float(stats["total_raised"] or 0),
-                "donors":           int(stats["donor_count"] or 0),
+                "total_activities": int(stats.get("total_activities") or 0),
+                "active":           int(stats.get("active_activities") or 0),
+                "total_raised":     float(stats.get("total_raised") or 0),
+                "donors":           int(stats.get("donor_count") or 0),
             },
             "recent_activities": [
                 {

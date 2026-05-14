@@ -36,6 +36,16 @@ class Profile:
         self.can_generate_report = can_generate_report
         self.is_active = is_active
 
+    _KNOWN_FIELDS = {
+        "role_id", "role_name", "description",
+        "can_access_admin_dashboard", "can_access_fr_dashboard",
+        "can_access_donee_dashboard", "can_access_platform_mgt_dashboard",
+        "can_manage_user_profile", "can_manage_user_account",
+        "can_manage_fr", "can_view_fra", "can_manage_fra_favourite",
+        "can_view_fr_analytics", "can_manage_donation",
+        "can_manage_fra_category", "can_generate_report", "is_active",
+    }
+
     @staticmethod
     def GetProfileByRoleId(role_id: int, conn) -> Profile:
         db_conn = conn
@@ -44,7 +54,9 @@ class Profile:
             db_cursor.execute(
                 "SELECT * FROM user_roles WHERE role_id = %s", (role_id,))
             profile_dict = db_cursor.fetchone()
-            result = Profile(**profile_dict)
+            # Filter to only fields Profile.__init__ accepts — extra DB columns cause TypeError
+            filtered = {k: v for k, v in profile_dict.items() if k in Profile._KNOWN_FIELDS}
+            result = Profile(**filtered)
             return result
         except Exception as e:
             raise e

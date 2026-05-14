@@ -21,7 +21,6 @@ class FundraisingActivity():
         return {
             "id": self.id,
             "fundraiser_id": self.fundraiser_id,
-            "donee_id": self.donee_id,
             "category_id": self.category_id,
             "description": self.description,
             "service_type": self.service_type,
@@ -36,22 +35,26 @@ class FundraisingActivity():
 
     @staticmethod
     def getStatsByFundraiserId(fundraiser_id: int, conn) -> dict:
-        db_conn = conn
-        db_cursor = db_conn.cursor(dictionary=True)
+        db_cursor = conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
                 SELECT
-                    COUNT(fundraising_activities.id)                                              AS total_activities,
-                    SUM(CASE WHEN fundraising_activities.status = 1 OR LOWER(fundraising_activities.status) = 'active' THEN 1 ELSE 0 END) AS active_activities,
-                    COALESCE(SUM(fundraising_activities.current_amount), 0)                       AS total_raised,
-                    COUNT(DISTINCT donations.donee_id)                               AS donor_count
-                FROM fundraising_activities LEFT JOIN donations
-                ON fundraising_activities.id = donations.fra_id
-                WHERE fundraising_activities.fundraiser_id = %s
+                    COUNT(*) AS total_activities,
+                    SUM(CASE WHEN status = 1 OR LOWER(CAST(status AS CHAR)) = 'active' THEN 1 ELSE 0 END) AS active_activities,
+                    COALESCE(SUM(current_amount), 0) AS total_raised
+                FROM fundraising_activities
+                WHERE fundraiser_id = %s
             """, (fundraiser_id,))
-            return db_cursor.fetchone()
-        except Exception  as e:
-            print(e)
+            row = db_cursor.fetchone()
+            return {
+                "total_activities": int(row["total_activities"] or 0),
+                "active_activities": int(row["active_activities"] or 0),
+                "total_raised": float(row["total_raised"] or 0),
+                "donor_count": 0,
+            }
+        except Exception as e:
+            print(f"getStatsByFundraiserId error: {e}")
+            return {"total_activities": 0, "active_activities": 0, "total_raised": 0, "donor_count": 0}
         finally:
             db_cursor.close()
 
@@ -175,5 +178,8 @@ class FundraisingActivity():
                 LIMIT %s
             """, (fundraiser_id, limit))
             return db_cursor.fetchall()
+        except Exception as e:
+            print(f"getRecentByFundraiserId error: {e}")
+            return []
         finally:
             db_cursor.close()
