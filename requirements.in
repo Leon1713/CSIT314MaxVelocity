@@ -4,3 +4,4 @@ mysql-connector-python
 python-dotenv
 passlib[argon2]
 requests
+python-multipart
