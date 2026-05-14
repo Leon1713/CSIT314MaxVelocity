@@ -26,9 +26,14 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
+      - name: Link project
+        run: railway link --project stunning-patience
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
       - name: Force Railway Redeploy
         run: railway redeploy --service fastapi-app --yes
         env:
-          RAILWAY_TOKEN: ${{secrets.RAILWAY_TOKEN}}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
       
       
