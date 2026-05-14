@@ -5,6 +5,7 @@ from Dependencies.Auth import require_permission
 from Controller.GetPlatformStatsController import GetPlatformStatsController
 from Controller.ManageCategoriesController import ManageCategoriesController
 from Controller.GetCategoryDetailsController import GetCategoryDetailsController
+from Controller.GetPlatformReportController import GetPlatformReportController
 
 
 class CreateCategoryInput(BaseModel):
@@ -54,6 +55,54 @@ def get_platform_stats(
                 }
                 for act in (recent or [])
             ]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
+@router.get("/report")
+def get_platform_report(
+    user: "Account" = Depends(require_permission("can_access_platform_mgt_dashboard")),
+    period: str = "weekly",
+):
+    controller = GetPlatformReportController()
+    try:
+        data   = controller.getReport(period)
+        stats  = data["stats"]
+        recent = data["recent"] or []
+
+        def norm_status(s):
+            return 1 if (s == 1 or str(s).lower() == "active") else 0
+
+        chart = data.get("chart_data") or []
+        return {
+            "username": user.username,
+            "period":   period,
+            "stats": {
+                "new_campaigns":    int(stats["new_campaigns"]    or 0),
+                "total_raised":     float(stats["total_raised"]   or 0),
+                "activity_visits":  int(stats["activity_visits"]  or 0),
+                "new_users":        int(stats["new_users"]        or 0),
+                "active_campaigns": int(stats["active_campaigns"] or 0),
+                "avg_raised":       float(stats["avg_raised"]     or 0),
+            },
+            "recent_activity": [
+                {
+                    "id":             act["id"],
+                    "title":          act["description"],
+                    "category_name":  act.get("category_name") or "—",
+                    "service_type":   act.get("service_type")  or "—",
+                    "status":         norm_status(act["status"]),
+                    "current_amount": float(act["current_amount"] or 0),
+                    "view_count":     int(act.get("view_count") or 0),
+                    "created_at":     str(act["created_at"]) if act["created_at"] else None,
+                }
+                for act in recent
+            ],
+            "chart_data": [
+                {"title": c["title"], "view_count": int(c["view_count"] or 0)}
+                for c in chart
+            ],
         }
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
