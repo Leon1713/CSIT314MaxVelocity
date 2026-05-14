@@ -212,3 +212,4 @@ class Account:
             raise
         finally:
             db_cursor.close()
+            print("test")
