@@ -22,6 +22,9 @@ class AuthController:
         with get_db_connection() as conn:
             try:
                 profile = Profile.GetProfileByRoleId(user.role_id, conn)
+                # Admin users have full access to everything
+                if getattr(profile, 'can_access_admin_dashboard', False):
+                    return True
                 return getattr(profile, permissionName)
             except Exception:
                 raise HTTPException(status_code=404, detail="Failed to get roles")        

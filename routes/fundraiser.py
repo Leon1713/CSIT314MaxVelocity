@@ -11,12 +11,10 @@ from Controller.UpdateFRAController import UpdateFRAController
 from Controller.RecordFRAViewController import RecordFRAViewController
 from Controller.GetCompletedFRAController import GetCompletedFRAController
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from Entity.Account import Account
 
-
-from typing import Optional
 
 class CreateFRAInput(BaseModel):
     title: str
@@ -41,19 +39,34 @@ router = APIRouter(
 )
 
 def _norm_status(raw) -> int:
-    """Normalise DB status (int 1/0 or legacy string 'active'/'inactive') to int."""
     if isinstance(raw, int):
         return raw
     s = str(raw).lower()
     return 1 if s in ('active', '1') else 0
 
+def _is_admin(user) -> bool:
+    """Returns True if the user has admin dashboard access (bypasses per-fundraiser filters)."""
+    try:
+        from db import get_db_connection
+        from Entity.Profile import Profile
+        with get_db_connection() as conn:
+            profile = Profile.GetProfileByRoleId(user.role_id, conn)
+            return bool(getattr(profile, 'can_access_admin_dashboard', False))
+    except Exception:
+        return False
+
+def _fid(user) -> Optional[int]:
+    """Returns fundraiser_id filter: None for admins (see all), user_id otherwise."""
+    return None if _is_admin(user) else user.user_id
+
 
 @router.get("/stats")
 def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_access_fr_dashboard"))):
     controller = GetFundraiserStatsController()
+    fid = _fid(user)
     try:
-        stats  = controller.getStats(user.user_id) or {}
-        recent = controller.getRecentActivities(user.user_id, limit=5) or []
+        stats  = controller.getStats(fid) or {}
+        recent = controller.getRecentActivities(fid, limit=5) or []
         return {
             "username": user.username,
             "stats": {
@@ -83,8 +96,9 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
 @router.get("/activities")
 def get_all_activities(user: "Account" = Depends(require_permission("can_access_fr_dashboard"))):
     controller = GetAllFRAController()
+    fid = _fid(user)
     try:
-        activities = controller.getAllActivities(user.user_id)
+        activities = controller.getAllActivities(fid)
         return {
             "username": user.username,
             "activities": [
@@ -112,8 +126,9 @@ def get_activity_details(
     user: "Account" = Depends(require_permission("can_access_fr_dashboard"))
 ):
     controller = GetFRADetailsController()
+    fid = _fid(user)
     try:
-        activity = controller.getActivity(activity_id, user.user_id)
+        activity = controller.getActivity(activity_id, fid)
         if not activity:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found")
         return {
@@ -143,9 +158,10 @@ def update_activity(
     user: "Account" = Depends(require_permission("can_manage_fr"))
 ):
     controller = UpdateFRAController()
+    fid = _fid(user)
     try:
         success = controller.updateActivity(
-            activity_id, user.user_id, data.model_dump(exclude_none=True)
+            activity_id, fid, data.model_dump(exclude_none=True)
         )
         if not success:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found")
@@ -162,8 +178,9 @@ def delete_activity(
     user: "Account" = Depends(require_permission("can_manage_fr"))
 ):
     controller = DeleteFRAController()
+    fid = _fid(user)
     try:
-        deleted = controller.deleteActivity(activity_id, user.user_id)
+        deleted = controller.deleteActivity(activity_id, fid)
         if not deleted:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found")
         return {"success": True}
@@ -195,6 +212,7 @@ def get_completed_activities(
     date_to: Optional[str] = None,
 ):
     controller = GetCompletedFRAController()
+    fid = _fid(user)
     try:
         filters = {
             "keyword":     keyword,
@@ -202,7 +220,7 @@ def get_completed_activities(
             "date_from":   date_from,
             "date_to":     date_to,
         }
-        activities = controller.getCompleted(user.user_id, filters) or []
+        activities = controller.getCompleted(fid, filters) or []
         return {
             "username": user.username,
             "activities": [
