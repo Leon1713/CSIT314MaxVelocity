@@ -1,7 +1,7 @@
 const STATUS_COLORS = {
-    active:    '#22c55e',
-    inactive:  '#ef4444',
-    pending:   '#f97316',
+    active: '#22c55e',
+    inactive: '#ef4444',
+    pending: '#f97316',
     completed: '#f59e0b',
     cancelled: '#ef4444',
 };
@@ -29,10 +29,10 @@ function daysLeft(endDateStr) {
 }
 
 // ── Routing ───────────────────────────────────────────────────────────────────
-const params     = new URLSearchParams(window.location.search);
+const params = new URLSearchParams(window.location.search);
 const activityId = params.get('id');
 const fromManage = params.get('from') === 'manage';
-const backHref   = fromManage ? 'manage_FRA.html' : 'fundraiser_dashboard.html';
+const backHref = fromManage ? 'manage_FRA.html' : 'fundraiser_dashboard.html';
 
 document.getElementById('fra-back-link').href = backHref;
 document.getElementById('fra-close-btn').href = backHref;
@@ -41,32 +41,31 @@ document.getElementById('fra-close-btn').href = backHref;
 let activityData = null;
 
 function renderView(a) {
-    document.getElementById('fra-title').innerText          = a.title;
-    document.getElementById('fra-description').innerText                = a.description;
+    document.getElementById('fra-title').innerText = a.title;
+    document.getElementById('fra-service-type').textContent = a.description;
     document.getElementById('fra-banner-service').innerText = a.service_type;
-    document.getElementById('fra-category').innerText       = a.category_name;
-    document.getElementById('fra-raised').innerText         = formatCurrency(a.current_amount);
-    document.getElementById('fra-goal').innerText           = formatCurrency(a.goal_amount);
-    document.getElementById('fra-days').innerText           = daysLeft(a.end_date);
-    //document.getElementById('fra-service-type').textContent   = a.service_type;
-    document.getElementById('fra-start').innerText          = formatDate(a.start_date);
-    document.getElementById('fra-end').innerText            = formatDate(a.end_date);
+    document.getElementById('fra-category').innerText = a.category_name;
+    document.getElementById('fra-raised').innerText = formatCurrency(a.current_amount);
+    document.getElementById('fra-goal').innerText = formatCurrency(a.goal_amount);
+    document.getElementById('fra-days').innerText = daysLeft(a.end_date);
+    document.getElementById('fra-start').innerText = formatDate(a.start_date);
+    document.getElementById('fra-end').innerText = formatDate(a.end_date);
 
     const statusKey = typeof a.status === 'number'
         ? (a.status === 1 ? 'active' : 'inactive')
         : String(a.status ?? '').toLowerCase();
     const isActive = a.status === 1 || statusKey === 'active';
-    const color    = STATUS_COLORS[statusKey] || '#aaa';
-    const label    = statusKey.charAt(0).toUpperCase() + statusKey.slice(1) || '—';
+    const color = STATUS_COLORS[statusKey] || '#aaa';
+    const label = statusKey.charAt(0).toUpperCase() + statusKey.slice(1) || '—';
     document.getElementById('fra-status-dot').style.background = color;
-    document.getElementById('fra-status-text').textContent     = label;
+    document.getElementById('fra-status-text').textContent = label;
     const badge = document.getElementById('fra-status-badge');
     badge.style.background = isActive ? '#f0fdf4' : '#fee2e2';
-    badge.style.border     = isActive ? '1.5px solid #bbf7d0' : '1.5px solid #fecaca';
-    badge.style.color      = isActive ? '#166534' : '#991b1b';
+    badge.style.border = isActive ? '1.5px solid #bbf7d0' : '1.5px solid #fecaca';
+    badge.style.color = isActive ? '#166534' : '#991b1b';
 
     document.getElementById('dropdown-username').textContent = a.username || '';
-    document.getElementById('dropdown-role').textContent     = 'Fundraiser';
+    document.getElementById('dropdown-role').textContent = 'Fundraiser';
 }
 
 async function loadActivity() {
@@ -93,7 +92,7 @@ function showToast(msg, delay = 2500) {
 }
 
 // ── Modals ────────────────────────────────────────────────────────────────────
-const editModal   = new bootstrap.Modal(document.getElementById('editModal'));
+const editModal = new bootstrap.Modal(document.getElementById('editModal'));
 const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
 
 // ── Edit ──────────────────────────────────────────────────────────────────────
@@ -102,12 +101,12 @@ document.getElementById('fra-edit-btn').addEventListener('click', async () => {
     if (!a) return;
 
     // Pre-fill fields
-    document.getElementById('edit-title').value   = a.title || '';
+    document.getElementById('edit-title').value = a.title || '';
     document.getElementById('edit-service').value = a.service_type || '';
-    document.getElementById('edit-goal').value    = a.goal_amount || '';
-    document.getElementById('edit-start').value   = toInputDate(a.start_date);
-    document.getElementById('edit-end').value     = toInputDate(a.end_date);
-    document.getElementById('edit-status').value  = (a.status === 1 || a.status === true) ? '1' : '0';
+    document.getElementById('edit-goal').value = a.goal_amount || '';
+    document.getElementById('edit-start').value = toInputDate(a.start_date);
+    document.getElementById('edit-end').value = toInputDate(a.end_date);
+    document.getElementById('edit-status').value = (a.status === 1 || a.status === true) ? '1' : '0';
     document.getElementById('edit-error').classList.add('hidden');
 
     // Load categories into select
@@ -136,13 +135,13 @@ document.getElementById('edit-save-btn').addEventListener('click', async () => {
     errEl.classList.add('hidden');
 
     const payload = { // need see how modal looks like
-        title:        document.getElementById('edit-title').value.trim()   || undefined,
+        title: document.getElementById('edit-title').value.trim() || undefined,
         service_type: document.getElementById('edit-service').value.trim() || undefined,
-        category_id:  Number(document.getElementById('edit-category').value) || undefined,
-        goal_amount:  Number(document.getElementById('edit-goal').value)   || undefined,
-        start_date:   document.getElementById('edit-start').value          || undefined,
-        end_date:     document.getElementById('edit-end').value            || undefined,
-        status:       Number(document.getElementById('edit-status').value),
+        category_id: Number(document.getElementById('edit-category').value) || undefined,
+        goal_amount: Number(document.getElementById('edit-goal').value) || undefined,
+        start_date: document.getElementById('edit-start').value || undefined,
+        end_date: document.getElementById('edit-end').value || undefined,
+        status: Number(document.getElementById('edit-status').value),
     };
     Object.keys(payload).forEach(k => payload[k] === undefined && delete payload[k]);
 
@@ -191,12 +190,12 @@ document.getElementById('delete-confirm-btn').addEventListener('click', async ()
 });
 
 // ── Gear dropdown ─────────────────────────────────────────────────────────────
-const gearBtn  = document.getElementById('hub-gear-btn');
+const gearBtn = document.getElementById('hub-gear-btn');
 const dropdown = document.getElementById('hub-settings-dropdown');
 gearBtn.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('hidden'); });
 document.addEventListener('click', () => dropdown.classList.add('hidden'));
 dropdown.addEventListener('click', (e) => e.stopPropagation());
 document.getElementById('hub-logout-btn').addEventListener('click', async () => {
-    try { await fetch('http://127.0.0.1:8000/logout', { method: 'POST', credentials: 'include' }); } catch (_) {}
+    try { await fetch('http://127.0.0.1:8000/logout', { method: 'POST', credentials: 'include' }); } catch (_) { }
     window.location.href = 'login.html';
 });

@@ -74,8 +74,8 @@ fundly/
 
 | Role ID | Role Name | Description | Hub Buttons |
 |---|---|---|---|
-| 1 | `user_admin` | Manages user accounts | All 4 buttons |
-| 2 | `fund_raiser` | Creates and manages fundraisers | Fundraiser |
+| 1 | `user admin` | Manages user accounts | user admin |
+| 2 | `fund raiser` | Creates and manages fundraisers | Fundraiser |
 | 3 | `donee` | Searches and donates | Donee |
 | 4 | `platform_mgmt` | Manages categories & reports | Platform Mgmt |
 

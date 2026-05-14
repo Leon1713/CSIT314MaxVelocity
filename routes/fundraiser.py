@@ -25,12 +25,12 @@ class CreateFRAInput(BaseModel):
 class UpdateFRAInput(BaseModel):
     title: Optional[str] = None
     service_type: Optional[str] = None
-    description: Optional[str] = None
+    
     category_id: Optional[int] = None
     goal_amount: Optional[float] = None
     start_date: Optional[str] = None
     end_date: Optional[str] = None
-    status: Optional[str] = None
+    status: Optional[int] = None
 
 router = APIRouter(
     prefix="/fundraiser",
@@ -94,7 +94,7 @@ def get_all_activities(user: "Account" = Depends(require_permission("can_access_
                     "category_name":  act.get("category_name") or "—",
                     "current_amount": float(act["current_amount"] or 0),
                     "goal_amount":    float(act["goal_amount"] or 0),
-                    "status":         _norm_status(act["status"]),
+                    "status":         int(act["status"]),
                     "end_date":       str(act["end_date"]) if act["end_date"] else None,
                 }
                 for act in (activities or [])
@@ -124,7 +124,7 @@ def get_activity_details(
             "service_type":  activity.get("service_type") or "—",
             "current_amount": float(activity["current_amount"] or 0),
             "goal_amount":    float(activity["goal_amount"] or 0),
-            "status":         _norm_status(activity["status"]),
+            "status":         int(activity["status"]),
             "start_date":     str(activity["start_date"]) if activity["start_date"] else None,
             "end_date":       str(activity["end_date"]) if activity["end_date"] else None,
         }

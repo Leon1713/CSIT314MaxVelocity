@@ -1,6 +1,6 @@
 const STATUS_COLORS = {
-    "active": '#22c55e',
-    "inactive": '#f97316',
+    1: '#22c55e',
+    0: '#f97316',
 };
 
 const STATUS_LABELS = {
@@ -9,8 +9,8 @@ const STATUS_LABELS = {
 };
 
 const BADGE_CLASSES = {
-    "active" : 'manage-badge-active',
-    "inactive": 'manage-badge-inactive',
+    1 : 'manage-badge-active',
+    0: 'manage-badge-inactive',
 };
 
 
