@@ -211,4 +211,5 @@ class Account:
         except Exception:
             raise
         finally:
+            print("test push")
             db_cursor.close()
