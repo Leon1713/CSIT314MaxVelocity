@@ -2411,3 +2411,89 @@ body.login-page {
   font-size: 0.82rem;
   align-items: center;
 }
+/* ── View / shortlist counts on manage cards ─────────────────── */
+.manage-card-counts {
+    display: flex;
+    gap: 12px;
+    margin-top: 5px;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 600;
+}
+.manage-card-counts i {
+    margin-right: 3px;
+    font-size: 0.72rem;
+}
+
+/* ── History button (secondary outline style) ────────────────── */
+.manage-history-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1.5px solid var(--fundly-primary, #c96b6b);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--fundly-primary, #c96b6b);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+}
+.manage-history-btn:hover {
+    background: var(--fundly-primary, #c96b6b);
+    color: #fff;
+}
+
+/* ── Completed FRA filter row ────────────────────────────────── */
+.completed-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+.completed-search-row {
+    display: flex;
+    width: 100%;
+}
+.completed-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+.completed-filter-service {
+    flex: 1 1 160px;
+    max-width: 220px;
+}
+.completed-date-range {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1 1 260px;
+}
+.completed-date-input {
+    flex: 1;
+    min-width: 130px;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+}
+.completed-date-sep {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* ── Dashboard outline button ────────────────────────────────── */
+.fr-overview-btn-outline {
+    background: transparent !important;
+    border: 1.5px solid rgba(255,255,255,0.7) !important;
+    color: #fff !important;
+}
+.fr-overview-btn-outline:hover {
+    background: rgba(255,255,255,0.15) !important;
+}

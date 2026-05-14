@@ -8,6 +8,8 @@ from Controller.GetFRADetailsController import GetFRADetailsController
 from Controller.DeleteFRAController import DeleteFRAController
 from Controller.GetAllFRAController import GetAllFRAController
 from Controller.UpdateFRAController import UpdateFRAController
+from Controller.RecordFRAViewController import RecordFRAViewController
+from Controller.GetCompletedFRAController import GetCompletedFRAController
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -87,13 +89,15 @@ def get_all_activities(user: "Account" = Depends(require_permission("can_access_
             "username": user.username,
             "activities": [
                 {
-                    "id":             act["id"],
-                    "title":          act["description"],
-                    "category_name":  act.get("category_name") or "—",
-                    "current_amount": float(act["current_amount"] or 0),
-                    "goal_amount":    float(act["goal_amount"] or 0),
-                    "status":         _norm_status(act["status"]),
-                    "end_date":       str(act["end_date"]) if act["end_date"] else None,
+                    "id":              act["id"],
+                    "title":           act["description"],
+                    "category_name":   act.get("category_name") or "—",
+                    "current_amount":  float(act["current_amount"] or 0),
+                    "goal_amount":     float(act["goal_amount"] or 0),
+                    "status":          _norm_status(act["status"]),
+                    "end_date":        str(act["end_date"]) if act["end_date"] else None,
+                    "view_count":      int(act.get("view_count") or 0),
+                    "shortlist_count": int(act.get("shortlist_count") or 0),
                 }
                 for act in (activities or [])
             ]
@@ -113,16 +117,18 @@ def get_activity_details(
         if not activity:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found")
         return {
-            "id":            activity["id"],
-            "title":         activity["description"],
-            "category_id":   activity.get("category_id"),
-            "category_name": activity.get("category_name") or "—",
-            "service_type":  activity.get("service_type") or "—",
-            "current_amount": float(activity["current_amount"] or 0),
-            "goal_amount":    float(activity["goal_amount"] or 0),
-            "status":         _norm_status(activity["status"]),
-            "start_date":     str(activity["start_date"]) if activity["start_date"] else None,
-            "end_date":       str(activity["end_date"]) if activity["end_date"] else None,
+            "id":              activity["id"],
+            "title":           activity["description"],
+            "category_id":     activity.get("category_id"),
+            "category_name":   activity.get("category_name") or "—",
+            "service_type":    activity.get("service_type") or "—",
+            "current_amount":  float(activity["current_amount"] or 0),
+            "goal_amount":     float(activity["goal_amount"] or 0),
+            "status":          _norm_status(activity["status"]),
+            "start_date":      str(activity["start_date"]) if activity["start_date"] else None,
+            "end_date":        str(activity["end_date"]) if activity["end_date"] else None,
+            "view_count":      int(activity.get("view_count") or 0),
+            "shortlist_count": int(activity.get("shortlist_count") or 0),
         }
     except HTTPException:
         raise
@@ -163,6 +169,59 @@ def delete_activity(
         return {"success": True}
     except HTTPException:
         raise
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
+@router.post("/activity/{activity_id}/view")
+def record_activity_view(
+    activity_id: int,
+    user: "Account" = Depends(require_permission("can_access_fr_dashboard"))
+):
+    controller = RecordFRAViewController()
+    try:
+        controller.recordView(activity_id)
+        return {"success": True}
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
+@router.get("/completed_activities")
+def get_completed_activities(
+    user: "Account" = Depends(require_permission("can_access_fr_dashboard")),
+    keyword: Optional[str] = None,
+    category_id: Optional[int] = None,
+    date_from: Optional[str] = None,
+    date_to: Optional[str] = None,
+):
+    controller = GetCompletedFRAController()
+    try:
+        filters = {
+            "keyword":     keyword,
+            "category_id": category_id,
+            "date_from":   date_from,
+            "date_to":     date_to,
+        }
+        activities = controller.getCompleted(user.user_id, filters) or []
+        return {
+            "username": user.username,
+            "activities": [
+                {
+                    "id":              act["id"],
+                    "title":           act["description"],
+                    "category_name":   act.get("category_name") or "—",
+                    "service_type":    act.get("service_type") or "—",
+                    "current_amount":  float(act["current_amount"] or 0),
+                    "goal_amount":     float(act["goal_amount"] or 0),
+                    "status":          _norm_status(act["status"]),
+                    "start_date":      str(act["start_date"]) if act["start_date"] else None,
+                    "end_date":        str(act["end_date"]) if act["end_date"] else None,
+                    "view_count":      int(act.get("view_count") or 0),
+                    "shortlist_count": int(act.get("shortlist_count") or 0),
+                }
+                for act in activities
+            ]
+        }
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
