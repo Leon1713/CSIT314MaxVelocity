@@ -27,7 +27,7 @@ jobs:
         run: npm install -g @railway/cli
 
       - name: Force Railway Redeploy
-        run: railway redeploy --service fastapi-app
+        run: railway redeploy --service fastapi-app --yes
         env:
           RAILWAY_TOKEN: ${{secrets.RAILWAY_TOKEN}}
       
