@@ -1,0 +1,34 @@
+name: CD - Pull backend to railway
+
+on:
+  workflow_run:
+    workflows: ["CD - Build docker image"]
+    types:
+      - completed
+
+jobs:
+  pipeline:
+    if: ${{github.event.workflow_run.conclusion == 'success'}}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Convert Owner name to lowercase
+        run: echo "OWNER_LC=${OWNER,,}" >> $GITHUB_ENV
+        env:
+          OWNER: ${{github.repository_owner}}
+        
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Force Railway Redeploy
+        run: railway service:update --image ghcr.io/${{ env.OWNER_LC }}/myapp:latest -y
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      
+      
