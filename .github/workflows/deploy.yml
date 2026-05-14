@@ -29,6 +29,6 @@ jobs:
       - name: Force Railway Redeploy
         run: railway redeploy --service fastapi-app
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_TOKEN: ${{secrets.RAILWAY_TOKEN}}
       
       
