@@ -44,26 +44,11 @@ def _norm_status(raw) -> int:
     s = str(raw).lower()
     return 1 if s in ('active', '1') else 0
 
-def _is_admin(user) -> bool:
-    """Returns True if the user has admin dashboard access (bypasses per-fundraiser filters)."""
-    try:
-        from db import get_db_connection
-        from Entity.Profile import Profile
-        with get_db_connection() as conn:
-            profile = Profile.GetProfileByRoleId(user.role_id, conn)
-            return bool(getattr(profile, 'can_access_admin_dashboard', False))
-    except Exception:
-        return False
-
-def _fid(user) -> Optional[int]:
-    """Returns fundraiser_id filter: None for admins (see all), user_id otherwise."""
-    return None if _is_admin(user) else user.user_id
-
 
 @router.get("/stats")
 def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_access_fr_dashboard"))):
     controller = GetFundraiserStatsController()
-    fid = _fid(user)
+    fid = user.user_id
     try:
         stats  = controller.getStats(fid) or {}
         recent = controller.getRecentActivities(fid, limit=5) or []
@@ -96,7 +81,7 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
 @router.get("/activities")
 def get_all_activities(user: "Account" = Depends(require_permission("can_access_fr_dashboard"))):
     controller = GetAllFRAController()
-    fid = _fid(user)
+    fid = user.user_id
     try:
         activities = controller.getAllActivities(fid)
         return {
@@ -126,7 +111,7 @@ def get_activity_details(
     user: "Account" = Depends(require_permission("can_access_fr_dashboard"))
 ):
     controller = GetFRADetailsController()
-    fid = _fid(user)
+    fid = user.user_id
     try:
         activity = controller.getActivity(activity_id, fid)
         if not activity:
@@ -158,7 +143,7 @@ def update_activity(
     user: "Account" = Depends(require_permission("can_manage_fr"))
 ):
     controller = UpdateFRAController()
-    fid = _fid(user)
+    fid = user.user_id
     try:
         success = controller.updateActivity(
             activity_id, fid, data.model_dump(exclude_none=True)
@@ -178,7 +163,7 @@ def delete_activity(
     user: "Account" = Depends(require_permission("can_manage_fr"))
 ):
     controller = DeleteFRAController()
-    fid = _fid(user)
+    fid = user.user_id
     try:
         deleted = controller.deleteActivity(activity_id, fid)
         if not deleted:
@@ -212,7 +197,7 @@ def get_completed_activities(
     date_to: Optional[str] = None,
 ):
     controller = GetCompletedFRAController()
-    fid = _fid(user)
+    fid = user.user_id
     try:
         filters = {
             "keyword":     keyword,
