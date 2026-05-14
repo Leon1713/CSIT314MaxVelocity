@@ -27,7 +27,7 @@ jobs:
         run: npm install -g @railway/cli
 
       - name: Force Railway Redeploy
-        run: railway service:update --image ghcr.io/${{ env.OWNER_LC }}/myapp:latest -y
+        run: railway redeploy --service fastapi-app
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
       
