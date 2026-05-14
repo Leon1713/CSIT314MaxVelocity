@@ -32,8 +32,14 @@
                     <div id="hub-settings-dropdown" class="hub-settings-dropdown hidden">
                         <p class="hub-dropdown-section">Account</p>
                         <div class="hub-dropdown-user">
-                            <span class="hub-dropdown-username" id="dropdown-username"></span>
-                            <span class="hub-dropdown-role" id="dropdown-role"></span>
+                            <div class="hub-dropdown-avatar-wrap">
+                                <i class="bi bi-person-fill" id="dropdown-avatar-icon"></i>
+                                <img id="dropdown-avatar-img" class="hidden" alt="" />
+                            </div>
+                            <div>
+                                <span class="hub-dropdown-username" id="dropdown-username"></span>
+                                <span class="hub-dropdown-role" id="dropdown-role"></span>
+                            </div>
                         </div>
                         <div class="hub-dropdown-divider"></div>
                         <a href="profile.html" class="hub-dropdown-item">
@@ -154,7 +160,19 @@
 
         </footer>
 
+        <!-- Success toast -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:1100">
+            <div id="fra-success-toast" class="toast cat-toast border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="cat-toast-inner">
+                    <div class="cat-toast-icon"><i class="bi bi-check-lg"></i></div>
+                    <span class="cat-toast-msg" id="fra-toast-msg"></span>
+                    <button type="button" class="cat-toast-close" data-bs-dismiss="toast"><i class="bi bi-x"></i></button>
+                </div>
+            </div>
+        </div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="/scripts/create_FRA.js"></script>
+        <script src="/scripts/dropdown_profile.js"></script>
     </body>
 </html>

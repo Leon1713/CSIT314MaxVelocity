@@ -11,12 +11,22 @@ async function loadProfile() {
         document.getElementById('profile-username').textContent = p.username || '—';
         document.getElementById('profile-email').textContent    = p.email    || '—';
 
-        // Avatar initials
-        const initials = ((p.first_name?.[0] || '') + (p.last_name?.[0] || '')).toUpperCase() || '?';
-        const avatar   = document.getElementById('profile-avatar');
-        if (initials !== '?') {
-            avatar.textContent  = initials;
-            avatar.style.fontSize = '1.6rem';
+        // Avatar: photo > initials > default icon
+        const avatarImg  = document.getElementById('profile-avatar-img');
+        const avatarIcon = document.getElementById('profile-avatar-icon');
+        if (p.profile_picture_url) {
+            avatarImg.src = p.profile_picture_url;
+            avatarImg.classList.remove('hidden');
+            avatarIcon.classList.add('hidden');
+        } else {
+            const initials = ((p.first_name?.[0] || '') + (p.last_name?.[0] || '')).toUpperCase();
+            if (initials) {
+                avatarIcon.classList.add('hidden');
+                const sp = document.createElement('span');
+                sp.textContent  = initials;
+                sp.style.cssText = 'font-size:1.6rem;font-weight:800;';
+                document.getElementById('profile-avatar').prepend(sp);
+            }
         }
 
         // Form fields
@@ -35,7 +45,46 @@ async function loadProfile() {
 
 loadProfile();
 
-// ── Save ──────────────────────────────────────────────────────────────────────
+// ── Photo upload ──────────────────────────────────────────────────────────────
+document.getElementById('profile-avatar').addEventListener('click', () => {
+    document.getElementById('profile-picture-input').click();
+});
+
+document.getElementById('profile-picture-input').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Instant local preview
+    const reader = new FileReader();
+    reader.onload = ev => {
+        const img  = document.getElementById('profile-avatar-img');
+        const icon = document.getElementById('profile-avatar-icon');
+        img.src = ev.target.result;
+        img.classList.remove('hidden');
+        icon.classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+
+    // Upload to backend
+    const form = new FormData();
+    form.append('file', file);
+    try {
+        const res = await fetch('http://127.0.0.1:8000/profile/picture', {
+            method: 'POST',
+            credentials: 'include',
+            body: form
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            alert(err.detail || 'Upload failed.');
+        }
+    } catch (_) {
+        alert('Could not connect to the server.');
+    }
+    e.target.value = '';
+});
+
+// ── Save Changes ──────────────────────────────────────────────────────────────
 const errorEl   = document.getElementById('profile-error');
 const successEl = document.getElementById('profile-success');
 
@@ -72,15 +121,12 @@ document.getElementById('profile-save-btn').addEventListener('click', async () =
             errorEl.classList.remove('hidden');
         } else {
             successEl.classList.remove('hidden');
-            // Refresh header display
+            // Refresh header name display
             const fn = document.getElementById('profile-first-name').value.trim();
             const ln = document.getElementById('profile-last-name').value.trim();
-            const initials = ((fn[0] || '') + (ln[0] || '')).toUpperCase();
-            if (initials) {
-                const avatar = document.getElementById('profile-avatar');
-                avatar.textContent = initials;
-                avatar.style.fontSize = '1.6rem';
-            }
+            document.getElementById('profile-username').textContent = fn || ln
+                ? `${fn} ${ln}`.trim()
+                : document.getElementById('profile-username').textContent;
         }
     } catch (_) {
         errorEl.textContent = 'Could not connect to the server.';

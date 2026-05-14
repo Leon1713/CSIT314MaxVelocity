@@ -11,10 +11,14 @@ function formatCurrency(amount) {
     return '$' + Number(amount).toLocaleString();
 }
 
-function formatDate(dateStr) {
-    return new Date(dateStr).toLocaleDateString('en-GB', {
-        day: '2-digit', month: 'long', year: 'numeric'
-    });
+function timeAgo(dateStr) {
+    if (!dateStr) return '—';
+    const diff = Math.floor((new Date() - new Date(dateStr)) / 1000);
+    if (diff < 60)     return `${diff}s ago`;
+    if (diff < 3600)   return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400)  return `${Math.floor(diff / 3600)}h ago`;
+    if (diff < 172800) return 'Yesterday';
+    return `${Math.floor(diff / 86400)}d ago`;
 }
 
 function renderStats({ total_activities, active, total_raised, donors }) {
@@ -36,7 +40,7 @@ function renderActivities(activities) {
     activities.forEach((act, i) => {
         if (i > 0) {
             const divider = document.createElement('div');
-            divider.className = 'fr-activity-divider';
+            divider.className = 'platform-activity-divider';
             list.appendChild(divider);
         }
 
@@ -47,14 +51,16 @@ function renderActivities(activities) {
         const status = statusStr.charAt(0).toUpperCase() + statusStr.slice(1) || '—';
 
         const item = document.createElement('div');
-        item.className = 'fr-activity-item';
+        item.className = 'platform-activity-item platform-activity-item--clickable';
         item.innerHTML = `
-            <span class="fr-status-dot" style="background:${color}"></span>
-            <div class="fr-activity-info">
-                <span class="fr-activity-name">${act.title || 'Untitled'}</span>
-                <span class="fr-activity-meta">${act.category || '—'} · ${status}</span>
+            <div class="platform-activity-icon" style="background:${color}20;color:${color};">
+                <i class="bi bi-cash-stack"></i>
             </div>
-            <span class="fr-activity-date">${formatDate(act.created_at)}</span>
+            <div class="platform-activity-body">
+                <span class="platform-activity-title" style="color:${color}">${act.description || 'Untitled'}</span>
+                <span class="platform-activity-meta">${act.category || '—'} · ${status}</span>
+            </div>
+            <span class="platform-activity-time">${timeAgo(act.created_at)}</span>
         `;
         item.addEventListener('click', () => {
             window.location.href = `view_FRA.html?id=${act.id}`;
@@ -83,8 +89,9 @@ async function loadDashboard() {
         renderStats(data.stats);
         renderActivities(data.recent_activities);
 
-        document.getElementById('dropdown-username').textContent = data.username;
-        document.getElementById('dropdown-role').textContent = 'Fundraiser';
+        document.getElementById('dropdown-username').textContent = data.username || '';
+        document.getElementById('dropdown-role').textContent     = 'Fundraiser';
+        document.getElementById('fr-username').textContent       = data.username || '';
 
     } catch (err) {
         console.error('Dashboard load error:', err);
