@@ -68,7 +68,7 @@ class FundraisingActivity():
                 INSERT INTO fundraising_activities
                     (fundraiser_id, category_id,campaign_title, description, service_type,
                      goal_amount, current_amount, status, start_date, end_date)
-                VALUES (%s, %s, %s, %s, %s,%s, 0, 'active', NOW(), %s)
+                VALUES (%s, %s, %s, %s, %s,%s, 0, 1, NOW(), %s)
             """, (
                 data["fundraiser_id"],
                 data["category_id"],

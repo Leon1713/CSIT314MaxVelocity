@@ -15,6 +15,7 @@ from Controller.SuspendUserAccountController import SuspendUserAccountController
 from Controller.SuspendUserProfileController import SuspendUserProfileController
 from Controller.ViewUserProfileController import ViewUserProfileController
 from Controller.UpdateProfileController import UpdateProfileController
+from Controller.GetAdminStatsController import GetAdminStatsController
 from Dependencies.Auth import require_permission
 
 
@@ -68,7 +69,7 @@ class UpdateProfileModal(BaseModel):
      
     
 def require_admin(user : Account = Depends(require_permission("can_access_admin_dashboard"))):
-    if user and user.role_id == 1:
+    if user:
         return user
     else:
          raise HTTPException(status_code=403, detail="Admin only")
@@ -76,8 +77,8 @@ def require_admin(user : Account = Depends(require_permission("can_access_admin_
 router = APIRouter(prefix="/admin", dependencies=[Depends(require_admin)])
 
 #User accounts
-@router.get("/dashboard", response_model=AccountModal) # Call at start of admin dashboard
-def admin_dashboard(admin : Account = Depends(require_admin)) -> Account:
+@router.get("/dashboard") # Call at start of admin dashboard
+def admin_dashboard(admin : Account = Depends(require_admin)):
     return admin
 
 @router.post("/create_account", dependencies=[Depends(require_permission("can_manage_user_account"))])
@@ -89,14 +90,7 @@ def create_account(input : AccountModal):
 def get_user_accounts_list():
     controller : GetUserAccountListController = GetUserAccountListController()
     accounts = controller.getUserAccountList()
-    account_info_list = []
-    for acc in accounts:
-        account_info_list.append({
-            "user_id" : acc.user_id,
-            "username" : acc.username,
-            "role_id" : acc.role_id,
-            "last_login" : acc.last_login
-        })
+    account_info_list = accounts
     return account_info_list
 
 @router.get("/user_accounts/{user_id}", dependencies=[Depends(require_permission("can_manage_user_account"))])
@@ -172,6 +166,21 @@ def suspend_user_profile(profile_id : int) -> bool:
         return controller.suspend(profile_id)
     except Exception:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Failed to suspend user profile.")
-# Search User Profile (Frontend)
-    
+
+# Routes to get stats
+@router.get("/dashboard_stats", dependencies=[Depends(require_permission("can_manage_user_account")), Depends(require_permission("can_manage_user_profile"))])
+def get_dashboard_stats():
+    try:
+        controller = GetAdminStatsController()
+        return controller.getStats()
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+
+@router.get("/dashboard_overview", dependencies=[Depends(require_permission("can_manage_user_account")), Depends(require_permission("can_manage_user_profile"))])
+def get_overview_stats():
+    try:
+        controller = GetAdminStatsController()
+        return controller.getOverviewStats()
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     

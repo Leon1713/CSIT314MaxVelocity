@@ -73,7 +73,7 @@ function renderActivities(activities) {
 async function loadDashboard() {
     try {
         const res = await fetch('http://127.0.0.1:8000/fundraiser/stats', {
-            method: 'GET',
+            method: 'GET', 
             credentials: 'include'
         });
 

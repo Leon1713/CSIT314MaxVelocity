@@ -17,7 +17,7 @@ DB_CONFIG = {
 try:
     pool = MySQLConnectionPool(
         pool_name="app_pool",
-        pool_size=10,
+        pool_size=20,
         pool_reset_session=True,
         **DB_CONFIG
     )

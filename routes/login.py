@@ -29,8 +29,8 @@ def login(data: LoginData, req : Request, res : Response) -> dict:
             key="token",
             value=result.session_id,
             httponly=True,
-            samesite="none",
-            secure=True #test only
+            samesite="lax",
+            secure=False #test only
         )
         return res
     except Exception:   

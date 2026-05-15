@@ -207,9 +207,80 @@ class Account:
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute(
-                """UPDATE user_accounts SET last_login = NOW() WHERE user_id = %s""", (self.user_id,))
+                """UPDATE user_accounts SET last_login = NOW(), updated_at = updated_at WHERE user_id = %s""", (self.user_id,))
+            db_conn.commit()
         except Exception:
             raise
         finally:
             db_cursor.close()
             print("test")
+
+    @staticmethod
+    def getRecentUpdatesAndLogin(limit: id, conn):
+        db_conn = conn
+        db_cursor = db_conn.cursor(dictionary=True)
+        try:
+            db_cursor.execute(
+                """SELECT
+                u.user_id,
+    u.username,
+    u.last_login AS event_time,
+    'last_login' AS event_type,
+    r.role_name,
+    u.is_active
+FROM user_accounts u
+JOIN user_roles r
+    ON u.role_id = r.role_id
+WHERE u.last_login IS NOT NULL
+UNION ALL
+SELECT
+u.user_id,
+    u.username,
+    u.updated_at AS event_time,
+    'updated_at' AS event_type,
+    r.role_name,
+    u.is_active
+FROM user_accounts u
+JOIN user_roles r
+    ON u.role_id = r.role_id
+
+ORDER BY event_time DESC
+LIMIT %s;""",(limit,)
+            )
+            return db_cursor.fetchall()
+        except Exception as e:
+            print(e)
+            raise
+        finally:
+            db_cursor.close()
+            
+            
+    @staticmethod
+    def getAdminDashboardStats(conn, user = None):
+        try:
+            db_cursor = conn.cursor(dictionary=True)
+            db_cursor.execute("""
+                              SELECT COUNT(u.user_id) AS total_accounts,
+                              SUM(CASE WHEN u.is_suspended = 1 THEN 1 ELSE 0 END) as suspended_accounts,
+                              SUM(CASE WHEN u.is_active = 1 THEN 1 ELSE 0 END) as active_accounts,
+                              (SELECT COUNT(role_id) FROM user_roles) as total_roles
+                              FROM user_accounts u;
+                              """)
+            return db_cursor.fetchone()
+        except Exception as e:
+            print(e)
+            raise
+        finally:
+            db_cursor.close()
+            
+    @staticmethod
+    def getAllUsersWithRoles(conn):
+        try:
+            db_cursor = conn.cursor(dictionary = True)
+            db_cursor.execute(
+                """SELECT u.*, r.role_name FROM user_accounts u JOIN user_roles r ON u.role_id = r.role_id ORDER BY u.last_login DESC"""
+            )
+            return db_cursor.fetchall()
+        except Exception as e:
+            print(e)
+            raise

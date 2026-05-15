@@ -8,7 +8,8 @@ class GetUserAccountListController:
     def getUserAccountList(self):
         with get_db_connection() as db_conn:
             try:
-                accounts = Account.getAllUsers(db_conn)
+                accounts = Account.getAllUsersWithRoles(db_conn)
                 return accounts
-            except Exception:
+            except Exception as e:
+                print(e)
                 raise
