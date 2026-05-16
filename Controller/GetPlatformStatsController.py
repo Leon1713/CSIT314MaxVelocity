@@ -4,15 +4,13 @@ from db import get_db_connection
 
 class GetPlatformStatsController:
     def getStats(self) -> dict:
-        with get_db_connection() as conn:
             try:
-                return PlatformStats.getStats(conn)
+                return PlatformStats.getStats()
             except Exception:
                 raise
 
     def getRecentActivity(self, limit: int = 5) -> list:
-        with get_db_connection() as conn:
             try:
-                return PlatformStats.getRecentCategoryActivity(conn, limit)
+                return PlatformStats.getRecentCategoryActivity(limit)
             except Exception:
                 raise

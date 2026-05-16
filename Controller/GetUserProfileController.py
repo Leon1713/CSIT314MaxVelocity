@@ -6,9 +6,8 @@ BASE_URL = "http://127.0.0.1:8000"
 
 class GetUserProfileController:
     def getProfile(self, user) -> dict:
-        with get_db_connection() as conn:
             try:
-                profile = UserProfile.getByUserId(user.user_id, conn)
+                profile = UserProfile.getByUserId(user.user_id)
                 return {
                     "user_id":    user.user_id,
                     "username":   user.username,

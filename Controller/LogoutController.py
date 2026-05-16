@@ -4,9 +4,8 @@ class LogoutController:
     def __init__(self):
         pass
     def logout(self, session_id : str) -> bool:
-        with get_db_connection() as conn:
             try:
-                return Session.deactivate(session_id, conn)
+                return Session.deactivate(session_id)
             except Exception:
                 return False
         

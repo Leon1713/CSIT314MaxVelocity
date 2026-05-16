@@ -4,7 +4,8 @@ from db import get_db_connection
 class PlatformStats:
 
     @staticmethod
-    def getStats(conn) -> dict:
+    def getStats() -> dict:
+        conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute("""
@@ -17,9 +18,11 @@ class PlatformStats:
             return cursor.fetchone()
         finally:
             cursor.close()
+            conn.close()
 
     @staticmethod
-    def getRecentCategoryActivity(conn, limit: int = 6) -> list:
+    def getRecentCategoryActivity(limit: int = 6) -> list:
+        conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute("""
@@ -31,3 +34,5 @@ class PlatformStats:
             return cursor.fetchall()
         finally:
             cursor.close()
+            conn.close()
+

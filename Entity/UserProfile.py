@@ -14,7 +14,8 @@ class UserProfile:
         self.created_at     = created_at
 
     @staticmethod
-    def getByUserId(user_id: int, conn):
+    def getByUserId(user_id: int):
+        conn = get_db_connection()
         db_cursor = conn.cursor(dictionary=True)
         try:
             db_cursor.execute(
@@ -23,9 +24,11 @@ class UserProfile:
             return db_cursor.fetchone()
         finally:
             db_cursor.close()
+            conn.close()
 
     @staticmethod
-    def upsert(user_id: int, data: dict, conn) -> bool:
+    def upsert(user_id: int, data: dict) -> bool:
+        conn = get_db_connection()
         db_cursor = conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -50,3 +53,4 @@ class UserProfile:
             raise e
         finally:
             db_cursor.close()
+            conn.close()

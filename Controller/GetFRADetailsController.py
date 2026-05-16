@@ -10,21 +10,18 @@ class GetFRADetailsController:
                 print(e)
                 raise
     def getActivityList(self, fundraiser_id : int):
-        with get_db_connection() as conn:
             try:
                 return FundraisingActivity.getFundRaiserActivitiesByFundRaiserId(fundraiser_id,conn)
             except Exception as e:
                 print(e)
                 raise
     def getAllActivities(self, page : int = 1, limit : int = 100):
-        with get_db_connection() as conn:
             try:
                 return FundraisingActivity.getAllFundRaisingActivities(page, limit, conn)
             except Exception as e:
                 print(e)
                 raise
     def getActivityByFRAId(self, act_id : int):
-        with get_db_connection() as conn:
             try:
                 return FundraisingActivity.getFundRaisingActivityById(act_id, conn)
             except Exception as e:

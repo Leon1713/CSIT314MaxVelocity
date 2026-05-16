@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+from db import get_db_connection
 class Donation:
     def __init__(self, id, donee_id, fra_id, amount, created_at):
         super().__init__()
@@ -19,8 +19,8 @@ class Donation:
         }
 
     @staticmethod
-    def getByDoneeId(donee_id: int, conn):
-        db_conn = conn
+    def getByDoneeId(donee_id: int):
+        db_conn = get_db_connection()
         cursor = db_conn.cursor(dictionary=True)
         try:
             cursor.execute("SELECT * FROM donations WHERE donee_id = %s", (donee_id,))
@@ -28,9 +28,11 @@ class Donation:
             return rows
         finally:
             cursor.close()
+            db_conn.close()
 
     @staticmethod
-    def create(donee_id: int, fra_id: int, amount: float, conn):
+    def create(donee_id: int, fra_id: int, amount: float):
+        conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute(
@@ -44,3 +46,4 @@ class Donation:
            raise
         finally:
             cursor.close()
+            conn.close()

@@ -5,9 +5,7 @@ class ViewFRAController:
         pass
 
     def getFRAList(self):
-        with get_db_connection() as conn:
-            return FundraisingActivity.getAll(conn)
+            return FundraisingActivity.getAll()
 
     def getFRA(self, fra_id: int):
-        with get_db_connection() as conn:
-            return FundraisingActivity.getById(fra_id, conn)
+            return FundraisingActivity.getById(fra_id)

@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+from db import get_db_connection
 class FRACategory:
     def __init__(self, id, category_name, category_description, is_active, created_at, updated_at):
         super().__init__()
@@ -18,7 +18,8 @@ class FRACategory:
         }
 
     @staticmethod
-    def getById(category_id: int, conn):
+    def getById(category_id: int):
+        conn = get_db_connection()
         db_cursor = conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -31,9 +32,11 @@ class FRACategory:
             return db_cursor.fetchone()
         finally:
             db_cursor.close()
+            conn.close()
 
     @staticmethod
-    def getAllWithCampaignCount(conn) -> list:
+    def getAllWithCampaignCount() -> list:
+        conn = get_db_connection()
         db_cursor = conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -48,9 +51,11 @@ class FRACategory:
             return db_cursor.fetchall()
         finally:
             db_cursor.close()
+            conn.close()
 
     @staticmethod
-    def create(data: dict, conn) -> bool:
+    def create(data: dict) -> bool:
+        conn = get_db_connection()
         db_cursor = conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -64,9 +69,11 @@ class FRACategory:
             raise e
         finally:
             db_cursor.close()
+            conn.close()
 
     @staticmethod
-    def updateById(category_id: int, data: dict, conn) -> bool:
+    def updateById(category_id: int, data: dict) -> bool:
+        conn = get_db_connection()
         db_cursor = conn.cursor(dictionary=True)
         field_map = {
             "category_name":        "category_name",
@@ -91,9 +98,11 @@ class FRACategory:
             raise e
         finally:
             db_cursor.close()
+            conn.close()
 
     @staticmethod
-    def deleteById(category_id: int, conn) -> bool:
+    def deleteById(category_id: int) -> bool:
+        conn = get_db_connection()
         db_cursor = conn.cursor(dictionary=True)
         try:
             db_cursor.execute("DELETE FROM fra_categories WHERE id = %s", (category_id,))
@@ -104,10 +113,11 @@ class FRACategory:
             raise e
         finally:
             db_cursor.close()
+            conn.close()
 
     @staticmethod
-    def getAll(conn) -> list:
-        db_conn = conn
+    def getAll() -> list:
+        db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -119,4 +129,5 @@ class FRACategory:
             return db_cursor.fetchall()
         finally:
             db_cursor.close()
+            db_conn.close()
             

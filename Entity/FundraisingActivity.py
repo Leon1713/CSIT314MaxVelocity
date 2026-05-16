@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+from db import get_db_connection
 
 class FundraisingActivity():
     def __init__(self, id, fundraiser_id, category_id, description,
@@ -39,8 +39,8 @@ class FundraisingActivity():
         }
 
     @staticmethod
-    def getStatsByFundraiserId(fundraiser_id: int, conn) -> dict:
-        db_conn = conn
+    def getStatsByFundraiserId(fundraiser_id: int) -> dict:
+        db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -58,9 +58,11 @@ class FundraisingActivity():
             print(e)
         finally:
             db_cursor.close()
+            db_conn.close()
 
     @staticmethod
-    def create(data: dict, conn) -> bool:
+    def create(data: dict) -> bool:
+        conn = get_db_connection()
         db_conn = conn
         db_cursor = db_conn.cursor(dictionary=True)
         try:
@@ -85,10 +87,11 @@ class FundraisingActivity():
             raise e
         finally:
             db_cursor.close()
+            conn.close()
 
     @staticmethod
-    def deleteById(activity_id: int, fundraiser_id: int, conn) -> bool:
-        db_conn = conn
+    def deleteById(activity_id: int, fundraiser_id: int) -> bool:
+        db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -102,10 +105,11 @@ class FundraisingActivity():
             raise e
         finally:
             db_cursor.close()
+            db_conn.close()
 
     @staticmethod
-    def getByIdAndFundraiser(activity_id: int, fundraiser_id: int, conn):
-        db_conn = conn
+    def getByIdAndFundraiser(activity_id: int, fundraiser_id: int):
+        db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -117,9 +121,11 @@ class FundraisingActivity():
             return db_cursor.fetchone()
         finally:
             db_cursor.close()
+            db_conn.close()
 
     @staticmethod
-    def updateById(activity_id: int, fundraiser_id: int, data: dict, conn) -> bool:
+    def updateById(activity_id: int, fundraiser_id: int, data: dict) -> bool:
+        conn = get_db_connection()
         db_cursor = conn.cursor(dictionary=True)
         field_map = {
             "title":        "campaign_title",
@@ -150,9 +156,11 @@ class FundraisingActivity():
             raise e
         finally:
             db_cursor.close()
+            conn.close()
 
     @staticmethod
-    def getAllByFundraiserId(fundraiser_id: int, conn) -> list:
+    def getAllByFundraiserId(fundraiser_id: int) -> list:
+        conn = get_db_connection()
         db_cursor = conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -167,10 +175,11 @@ class FundraisingActivity():
             return db_cursor.fetchall()
         finally:
             db_cursor.close()
+            conn.close()
 
     @staticmethod
-    def getRecentByFundraiserId(fundraiser_id: int, conn, limit: int = 5, ) -> list:
-        db_conn = conn
+    def getRecentByFundraiserId(fundraiser_id: int, limit: int = 5, ) -> list:
+        db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -184,10 +193,11 @@ class FundraisingActivity():
             return db_cursor.fetchall()
         finally:
             db_cursor.close()
+            db_conn.close()
 
     @staticmethod
-    def getFundRaiserActivitiesByFundRaiserId(user_id: int, conn):
-        db_conn = conn
+    def getFundRaiserActivitiesByFundRaiserId(user_id: int):
+        db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -198,11 +208,12 @@ class FundraisingActivity():
             return db_cursor.fetchall()
         finally:
             db_cursor.close()
+            db_conn.close()
 
     @staticmethod
-    def getAllFundRaisingActivities(pages: int, limitPerPage: int, conn):
+    def getAllFundRaisingActivities(pages: int, limitPerPage: int):
         offset = (pages - 1) * limitPerPage
-        db_conn = conn
+        db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -216,9 +227,10 @@ class FundraisingActivity():
             raise
         finally:
             db_cursor.close()
+            db_conn.close()
     @staticmethod
-    def getFundRaisingActivityById(fra_id : int, conn):
-        db_conn = conn
+    def getFundRaisingActivityById(fra_id : int):
+        db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
@@ -231,3 +243,4 @@ class FundraisingActivity():
             raise
         finally:
             db_cursor.close()
+            db_conn.close()

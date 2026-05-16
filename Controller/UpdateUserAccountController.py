@@ -4,9 +4,8 @@ class UpdateUserAccountController:
     def __init__(self):
         pass
     def updateUserAccount(self, account_id, input_data : dict) -> bool:
-        with get_db_connection() as db_conn:
             try:
-                acc : Account = Account.getUsersById(account_id, db_conn)
+                acc : Account = Account.getUsersById(account_id)
                 for key, value in input_data.items():
                     setattr(acc, key, value)
                 return acc.update()

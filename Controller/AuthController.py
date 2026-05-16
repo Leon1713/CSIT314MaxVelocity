@@ -6,22 +6,19 @@ from Entity.Account import Account
 from Entity.Profile import Profile
 class AuthController:
     def AuthSession(self, session_id : str) -> Account:
-        with get_db_connection() as conn:
             try:
-                session : Session = Session.getSessionBySessionId(session_id, conn)
-                return  Account.getUsersById(session.user_id, conn)
+                session : Session = Session.getSessionBySessionId(session_id)
+                return  Account.getUsersById(session.user_id)
             except Exception:
                 raise HTTPException(status_code=404, detail="Item not found")
     def cleanUpExpiredSessions(self):
-        with get_db_connection() as conn:
             try:
-                Session.cleanUpExpiredSessions(conn)
+                Session.cleanUpExpiredSessions()
             except Exception:
                 raise
     def hasPermissions(self, user : Account, permissionName : str) -> bool:
-        with get_db_connection() as conn:
             try:
-                profile = Profile.GetProfileByRoleId(user.role_id, conn)
+                profile = Profile.GetProfileByRoleId(user.role_id)
                 return getattr(profile, permissionName)
             except Exception:
                 raise HTTPException(status_code=404, detail="Failed to get roles")        

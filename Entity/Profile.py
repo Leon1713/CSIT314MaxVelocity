@@ -1,4 +1,5 @@
 from __future__ import annotations
+from db import get_db_connection
 class Profile:
     def __init__(self,
                  role_id: str, role_name: str,
@@ -38,8 +39,8 @@ class Profile:
         self.is_user = not (can_access_admin_dashboard or can_access_platform_mgt_dashboard)
 
     @staticmethod
-    def GetProfileByRoleId(role_id: int, conn) -> Profile:
-        db_conn = conn
+    def GetProfileByRoleId(role_id: int) -> Profile:
+        db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute(
@@ -52,6 +53,7 @@ class Profile:
             raise e
         finally:
             db_cursor.close()
+            db_conn.close()
 
     def to_dict(self):
         return {
@@ -74,8 +76,8 @@ class Profile:
         }
 
     @staticmethod
-    def insertProfile(profile: dict, conn) -> bool:
-        db_conn = conn
+    def insertProfile(profile: dict) -> bool:
+        db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         data = profile
         values = (
@@ -133,10 +135,11 @@ VALUES (
             raise
         finally:
             db_cursor.close()
+            db_conn.close()
 
     @staticmethod
-    def getAllProfiles(conn) -> list[Profile]:
-        db_conn = conn
+    def getAllProfiles() -> list[Profile]:
+        db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("SELECT * FROM user_roles")
@@ -149,10 +152,11 @@ VALUES (
             raise
         finally:
             db_cursor.close()
+            db_conn.close()
 
     @staticmethod
-    def getProfileById(id: int, conn):
-        db_conn = conn
+    def getProfileById(id: int):
+        db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute(
@@ -163,65 +167,32 @@ VALUES (
             raise
         finally:
             db_cursor.close()
+            db_conn.close()
 
-    def update(self, conn) -> bool:
-        db_conn = conn
+    @staticmethod
+    def update(profile_id, profile_dict) -> bool:
+        db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
-            params = {
-                "role_id": self.role_id,
-                "role_name": self.role_name,
-                "description": self.role_desc,
-                "can_access_admin_dashboard": self.can_access_admin_dashboard,
-                "can_access_fr_dashboard": self.can_access_fr_dashboard,
-                "can_access_donee_dashboard": self.can_access_donee_dashboard,
-                "can_access_platform_mgt_dashboard": self.can_access_platform_mgt_dashboard,
-                "can_manage_user_profile": self.can_manage_user_profile,
-                "can_manage_user_account": self.can_manage_user_account,
-                "can_manage_fr": self.can_manage_fr,
-                "can_view_fra": self.can_view_fra,
-                "can_manage_fra_favourite": self.can_manage_fra_favourite,
-                "can_view_fr_analytics": self.can_view_fr_analytics,
-                "can_manage_donation": self.can_manage_donation,
-                "can_manage_fra_category": self.can_manage_fra_category,
-                "can_generate_report": self.can_generate_report,
-                "is_user" : self.can_access_admin_dashboard or self.can_access_platform_mgt_dashboard
-            }
-            db_cursor.execute("""
-             UPDATE user_roles
-                SET
-                    role_name = %(role_name)s,
-                    description = %(description)s,
-                    can_access_admin_dashboard = %(can_access_admin_dashboard)s,
-                    can_access_fr_dashboard = %(can_access_fr_dashboard)s,
-                    can_access_donee_dashboard = %(can_access_donee_dashboard)s,
-                    can_access_platform_mgt_dashboard = %(can_access_platform_mgt_dashboard)s,
-                    can_manage_user_profile = %(can_manage_user_profile)s,
-                    can_manage_user_account = %(can_manage_user_account)s,
-                    can_manage_fr = %(can_manage_fr)s,
-                    can_view_fra = %(can_view_fra)s,
-                    can_manage_fra_favourite = %(can_manage_fra_favourite)s,
-                    can_view_fr_analytics = %(can_view_fr_analytics)s,
-                    can_manage_donation = %(can_manage_donation)s,
-                    can_manage_fra_category = %(can_manage_fra_category)s,
-                    can_generate_report = %(can_generate_report)s,
-                    is_user = %(is_user)s
-                WHERE role_id = %(role_id)s""",
-                params)
+            set_clauses = [f"{key} = %s" for key in profile_dict.keys()]
+            query = f"UPDATE user_roles SET {', '.join(set_clauses)} WHERE id = %s"
+            query_values = list(profile_dict.values()) + [profile_id]
+            db_cursor.execute(query, query_values)
             db_conn.commit()
             return True
         except Exception as e:
             print(f"Error updating Profile: {e}")
             db_conn.rollback()
             raise Exception(
-                "Error updating Profile with profile id = %s", (self.role_id,))
+                "Error updating Profile with profile id = %s", (profile_id,))
         finally:
             db_cursor.close()
+            db_conn.close()
 
     @staticmethod
-    def suspend(profile_id: int, conn) -> bool:
+    def suspend(profile_id: int) -> bool:
         try:
-            db_conn = conn
+            db_conn = get_db_connection()
             db_cursor = db_conn.cursor(dictionary=True)
             db_cursor.execute("""UPDATE user_roles SET is_active = 0 WHERE role_id = %s""",(profile_id,))
             db_conn.commit()
@@ -232,9 +203,11 @@ VALUES (
             raise
         finally:
             db_cursor.close()
+            db_conn.close()
     @staticmethod
-    def GetAllProfileNameAndId(conn, is_signup = True):
+    def GetAllProfileNameAndId(is_signup = True):
         try:
+            conn = get_db_connection()
             db_cursor = conn.cursor(dictionary=True)
             db_cursor.execute(f"SELECT role_id, role_name FROM user_roles{' WHERE is_user = 1' if is_signup else ''} ORDER BY role_id ASC")
             return db_cursor.fetchall()
@@ -243,4 +216,5 @@ VALUES (
             raise
         finally:
             db_cursor.close()
+            conn.close()
             

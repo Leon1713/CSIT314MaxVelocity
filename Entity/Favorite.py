@@ -1,4 +1,5 @@
 from __future__ import annotations
+from db import get_db_connection
 class Favorite:
     def __init__(self, id, donee_id, fra_id, created_at):
         super().__init__()
@@ -16,7 +17,8 @@ class Favorite:
         }
 
     @staticmethod
-    def getByDoneeId(donee_id: int, conn):
+    def getByDoneeId(donee_id: int):
+        conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute("SELECT * FROM favorites WHERE donee_id = %s", (donee_id,))
@@ -24,9 +26,11 @@ class Favorite:
             return [Favorite(**row) for row in rows]
         finally:
             cursor.close()
+            conn.close()
 
     @staticmethod
-    def create(donee_id: int, fra_id: int, conn):
+    def create(donee_id: int, fra_id: int):
+        conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute(
@@ -40,9 +44,12 @@ class Favorite:
             raise
         finally:
             cursor.close()
+            conn.close()
+
 
     @staticmethod
-    def delete(donee_id: int, fra_id: int, conn):
+    def delete(donee_id: int, fra_id: int):
+        conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute(
@@ -56,3 +63,4 @@ class Favorite:
             raise
         finally:
             cursor.close()
+            conn.close()

@@ -4,12 +4,8 @@ class UpdateProfileController:
     def __init__(self):
         pass
     def update(self, profile_id : int, profile_dict : dict):
-        with get_db_connection() as db_con:
             try:
-                profile : Profile = Profile.getProfileById(profile_id, db_con)
-                for key, value in profile_dict.items():
-                    setattr(profile, key, value)
-                return profile.update(db_con)
+                return Profile.update(profile_id, profile_dict)
             except Exception as e:
                 print(e)
                 raise  

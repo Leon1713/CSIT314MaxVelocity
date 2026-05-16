@@ -6,13 +6,10 @@ class FavoriteController:
         pass
 
     def getFavorites(self, donee_id: int):
-        with get_db_connection() as conn:
-            return Favorite.getByDoneeId(donee_id,conn)
+            return Favorite.getByDoneeId(donee_id)
 
     def addFavorite(self, donee_id: int, fra_id: int):
-        with get_db_connection() as conn:
-            return Favorite.create(donee_id, fra_id, conn)
+            return Favorite.create(donee_id, fra_id)
 
     def removeFavorite(self, donee_id: int, fra_id: int):
-        with get_db_connection() as conn:
-            return Favorite.delete(donee_id, fra_id, conn)
+            return Favorite.delete(donee_id, fra_id)
