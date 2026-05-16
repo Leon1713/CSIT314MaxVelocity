@@ -10,6 +10,7 @@ from Controller.UpdateUserAccountController import UpdateUserAccountController
 from Dependencies.Auth import get_current_users
 from Controller.CreateUserAccountController import CreateUserAccountController
 from Controller.GetUserAccountListController import GetUserAccountListController
+from Controller.SearchUserAccountsController import SearchUserAccountsController
 from Controller.ReadUserAccountController import ReadUserAccountController
 from Controller.SuspendUserAccountController import SuspendUserAccountController
 from Controller.SuspendUserProfileController import SuspendUserProfileController
@@ -87,9 +88,9 @@ def create_account(input : AccountModal):
     return controller.createAccount(**input.model_dump())
 
 @router.get("/user_accounts", dependencies=[Depends(require_permission("can_manage_user_account"))])
-def get_user_accounts_list():
-    controller : GetUserAccountListController = GetUserAccountListController()
-    accounts = controller.getUserAccountList()
+def get_user_accounts_list(input : str):
+    controller : SearchUserAccountsController = SearchUserAccountsController()
+    accounts = controller.search(input)
     account_info_list = accounts
     return account_info_list
 

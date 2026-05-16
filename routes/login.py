@@ -21,7 +21,6 @@ def login(data: LoginData, req : Request, res : Response) -> dict:
             content={  "success" : True,
                 "session_id" : result.session_id,
                 "user_id" : result.user_id,
-                "role_id" : result.role_id,
                 "message" : "Login Successful"
             }
         )
