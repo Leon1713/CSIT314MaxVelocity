@@ -10,11 +10,15 @@ def get_current_users(session_id : str = Cookie(None, alias="token")):
     
 def require_permission(permissions : str):
     def checker(user = Depends(get_current_users)):
+        if not user:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
         try:
             controller = AuthController()
             if not controller.hasPermissions(user, permissions):
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No permissions")
             return user
+        except HTTPException:
+            raise
         except Exception as e:
              raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
     return checker

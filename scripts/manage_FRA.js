@@ -69,6 +69,10 @@ function renderList(activities) {
                 <div class="manage-progress-wrap">
                     <div class="manage-progress-fill" style="width:${pct}%"></div>
                 </div>
+                <div class="manage-card-counts">
+                    <span><i class="bi bi-eye-fill"></i> ${act.view_count || 0}</span>
+                    <span><i class="bi bi-bookmark-fill"></i> ${act.shortlist_count || 0}</span>
+                </div>
             </div>
             <div class="manage-card-right">
                 <span class="manage-badge ${badgeClass}">
@@ -154,6 +158,10 @@ document.getElementById('manage-status-filter').addEventListener('change', apply
 // ── New Activity button ────────────────────────────────────────────────────────
 document.getElementById('manage-new-btn').addEventListener('click', () => {
     window.location.href = 'create_FRA.html';
+});
+
+document.getElementById('manage-history-btn').addEventListener('click', () => {
+    window.location.href = 'completed_FRA.html';
 });
 
 // ── Delete confirm ─────────────────────────────────────────────────────────────

@@ -109,6 +109,10 @@ document.getElementById('btn-manage-activities').addEventListener('click', () =>
     window.location.href = 'manage_FRA.html';
 });
 
+document.getElementById('btn-view-history').addEventListener('click', () => {
+    window.location.href = 'completed_FRA.html';
+});
+
 // ── Gear dropdown ──────────────────────────────────────────────────────────────
 const gearBtn  = document.getElementById('hub-gear-btn');
 const dropdown = document.getElementById('hub-settings-dropdown');

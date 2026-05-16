@@ -1,21 +1,3 @@
-
-// const ROLE_BUTTONS = {
-//     1: [ // user_admin — sees all roles
-//         { icon: 'bi-cash-stack',    label: 'Fundraiser',    href: 'fundraiser_dashboard.html' },
-//         { icon: 'bi-heart-fill',    label: 'Donee',         href: 'donee_dashboard.html' },
-//         { icon: 'bi-people-fill',   label: 'User Admin',    href: 'admin_dashboard.html' },
-//         { icon: 'bi-speedometer2',  label: 'Platform Mgmt', href: 'platform_dashboard.html' },
-//     ],
-//     2: [ // fund_raiser
-//         { icon: 'bi-cash-stack', label: 'Fundraiser', href: 'fundraiser_dashboard.html' },
-//     ],
-//     3: [ // donee
-//         { icon: 'bi-hand-heart', label: 'Donee', href: 'donee_dashboard.html' },
-//     ],
-//     4: [ // platform_mgmt
-//         { icon: 'bi-speedometer2', label: 'Platform Mgmt', href: 'platform_dashboard.html' },
-//     ],
-// };
 function getButtonsByPermission(data) {
     let buttons = [
         [data.can_access_admin_dashboard, { icon: 'bi-people-fill',   label: 'User Admin',    href: 'admin_dashboard.html' }],
@@ -69,7 +51,7 @@ async function loadHub() {
 }
 
 function setupDropdown() {
-    const gearBtn = document.getElementById('hub-gear-btn');
+    const gearBtn  = document.getElementById('hub-gear-btn');
     const dropdown = document.getElementById('hub-settings-dropdown');
 
     gearBtn.addEventListener('click', (e) => {
@@ -77,10 +59,7 @@ function setupDropdown() {
         dropdown.classList.toggle('hidden');
     });
 
-    document.addEventListener('click', () => {
-        dropdown.classList.add('hidden');
-    });
-
+    document.addEventListener('click', () => dropdown.classList.add('hidden'));
     dropdown.addEventListener('click', (e) => e.stopPropagation());
 
     document.getElementById('hub-logout-btn').addEventListener('click', async () => {

@@ -31,8 +31,10 @@ function daysLeft(endDateStr) {
 // ── Routing ───────────────────────────────────────────────────────────────────
 const params = new URLSearchParams(window.location.search);
 const activityId = params.get('id');
-const fromManage = params.get('from') === 'manage';
-const backHref = fromManage ? 'manage_FRA.html' : 'fundraiser_dashboard.html';
+const fromParam  = params.get('from');
+const backHref   = fromParam === 'manage'  ? 'manage_FRA.html'
+                 : fromParam === 'history' ? 'completed_FRA.html'
+                 : 'fundraiser_dashboard.html';
 
 document.getElementById('fra-back-link').href = backHref;
 document.getElementById('fra-close-btn').href = backHref;
@@ -41,15 +43,17 @@ document.getElementById('fra-close-btn').href = backHref;
 let activityData = null;
 
 function renderView(a) {
-    document.getElementById('fra-title').innerText = a.title;
-    document.getElementById('fra-service-type').textContent = a.description;
-    document.getElementById('fra-banner-service').innerText = a.service_type;
-    document.getElementById('fra-category').innerText = a.category_name;
-    document.getElementById('fra-raised').innerText = formatCurrency(a.current_amount);
-    document.getElementById('fra-goal').innerText = formatCurrency(a.goal_amount);
-    document.getElementById('fra-days').innerText = daysLeft(a.end_date);
-    document.getElementById('fra-start').innerText = formatDate(a.start_date);
-    document.getElementById('fra-end').innerText = formatDate(a.end_date);
+    document.getElementById('fra-title').textContent          = a.title;
+    document.getElementById('fra-banner-service').textContent = a.service_type;
+    document.getElementById('fra-category').textContent       = a.category_name;
+    document.getElementById('fra-raised').textContent         = formatCurrency(a.current_amount);
+    document.getElementById('fra-goal').textContent           = formatCurrency(a.goal_amount);
+    document.getElementById('fra-days').textContent           = daysLeft(a.end_date);
+    document.getElementById('fra-views').textContent          = a.view_count ?? 0;
+    document.getElementById('fra-shortlisted').textContent    = a.shortlist_count ?? 0;
+    document.getElementById('fra-service-type').textContent   = a.service_type;
+    document.getElementById('fra-start').textContent          = formatDate(a.start_date);
+    document.getElementById('fra-end').textContent            = formatDate(a.end_date);
 
     const statusKey = typeof a.status === 'number'
         ? (a.status === 1 ? 'active' : 'inactive')
@@ -79,6 +83,13 @@ async function loadActivity() {
         if (!res.ok) throw new Error();
         activityData = await res.json();
         renderView(activityData);
+        // Record view and update count in place
+        fetch(`http://127.0.0.1:8000/fundraiser/activity/${activityId}/view`, {
+            method: 'POST', credentials: 'include'
+        }).then(() => {
+            const el = document.getElementById('fra-views');
+            if (el) el.textContent = (parseInt(el.textContent) || 0) + 1;
+        }).catch(() => {});
     } catch (err) {
         console.error('Failed to load activity:', err);
     }
