@@ -29,6 +29,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
         const editModal    = bootstrap.Modal.getOrCreateInstance(document.getElementById('editModal'));
         const suspendModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('suspendModal'));
 
+
         // ── Toast ──
         function showToast(msg) {
             document.getElementById('cat-toast-msg').textContent = msg;
@@ -80,14 +81,16 @@ const BASE_URL = 'http://127.0.0.1:8000';
                     <td>${statusBadge(p.is_active)}</td>
                     <td>
                         <div class="manage-card-actions">
-                            <button class="manage-btn manage-btn-view"   title="View"><i class="bi bi-eye-fill"></i></button>
+                            <button class="manage-btn manage-btn-view" title="View"><i class="bi bi-eye-fill"></i></button>
                             <button class="manage-btn manage-btn-edit"   title="Edit"><i class="bi bi-pencil-fill"></i></button>
                             <button class="manage-btn manage-btn-delete" title="Suspend"><i class="bi bi-slash-circle-fill"></i></button>
                         </div>
                     </td>
                 `;
 
-                tr.querySelector('.manage-btn-view').onclick   = () => openView(p);
+                tr.querySelector('.manage-btn-view').onclick   = () => {
+                    window.location.href = `view_profile_pg.html?id=${p.role_id}`;
+                }
                 tr.querySelector('.manage-btn-edit').onclick   = () => openEdit(p);
                 tr.querySelector('.manage-btn-delete').onclick = () => openSuspend(p);
 

@@ -187,7 +187,7 @@ VALUES (
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             set_clauses = [f"{key} = %s" for key in profile_dict.keys()]
-            query = f"UPDATE user_roles SET {', '.join(set_clauses)} WHERE id = %s"
+            query = f"UPDATE user_roles SET {', '.join(set_clauses)} WHERE role_id = %s"
             query_values = list(profile_dict.values()) + [profile_id]
             db_cursor.execute(query, query_values)
             db_conn.commit()

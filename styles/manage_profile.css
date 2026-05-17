@@ -56,20 +56,6 @@
             gap: 9px;
         }
 
-        /* ── View modal perm grid ── */
-        .perm-view-section {
-            margin-bottom: 10px;
-        }
-
-        .perm-view-section-label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            margin-bottom: 5px;
-        }
-
         /* ── Create / Edit modal sections ── */
         .modal-section-label {
             font-size: 0.72rem;
