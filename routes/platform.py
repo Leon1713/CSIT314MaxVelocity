@@ -3,7 +3,10 @@ from pydantic import BaseModel
 from typing import Optional
 from Dependencies.Auth import require_permission
 from Controller.GetPlatformStatsController import GetPlatformStatsController
-from Controller.ManageCategoriesController import ManageCategoriesController
+from Controller.ViewCategoryController import ViewCategoryController
+from Controller.CreateCategoryController import CreateCategoryController
+from Controller.UpdateCategoryController import UpdateCategoryController
+from Controller.DeleteCategoryController import DeleteCategoryController
 from Controller.GetCategoryDetailsController import GetCategoryDetailsController
 from Controller.GetPlatformReportController import GetPlatformReportController
 
@@ -135,7 +138,7 @@ def get_category(
 
 @router.get("/categories")
 def get_categories(_=Depends(require_permission("can_manage_fra_category"))):
-    ctrl = ManageCategoriesController()
+    ctrl = ViewCategoryController()
     try:
         cats = ctrl.getAll()
         return {"categories": [
@@ -158,7 +161,7 @@ def create_category(
     data: CreateCategoryInput,
     _=Depends(require_permission("can_manage_fra_category"))
 ):
-    ctrl = ManageCategoriesController()
+    ctrl = CreateCategoryController()
     try:
         ctrl.create(data.model_dump())
         return {"success": True}
@@ -172,7 +175,7 @@ def update_category(
     data: UpdateCategoryInput,
     _=Depends(require_permission("can_manage_fra_category"))
 ):
-    ctrl = ManageCategoriesController()
+    ctrl = UpdateCategoryController()
     try:
         success = ctrl.update(category_id, data.model_dump(exclude_none=True))
         if not success:
@@ -189,7 +192,7 @@ def delete_category(
     category_id: int,
     _=Depends(require_permission("can_manage_fra_category"))
 ):
-    ctrl = ManageCategoriesController()
+    ctrl = DeleteCategoryController()
     try:
         success = ctrl.delete(category_id)
         if not success:
