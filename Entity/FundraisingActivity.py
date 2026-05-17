@@ -84,10 +84,7 @@ class FundraisingActivity():
                 data["goal_amount"],
                 data["end_date"],
             ))
-            db_cursor.execute("""
-                INSERT INTO fra_stats (fra_id, view_count, shortlist_count)
-                VALUES (LAST_INSERT_ID(), 0, 0)
-            """)
+            
             db_conn.commit()
             return True
         except Exception as e:

@@ -17,6 +17,13 @@ from routes.profile import router as router_profile
 from routes.getLoginRoles import router as router_login_roles
 from routes.hub import router as router_hub
 from routes.platform import router as router_platform
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+
+
+    
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     from Dependencies.CleanUpSession import SessionCleanUp
@@ -28,16 +35,30 @@ app = FastAPI(lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://127.0.0.1:5500",
+        "http://127.0.0.1:5500",  
         "http://localhost:5500",
+        "http://127.0.0.1:8000",   
         "http://localhost:8000",
-        "http://127.0.0.1:8000",
-        "https://fastapi-app-production-9d4a.up.railway.app"
+        "https://fastapi-app-production-9d4a.up.railway.app"  
     ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_credentials=True,   
+    allow_methods=["*"],      
+    allow_headers=["*"],      
 )
+
+@app.exception_handler(404)
+async def not_found_handler(request, exc):
+    return JSONResponse(
+        status_code=404,
+        content={"message": f"Route {request.method} {request.url.path} not found"}
+    )
+
+@app.exception_handler(RequestValidationError)
+async def validation_error_handler(request, exc):
+    return JSONResponse(
+        status_code=422,
+        content={"message": str(exc.errors())}
+    )
 
 app.include_router(router_reg)
 app.include_router(router_login)

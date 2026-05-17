@@ -8,9 +8,9 @@ function showSuccess(msg) {
     toast.show();
 }
 
-const viewModal   = new bootstrap.Modal(document.getElementById('viewModal'));
-const editModal   = new bootstrap.Modal(document.getElementById('editModal'));
-const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+const viewModal   = bootstrap.Modal.getOrCreateInstance(document.getElementById('viewModal'));
+const editModal   = bootstrap.Modal.getOrCreateInstance(document.getElementById('editModal'));
+const deleteModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteModal'));
 
 function formatDate(dateStr) {
     if (!dateStr) return '—';

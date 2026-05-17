@@ -103,8 +103,8 @@ function showToast(msg, delay = 2500) {
 }
 
 // ── Modals ────────────────────────────────────────────────────────────────────
-const editModal = new bootstrap.Modal(document.getElementById('editModal'));
-const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+const editModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('editModal'));
+const deleteModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteModal'));
 
 // ── Edit ──────────────────────────────────────────────────────────────────────
 document.getElementById('fra-edit-btn').addEventListener('click', async () => {
