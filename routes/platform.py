@@ -3,8 +3,12 @@ from pydantic import BaseModel
 from typing import Optional
 from Dependencies.Auth import require_permission
 from Controller.GetPlatformStatsController import GetPlatformStatsController
-from Controller.ManageCategoriesController import ManageCategoriesController
+from Controller.ViewCategoryController import ViewCategoryController
+from Controller.CreateCategoryController import CreateCategoryController
+from Controller.UpdateCategoryController import UpdateCategoryController
+from Controller.DeleteCategoryController import DeleteCategoryController
 from Controller.GetCategoryDetailsController import GetCategoryDetailsController
+from Controller.SearchCategoryController import SearchCategoryController
 from Controller.GetPlatformReportController import GetPlatformReportController
 
 
@@ -108,6 +112,30 @@ def get_platform_report(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
+@router.get("/categories/search")
+def search_categories(
+    q: str = "",
+    filter_status: str = "",
+    _=Depends(require_permission("can_manage_fra_category"))
+):
+    ctrl = SearchCategoryController()
+    try:
+        cats = ctrl.search(q, filter_status)
+        return {"categories": [
+            {
+                "id":                   c["id"],
+                "category_name":        c["category_name"],
+                "category_description": c.get("category_description") or "",
+                "is_active":            bool(c["is_active"]),
+                "campaign_count":       int(c["campaign_count"] or 0),
+                "created_at":           str(c["created_at"]) if c["created_at"] else None,
+            }
+            for c in (cats or [])
+        ]}
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
 @router.get("/categories/{category_id}")
 def get_category(
     category_id: int,
@@ -135,7 +163,7 @@ def get_category(
 
 @router.get("/categories")
 def get_categories(_=Depends(require_permission("can_manage_fra_category"))):
-    ctrl = ManageCategoriesController()
+    ctrl = ViewCategoryController()
     try:
         cats = ctrl.getAll()
         return {"categories": [
@@ -158,7 +186,7 @@ def create_category(
     data: CreateCategoryInput,
     _=Depends(require_permission("can_manage_fra_category"))
 ):
-    ctrl = ManageCategoriesController()
+    ctrl = CreateCategoryController()
     try:
         ctrl.create(data.model_dump())
         return {"success": True}
@@ -172,7 +200,7 @@ def update_category(
     data: UpdateCategoryInput,
     _=Depends(require_permission("can_manage_fra_category"))
 ):
-    ctrl = ManageCategoriesController()
+    ctrl = UpdateCategoryController()
     try:
         success = ctrl.update(category_id, data.model_dump(exclude_none=True))
         if not success:
@@ -189,7 +217,7 @@ def delete_category(
     category_id: int,
     _=Depends(require_permission("can_manage_fra_category"))
 ):
-    ctrl = ManageCategoriesController()
+    ctrl = DeleteCategoryController()
     try:
         success = ctrl.delete(category_id)
         if not success:

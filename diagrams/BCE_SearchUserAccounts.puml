@@ -1,0 +1,28 @@
+@startuml BCE_SearchUserAccounts
+title Search User Accounts
+
+left to right direction
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam classBackgroundColor White
+skinparam classBorderColor #333333
+
+class "manage_users.js" as B {
+  +loadData(filters)
+  +renderTable(users)
+}
+
+class "SearchUserAccountsController" as C {
+  +list
+  search(string input, string is_active)
+}
+
+class "Account" as E {
+  +list
+  search(string input, string active)
+}
+
+B -- C
+C -- E
+
+@enduml

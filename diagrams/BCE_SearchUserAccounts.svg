@@ -1,0 +1,24 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="870" height="135" font-family="Arial" font-size="12">
+  <!-- search_user_accounts.js -->
+  <rect x="10" y="20" width="190" height="90" fill="white" stroke="#333" stroke-width="1.5"/>
+  <line x1="10" y1="46" x2="200" y2="46" stroke="#333" stroke-width="1"/>
+  <text x="105" y="37" text-anchor="middle" font-weight="bold">search_user_accounts.js</text>
+  <text x="16" y="63" font-size="11">+loadData(filters): void</text>
+  <text x="16" y="80" font-size="11">+renderTable(users): void</text>
+
+  <line x1="200" y1="65" x2="270" y2="65" stroke="#333" stroke-width="1.5"/>
+
+  <!-- SearchUserAccountsController -->
+  <rect x="270" y="20" width="295" height="90" fill="white" stroke="#333" stroke-width="1.5"/>
+  <line x1="270" y1="46" x2="565" y2="46" stroke="#333" stroke-width="1"/>
+  <text x="417" y="37" text-anchor="middle" font-weight="bold">SearchUserAccountsController</text>
+  <text x="276" y="63" font-size="11">+search(input: str, is_active: str): list</text>
+
+  <line x1="565" y1="65" x2="635" y2="65" stroke="#333" stroke-width="1.5"/>
+
+  <!-- Account -->
+  <rect x="635" y="20" width="225" height="90" fill="white" stroke="#333" stroke-width="1.5"/>
+  <line x1="635" y1="46" x2="860" y2="46" stroke="#333" stroke-width="1"/>
+  <text x="747" y="37" text-anchor="middle" font-weight="bold">Account</text>
+  <text x="641" y="63" font-size="11">+search(input: str, active: str): list</text>
+</svg>
