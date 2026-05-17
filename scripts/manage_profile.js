@@ -26,7 +26,6 @@ const BASE_URL = 'http://127.0.0.1:8000';
         const ALL_KEYS = [...DASHBOARD_KEYS, ...PERM_KEYS];
 
         // ── Modals ──
-        const viewModal    = bootstrap.Modal.getOrCreateInstance(document.getElementById('viewModal'));
         const editModal    = bootstrap.Modal.getOrCreateInstance(document.getElementById('editModal'));
         const suspendModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('suspendModal'));
 
@@ -130,41 +129,9 @@ const BASE_URL = 'http://127.0.0.1:8000';
         // ── View Modal ──
         let viewingProfile = null;
 
-        function openView(p) {
-            viewingProfile = p;
+        
 
-            const dashPills = DASHBOARD_KEYS
-                .filter(d => !!p[d.key])
-                .map(d => `<span class="perm-pill dashboard"><i class="bi ${d.icon}"></i>${d.label}</span>`)
-                .join('') || '<span style="color:#aaa;font-size:0.8rem;">None</span>';
-
-            const permPills = PERM_KEYS
-                .filter(d => !!p[d.key])
-                .map(d => `<span class="perm-pill"><i class="bi ${d.icon}"></i>${d.label}</span>`)
-                .join('') || '<span style="color:#aaa;font-size:0.8rem;">None</span>';
-
-            document.getElementById('view-grid').innerHTML = `
-                <div class="cat-view-row"><span class="cat-view-label">Role Name</span><strong>${p.role_name}</strong></div>
-                <div class="cat-view-row"><span class="cat-view-label">Description</span><span>${p.description || '—'}</span></div>
-                <div class="cat-view-row"><span class="cat-view-label">Status</span>${statusBadge(p.is_active)}</div>
-                <div class="cat-view-row" style="flex-direction:column;align-items:flex-start;gap:6px;">
-                    <span class="cat-view-label">Dashboard Access</span>
-                    <div class="perm-pills">${dashPills}</div>
-                </div>
-                <div class="cat-view-row" style="flex-direction:column;align-items:flex-start;gap:6px;">
-                    <span class="cat-view-label">Permissions</span>
-                    <div class="perm-pills">${permPills}</div>
-                </div>
-            `;
-
-            viewModal.show();
-        }
-
-        // "Edit" button inside view modal
-        document.getElementById('view-edit-btn').addEventListener('click', () => {
-            viewModal.hide();
-            if (viewingProfile) openEdit(viewingProfile);
-        });
+       
 
         // ── Edit toggle row active sync ──
         function syncModalRow(checkbox) {
