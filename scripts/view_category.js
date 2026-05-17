@@ -1,123 +1,95 @@
+let allCategories = [];
+let editingId = null;
+let pendingDeleteId = null;
+
+const viewModal   = new bootstrap.Modal(document.getElementById('viewModal'));
+const editModal   = new bootstrap.Modal(document.getElementById('editModal'));
+const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+
+function showSuccess(msg) {
+    document.getElementById('cat-toast-msg').textContent = msg;
+    const toast = new bootstrap.Toast(document.getElementById('cat-success-toast'), { delay: 3000 });
+    toast.show();
+}
+
 function formatDate(dateStr) {
     if (!dateStr) return '—';
     return new Date(dateStr).toLocaleDateString('en-GB', {
-        day: '2-digit', month: '2-digit', year: 'numeric'
+        day: '2-digit', month: 'short', year: 'numeric'
     });
 }
 
-function formatDateTime(dateStr) {
-    if (!dateStr) return '—';
-    return new Date(dateStr).toLocaleString('en-GB', {
-        day: '2-digit', month: 'short', year: 'numeric',
-        hour: '2-digit', minute: '2-digit'
+function statusBadge(isActive) {
+    return isActive
+        ? '<span class="cat-badge cat-badge-active"><span class="cat-badge-dot"></span>Active</span>'
+        : '<span class="cat-badge cat-badge-inactive"><span class="cat-badge-dot"></span>Inactive</span>';
+}
+
+function renderTable(cats) {
+    const tbody = document.getElementById('cat-table-body');
+    tbody.innerHTML = '';
+
+    if (!cats.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="cat-empty">No categories found.</td></tr>`;
+        return;
+    }
+
+    cats.forEach((c, i) => {
+        const tr = document.createElement('tr');
+        tr.className = 'cat-row';
+        tr.innerHTML = `
+            <td class="cat-col-num">${i + 1}</td>
+            <td class="cat-col-name">${c.category_name}</td>
+            <td class="cat-col-desc">${c.category_description || '—'}</td>
+            <td class="cat-col-num">${c.campaign_count}</td>
+            <td>${statusBadge(c.is_active)}</td>
+            <td class="cat-col-date">${formatDate(c.created_at)}</td>
+            <td>
+                <div class="manage-card-actions">
+                    <button class="manage-btn manage-btn-view" title="View"><i class="bi bi-eye-fill"></i></button>
+                    <button class="manage-btn manage-btn-edit" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+                    <button class="manage-btn manage-btn-delete" title="Delete"><i class="bi bi-trash-fill"></i></button>
+                </div>
+            </td>
+        `;
+
+        tr.querySelector('.manage-btn-view').onclick   = () => { window.location.href = `view_category.html?id=${c.id}`; };
+        tr.querySelector('.manage-btn-edit').onclick   = () => openEdit(c);
+        tr.querySelector('.manage-btn-delete').onclick = () => openDelete(c);
+
+        tbody.appendChild(tr);
     });
 }
 
-async function loadCategory() {
-    const id = new URLSearchParams(window.location.search).get('id');
-    if (!id) { window.location.href = 'manage_categories.html'; return; }
+function applyFilters() {
+    const q      = document.getElementById('cat-search').value.trim().toLowerCase();
+    const status = document.getElementById('cat-status-filter').value;
+    const result = allCategories.filter(c => {
+        const matchName   = !q || c.category_name.toLowerCase().includes(q);
+        const matchStatus = status === '' || String(c.is_active ? '1' : '0') === status;
+        return matchName && matchStatus;
+    });
+    renderTable(result);
+}
 
+async function loadCategories() {
     try {
-        const res = await fetch(`http://127.0.0.1:8000/platform/categories/${id}`, {
-            credentials: 'include'
-        });
-
+        const res = await fetch('http://127.0.0.1:8000/platform/categories', { credentials: 'include' });
         if (res.status === 401 || res.status === 403) { window.location.href = 'login.html'; return; }
-        if (res.status === 404) { window.location.href = 'manage_categories.html'; return; }
-        if (!res.ok) throw new Error('Failed to load category');
-
-        const c = await res.json();
-
-        // Banner
-        document.getElementById('cat-name').textContent     = c.category_name;
-        document.getElementById('cat-id-label').textContent = `Category #${c.id}`;
-
-        // Stats
-        document.getElementById('cat-campaigns').textContent = c.campaign_count;
-        document.getElementById('cat-created').textContent   = formatDate(c.created_at);
-        document.getElementById('cat-updated').textContent   = formatDate(c.updated_at || c.created_at);
-
-        // Description
-        document.getElementById('cat-description').textContent = c.category_description || 'No description provided.';
-
-        // Status badge
-        const isActive = c.is_active;
-        document.getElementById('cat-status-dot').style.background = isActive ? '#22c55e' : '#ef4444';
-        document.getElementById('cat-status-text').textContent      = isActive ? 'Active' : 'Inactive';
-        const badge = document.getElementById('cat-status-badge');
-        badge.style.background = isActive ? '#dcfce7' : '#fee2e2';
-        badge.style.border     = isActive ? '1.5px solid #bbf7d0' : '1.5px solid #fecaca';
-        badge.style.color      = isActive ? '#166534' : '#991b1b';
-
-        // Full dates
-        document.getElementById('cat-created-full').textContent = formatDateTime(c.created_at);
-        document.getElementById('cat-updated-full').textContent = formatDateTime(c.updated_at || c.created_at);
-
-        // Wire buttons now that we have the data
-        const editModal   = bootstrap.Modal.getOrCreateInstance(document.getElementById('editModal'));
-        const deleteModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteModal'));
-
-        // Edit — open modal pre-filled with current data
-        document.getElementById('cat-edit-btn').addEventListener('click', () => {
-            document.getElementById('edit-name').value   = c.category_name;
-            document.getElementById('edit-desc').value   = c.category_description || '';
-            document.getElementById('edit-status').value = c.is_active ? '1' : '0';
-            document.getElementById('edit-error').classList.add('hidden');
-            editModal.show();
-        });
-
-        document.getElementById('edit-save-btn').addEventListener('click', async () => {
-            const name   = document.getElementById('edit-name').value.trim();
-            const errEl  = document.getElementById('edit-error');
-            if (!name) { errEl.textContent = 'Category name is required.'; errEl.classList.remove('hidden'); return; }
-            errEl.classList.add('hidden');
-
-            try {
-                const res = await fetch(`http://127.0.0.1:8000/platform/categories/${c.id}`, {
-                    method: 'PATCH',
-                    credentials: 'include',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        category_name:        name,
-                        category_description: document.getElementById('edit-desc').value.trim(),
-                        is_active:            Number(document.getElementById('edit-status').value),
-                    })
-                });
-                if (!res.ok) { const e = await res.json(); errEl.textContent = e.detail || 'Failed.'; errEl.classList.remove('hidden'); return; }
-                editModal.hide();
-                loadCategory(); // reload the page data to reflect changes
-            } catch (_) { errEl.textContent = 'Could not connect to the server.'; errEl.classList.remove('hidden'); }
-        });
-
-        document.getElementById('cat-delete-btn').addEventListener('click', () => {
-            document.getElementById('delete-modal-msg').textContent =
-                `Delete "${c.category_name}"? This cannot be undone.`;
-            deleteModal.show();
-        });
-
-        document.getElementById('delete-confirm-btn').addEventListener('click', async () => {
-            deleteModal.hide();
-            try {
-                const del = await fetch(`http://127.0.0.1:8000/platform/categories/${c.id}`, {
-                    method: 'DELETE', credentials: 'include'
-                });
-                if (del.ok) {
-                    window.location.href = 'manage_categories.html';
-                } else {
-                    const err = await del.json();
-                    alert(err.detail || 'Failed to delete category.');
-                }
-            } catch (_) { alert('Could not connect to the server.'); }
-        });
-
-    } catch (err) {
-        console.error('Failed to load category:', err);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        allCategories = data.categories || [];
+        renderTable(allCategories);
+    } catch {
+        document.getElementById('cat-table-body').innerHTML =
+            `<tr><td colspan="7" class="cat-empty">Failed to load categories.</td></tr>`;
     }
 }
 
-loadCategory();
+loadCategories();
+document.getElementById('cat-search').addEventListener('input', applyFilters);
+document.getElementById('cat-status-filter').addEventListener('change', applyFilters);
 
-// ── Gear dropdown ─────────────────────────────────────────────────────────────
 const gearBtn  = document.getElementById('hub-gear-btn');
 const dropdown = document.getElementById('hub-settings-dropdown');
 gearBtn.addEventListener('click', e => { e.stopPropagation(); dropdown.classList.toggle('hidden'); });
