@@ -8,6 +8,7 @@ from Controller.CreateCategoryController import CreateCategoryController
 from Controller.UpdateCategoryController import UpdateCategoryController
 from Controller.DeleteCategoryController import DeleteCategoryController
 from Controller.GetCategoryDetailsController import GetCategoryDetailsController
+from Controller.SearchCategoryController import SearchCategoryController
 from Controller.GetPlatformReportController import GetPlatformReportController
 
 
@@ -107,6 +108,30 @@ def get_platform_report(
                 for c in chart
             ],
         }
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
+@router.get("/categories/search")
+def search_categories(
+    q: str = "",
+    filter_status: str = "",
+    _=Depends(require_permission("can_manage_fra_category"))
+):
+    ctrl = SearchCategoryController()
+    try:
+        cats = ctrl.search(q, filter_status)
+        return {"categories": [
+            {
+                "id":                   c["id"],
+                "category_name":        c["category_name"],
+                "category_description": c.get("category_description") or "",
+                "is_active":            bool(c["is_active"]),
+                "campaign_count":       int(c["campaign_count"] or 0),
+                "created_at":           str(c["created_at"]) if c["created_at"] else None,
+            }
+            for c in (cats or [])
+        ]}
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 

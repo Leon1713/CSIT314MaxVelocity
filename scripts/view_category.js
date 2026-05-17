@@ -61,17 +61,6 @@ function renderTable(cats) {
     });
 }
 
-function applyFilters() {
-    const q      = document.getElementById('cat-search').value.trim().toLowerCase();
-    const status = document.getElementById('cat-status-filter').value;
-    const result = allCategories.filter(c => {
-        const matchName   = !q || c.category_name.toLowerCase().includes(q);
-        const matchStatus = status === '' || String(c.is_active ? '1' : '0') === status;
-        return matchName && matchStatus;
-    });
-    renderTable(result);
-}
-
 async function loadCategories() {
     try {
         const res = await fetch('http://127.0.0.1:8000/platform/categories', { credentials: 'include' });
@@ -87,8 +76,6 @@ async function loadCategories() {
 }
 
 loadCategories();
-document.getElementById('cat-search').addEventListener('input', applyFilters);
-document.getElementById('cat-status-filter').addEventListener('change', applyFilters);
 
 const gearBtn  = document.getElementById('hub-gear-btn');
 const dropdown = document.getElementById('hub-settings-dropdown');

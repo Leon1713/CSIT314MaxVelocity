@@ -116,6 +116,35 @@ class FRACategory:
             conn.close()
 
     @staticmethod
+    def search(q: str = "", status: str = "") -> list:
+        conn = get_db_connection()
+        db_cursor = conn.cursor(dictionary=True)
+        try:
+            conditions = []
+            values = []
+            if q:
+                conditions.append("fc.category_name LIKE %s")
+                values.append(f"%{q}%")
+            if status != "":
+                conditions.append("fc.is_active = %s")
+                values.append(int(status))
+            where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
+            db_cursor.execute(f"""
+                SELECT fc.id, fc.category_name, fc.category_description,
+                       fc.is_active, fc.created_at,
+                       COUNT(fa.id) AS campaign_count
+                FROM fra_categories fc
+                LEFT JOIN fundraising_activities fa ON fc.id = fa.category_id
+                {where}
+                GROUP BY fc.id
+                ORDER BY fc.id
+            """, values)
+            return db_cursor.fetchall()
+        finally:
+            db_cursor.close()
+            conn.close()
+
+    @staticmethod
     def getAll() -> list:
         db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
