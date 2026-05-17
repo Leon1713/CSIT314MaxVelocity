@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="135" font-family="Arial" font-size="12">
+  <!-- update_FRA.js -->
+  <rect x="10" y="20" width="200" height="90" fill="white" stroke="#333" stroke-width="1.5"/>
+  <line x1="10" y1="46" x2="210" y2="46" stroke="#333" stroke-width="1"/>
+  <text x="110" y="37" text-anchor="middle" font-weight="bold">update_FRA.js</text>
+  <text x="16" y="63" font-size="11">+openEditModal(id): void</text>
+  <text x="16" y="80" font-size="11">+saveActivity(): void</text>
+
+  <line x1="210" y1="65" x2="275" y2="65" stroke="#333" stroke-width="1.5"/>
+
+  <!-- UpdateFRAController -->
+  <rect x="275" y="20" width="310" height="90" fill="white" stroke="#333" stroke-width="1.5"/>
+  <line x1="275" y1="46" x2="585" y2="46" stroke="#333" stroke-width="1"/>
+  <text x="430" y="37" text-anchor="middle" font-weight="bold">UpdateFRAController</text>
+  <text x="281" y="63" font-size="11">+updateActivity(activity_id: int,</text>
+  <text x="281" y="80" font-size="11">  fundraiser_id: int, data: dict): bool</text>
+
+  <line x1="585" y1="65" x2="650" y2="65" stroke="#333" stroke-width="1.5"/>
+
+  <!-- FundraisingActivity -->
+  <rect x="650" y="20" width="220" height="90" fill="white" stroke="#333" stroke-width="1.5"/>
+  <line x1="650" y1="46" x2="870" y2="46" stroke="#333" stroke-width="1"/>
+  <text x="760" y="37" text-anchor="middle" font-weight="bold">FundraisingActivity</text>
+  <text x="656" y="63" font-size="11">+updateById(activity_id,</text>
+  <text x="656" y="80" font-size="11">  fundraiser_id, data): bool</text>
+</svg>

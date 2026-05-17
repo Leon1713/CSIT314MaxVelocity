@@ -167,6 +167,36 @@ class FundraisingActivity():
             conn.close()
 
     @staticmethod
+    def searchByFundraiserId(fundraiser_id: int, q: str = "", filter_status: str = "") -> list:
+        conn = get_db_connection()
+        db_cursor = conn.cursor(dictionary=True)
+        try:
+            conditions = ["fa.fundraiser_id = %s"]
+            values = [fundraiser_id]
+            if q:
+                conditions.append("fa.campaign_title LIKE %s")
+                values.append(f"%{q}%")
+            if filter_status != "":
+                conditions.append("fa.status = %s")
+                values.append(int(filter_status))
+            db_cursor.execute(f"""
+                SELECT fa.id, fa.description, fa.campaign_title, fa.service_type, fa.status,
+                       fa.current_amount, fa.goal_amount, fa.end_date, fa.created_at,
+                       COALESCE(fs.view_count, 0)      AS view_count,
+                       COALESCE(fs.shortlist_count, 0) AS shortlist_count,
+                       fc.category_name
+                FROM fundraising_activities fa
+                LEFT JOIN fra_categories fc ON fa.category_id = fc.id
+                LEFT JOIN fra_stats fs ON fa.id = fs.fra_id
+                WHERE {' AND '.join(conditions)}
+                ORDER BY fa.created_at DESC
+            """, values)
+            return db_cursor.fetchall()
+        finally:
+            db_cursor.close()
+            conn.close()
+
+    @staticmethod
     def getAllByFundraiserId(fundraiser_id: int) -> list:
         conn = get_db_connection()
         db_cursor = conn.cursor(dictionary=True)
