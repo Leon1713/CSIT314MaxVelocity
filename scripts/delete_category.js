@@ -13,8 +13,8 @@ document.getElementById('delete-confirm-btn').addEventListener('click', async ()
             method: 'DELETE', credentials: 'include'
         });
         if (res.ok) {
-            allCategories = allCategories.filter(c => c.id !== pendingDeleteId);
-            applyFilters();
+            loadCategories();
+            showSuccess('Category deleted successfully.');
         } else {
             const e = await res.json();
             alert(e.detail || 'Failed to delete category.');

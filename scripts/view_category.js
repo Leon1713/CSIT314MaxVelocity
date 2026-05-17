@@ -8,8 +8,7 @@ const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
 
 function showSuccess(msg) {
     document.getElementById('cat-toast-msg').textContent = msg;
-    const toast = new bootstrap.Toast(document.getElementById('cat-success-toast'), { delay: 3000 });
-    toast.show();
+    bootstrap.Toast.getOrCreateInstance(document.getElementById('cat-success-toast'), { delay: 3000 }).show();
 }
 
 function formatDate(dateStr) {

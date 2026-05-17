@@ -23,5 +23,5 @@
   <text x="745" y="37" text-anchor="middle" font-weight="bold">PlatformReport</text>
   <text x="606" y="63" font-size="11">+getReportStats(period: str, conn): dict</text>
   <text x="606" y="80" font-size="11">+getRecentFRAActivity(period: str, conn): list</text>
-  <text x="606" y="97" font-size="11">+getTopActivitiesByViews(conn): list</text>
+  <text x="606" y="97" font-size="11">+getViewsByCategory(conn): list</text>
 </svg>
