@@ -58,8 +58,8 @@
       <p class="admin-overview-welcome">Welcome back, <span id="admin-username">—</span></p>
       <p class="admin-overview-text">Here's an overview of your<br>Adminstration Activities.</p>
       <div class="admin-overview-actions">
-        <button class="admin-overview-btn" id="btn-manage-accounts">Manage Accounts</button>
-        <button class="admin-overview-btn" id="btn-manage-profiles">Manage Profiles</button>
+        <button class="admin-overview-btn" id="btn-manage-accounts" onclick="location.href='/pages/manage_account.html'">Manage Accounts</button>
+        <button class="admin-overview-btn" id="btn-manage-profiles" onclick="location">Manage Profiles</button>
       </div>
     </div>
 
@@ -124,6 +124,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/scripts/session-check.js"></script>
   <script src="/scripts/admin.js"></script>
   <script src="/scripts/dropdown_profile.js"></script>
 </body>

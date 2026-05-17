@@ -252,8 +252,8 @@ class FundraisingActivity():
             conn.close()
 
     @staticmethod
-    def getRecentByFundraiserId(fundraiser_id: int, conn, limit: int = 5) -> list:
-        db_conn = conn
+    def getRecentByFundraiserId(fundraiser_id: int, limit: int = 5) -> list:
+        db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""

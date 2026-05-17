@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Fund Raising Activity</title>
+
+  <link rel="stylesheet" href="/styles/styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+
+<body class="fr-create-page">
+
+  <nav class="fundly-hub-navbar">
+    <div class="container-fluid px-4 d-flex align-items-center">
+      <div class="hub-nav-logo">
+        <img src="../img/fundly-logo.png" alt="Fundly Logo" class="fundly-logo-img" />
+      </div>
+      <span class="hub-nav-title">View User Accounts</span>
+      <div class="hub-gear-wrap ms-auto">
+        <button class="hub-nav-gear" id="hub-gear-btn" aria-label="Settings">
+          <i class="bi bi-gear-fill"></i>
+        </button>
+        <div id="hub-settings-dropdown" class="hub-settings-dropdown hidden">
+          <p class="hub-dropdown-section">Account</p>
+          <div class="hub-dropdown-user">
+            <div class="hub-dropdown-avatar-wrap">
+              <i class="bi bi-person-fill" id="dropdown-avatar-icon"></i>
+              <img id="dropdown-avatar-img" class="hidden" alt="" />
+            </div>
+            <div>
+              <span class="hub-dropdown-username" id="dropdown-username"></span>
+              <span class="hub-dropdown-role" id="dropdown-role"></span>
+            </div>
+          </div>
+          <div class="hub-dropdown-divider"></div>
+          <a href="profile.html" class="hub-dropdown-item">
+            <i class="bi bi-person-circle"></i>My Profile
+          </a>
+          <a href="#" class="hub-dropdown-item">
+            <i class="bi bi-envelope"></i>Notifications
+          </a>
+          <button class="hub-dropdown-item hub-dropdown-logout" id="hub-logout-btn">
+            <i class="bi bi-box-arrow-right"></i>Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+
+    <!-- BACK LINK · Class: .back-link -->
+    <a class="back-link" href="#">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 8 8 12 12 16"></polyline>
+        <line x1="16" y1="12" x2="8" y2="12"></line>
+      </svg>
+      Back
+    </a>
+
+
+    <!-- ══════════════════════════════════════
+       ACCOUNT CARD  (outermost container)
+       Class: .account-card
+  ══════════════════════════════════════ -->
+    <div class="account-card">
+
+
+      <!-- ──────────────────────────────────
+         PROFILE HEADER
+         Classes: .account-card__profile-header
+                  .account-card__avatar
+                  .account-card__username
+                  .account-card__role-label
+                  .status-pill .status-pill--active / --inactive
+                  .status-pill__dot
+    ────────────────────────────────── -->
+      <div class="account-card__profile-header">
+
+        <div class="account-card__avatar">US</div>
+
+        <div>
+          <h1 class="account-card__username" id="header-username">username</h1>
+          <p class="account-card__role-label" id="header-role">role</p>
+          <span class="status-pill status-pill--active" id="header-status">
+            <span class="status-pill__dot"></span> is_active
+          </span>
+        </div>
+
+      </div>
+
+
+      <!-- ──────────────────────────────────
+         DETAILS SECTION
+         Classes: .account-card__details-section
+                  .account-card__section-heading
+                  .account-card__details-grid
+                  .details-grid__item
+                  .details-grid__item--status  (colour override for status cell)
+    ────────────────────────────────── -->
+      <div class="account-card__details-section">
+
+        <p class="account-card__section-heading">Account details</p>
+
+        <div class="account-card__details-grid">
+
+          <div class="details-grid__item">
+            <label>User ID</label>
+            <span id="details-id">id</span>
+          </div>
+
+          <div class="details-grid__item">
+            <label>Role</label>
+            <span id="details-role">Fundraiser</span>
+          </div>
+
+          <div class="details-grid__item details-grid__item--status">
+            <label>Status</label>
+            <span id="details-status">Active</span>
+          </div>
+
+          <div class="details-grid__item">
+            <label>Account created</label>
+            <span id="details-created_at">09 May 2026</span>
+          </div>
+
+          <div class="details-grid__item">
+            <label>Last login</label>
+            <span id="details-last_login">Yesterday</span>
+          </div>
+
+          <div class="details-grid__item">
+            <label>Email</label>
+            <span id="details-email">fundraiser1@fundly.com</span>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- ──────────────────────────────────
+         ACTIVITY SECTION
+         Classes: .account-card__activity-section
+                  .account-card__section-heading  (reused)
+                  .account-card__activity-list
+                  .activity-list__item
+                  .activity-list__icon
+                  .activity-list__text
+                  .activity-list__timestamp
+    ────────────────────────────────── -->
+      <div class="account-card__activity-section">
+
+        <p class="account-card__section-heading">Recent activity</p>
+
+        <div class="account-card__activity-list" id="details-recent-activity">
+          <div class="activity-list__item">
+            <div class="activity-list__icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                <polyline points="10 17 15 12 10 7"></polyline>
+                <line x1="15" y1="12" x2="3" y2="12"></line>
+              </svg>
+            </div>
+            <div class="activity-list__text">
+              <p>Logged in</p>
+              <span>Yesterday at 2:34 PM</span>
+            </div>
+            <span class="activity-list__timestamp">1d ago</span>
+          </div>
+
+          <div class="activity-list__item">
+            <div class="activity-list__icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="12" y1="18" x2="12" y2="12"></line>
+                <line x1="9" y1="15" x2="15" y2="15"></line>
+              </svg>
+            </div>
+            <div class="activity-list__text">
+              <p>Created a new fundraising campaign</p>
+              <span>10 May 2026 at 11:20 AM</span>
+            </div>
+            <span class="activity-list__timestamp">7d ago</span>
+          </div>
+
+          <div class="activity-list__item">
+            <div class="activity-list__icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+                <polyline points="16 11 18 13 22 9"></polyline>
+              </svg>
+            </div>
+            <div class="activity-list__text">
+              <p>Account created and verified</p>
+              <span>09 May 2026 at 9:00 AM</span>
+            </div>
+            <span class="activity-list__timestamp">8d ago</span>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- ──────────────────────────────────
+         ACTION BAR
+         Classes: .account-card__action-bar
+                  .action-bar__btn
+                  .action-bar__btn--edit
+                  .action-bar__btn--deactivate
+                  .action-bar__btn--delete
+    ────────────────────────────────── -->
+      <div class="account-card__action-bar">
+
+        <button class="action-bar__btn action-bar__btn--edit" id="edit-acc-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          Edit account
+        </button>
+
+        <button class="action-bar__btn action-bar__btn--deactivate">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+          </svg>
+          Deactivate
+        </button>
+      </div>
+    </div><!-- /account-card -->
+
+  </main>
+
+  <footer class="fundly-footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="../img/fundly-logo.png" alt="Fundly Logo" class="footer-logo-img" />
+      </div>
+      <div class="footer-credits">
+        made by jia yuan, chloe,<br />
+        tara, yaz, yadyoo &amp; hanyi
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <i class="bi bi-c-circle footer-copy-icon"></i>
+      <span class="footer-copy-text">Fundly</span>
+    </div>
+  </footer>
+
+  <!-- Edit modal -->
+  <!-- ══ EDIT USER MODAL (shown on load) ══ -->
+  <div class="modal fade fundly-modal hide" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel"
+    aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Header -->
+        <div class="modal-header">
+          <h5 class="modal-title" id="editUserModalLabel">
+            <i class="bi bi-pencil-square"></i>Edit User Account
+          </h5>
+          <button type="button" class="btn-close" aria-label="Close" id="edit-modal-close"></button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+
+          <!-- User strip -->
+          <div class="modal-user-strip">
+            <div class="modal-user-av" id="username-strip-modal">TE</div>
+            <div>
+              <div class="modal-user-name" id="modal-uname">TEST</div>
+              <div class="modal-user-email" id="modal-email">test@t.com</div>
+            </div>
+          </div>
+
+          <!-- Account Details -->
+          <div class="modal-section-label">Account Details</div>
+
+          <div class="row g-3">
+            <div class="col-6">
+              <label class="form-label" for="edit-first-name">First Name</label>
+              <input type="text" class="form-control" id="edit-first-name" value="-" />
+            </div>
+            <div class="col-6">
+              <label class="form-label" for="edit-last-name">Last Name</label>
+              <input type="text" class="form-control" id="edit-last-name" value="" />
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="edit-username">Username</label>
+              <input type="text" class="form-control" id="edit-username" value="jia_yuan" />
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="edit-email">Email</label>
+              <input type="email" class="form-control" id="edit-email" value="jia@fundly.io" />
+            </div>
+            <div class="col-6">
+              <label class="form-label" for="edit-phone">Phone</label>
+              <input type="tel" class="form-control" id="edit-phone" value="+65 9123 4567" />
+            </div>
+            <div class="col-6">
+              <label class="form-label" for="edit-role">Role</label>
+              <select class="form-select" id="edit-role">
+              </select>
+            </div>
+          </div>
+
+          <!-- Change Password -->
+          <div class="modal-section-label">Change Password</div>
+
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label" for="edit-password">New Password</label>
+              <div class="pw-wrap">
+                <input type="password" class="form-control" id="edit-password"
+                  placeholder="Leave blank to keep current" />
+                <button class="pw-toggle" type="button" id="pw-toggle-btn" aria-label="Toggle password">
+                  <i class="bi bi-eye" id="pw-toggle-icon"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn-fundly-ghost" id="editModalBtn">Cancel</button>
+          <button type="button" class="btn-fundly" id="editmodal-save-changes">
+            <i class="bi bi-check-lg me-1"></i>Save Changes
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete confirmation modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content fra-delete-modal">
+        <div class="modal-header fra-delete-modal-header border-0">
+          <i class="bi bi-trash-fill fra-delete-modal-icon"></i>
+          <h5 class="modal-title fra-delete-modal-title">Delete Activity</h5>
+        </div>
+        <div class="modal-body fra-delete-modal-body">
+          <p id="delete-modal-msg"></p>
+        </div>
+        <div class="modal-footer fra-delete-modal-footer border-0">
+          <button type="button" class="fr-cancel-btn" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="fra-delete-confirm-btn" id="delete-confirm-btn">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success toast -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:1100">
+    <div id="fra-success-toast" class="toast cat-toast border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="cat-toast-inner">
+        <div class="cat-toast-icon"><i class="bi bi-check-lg"></i></div>
+        <span class="cat-toast-msg" id="fra-toast-msg"></span>
+        <button type="button" class="cat-toast-close" data-bs-dismiss="toast"><i class="bi bi-x"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/scripts/view_FRA.js"></script>
+  <script src="/scripts/dropdown_profile.js"></script>
+</body>
+
+</html>

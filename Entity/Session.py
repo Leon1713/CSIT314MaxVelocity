@@ -52,7 +52,7 @@ class Session:
             session = Session(result["session_id"], result["user_id"], result["created_at"], result["expires_at"], result["ip_address"],result["is_active"])
             return session
         except Exception as e:
-            raise HTTPException(status_code=404, detail="Item not found")
+            return None
         finally:
             db_cursor.close()
             db_conn.close()

@@ -1,5 +1,6 @@
 from __future__ import annotations
-from db import get_db_connection;
+from db import get_db_connection
+
 
 class Account:
     # Define the attributes of the Account class
@@ -136,7 +137,7 @@ class Account:
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute(
-                """SELECT * FROM user_accounts where user_id = %s""", (id,))
+                """SELECT u.* FROM user_accounts u where u.user_id = %s""", (id,))
             account_dict = db_cursor.fetchone()
             result = Account(**account_dict)
             return result
@@ -161,33 +162,23 @@ class Account:
             db_cursor.close()
             db_conn.close()
 
-    def update(self) -> bool:
+    @staticmethod
+    def update(user_id, update_dict) -> bool:
+
         db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
-            db_cursor.execute("""
-                UPDATE user_accounts
-                SET username = %s, email = %s, password_hash = %s, role_id = %s, first_name = %s, last_name = %s, phone = %s, is_active = %s, is_suspended = %s, updated_at = NOW()
-                WHERE user_id = %s
-            """, (
-                self.username,
-                self.email,
-                self.password_hash,
-                self.role_id,
-                self.first_name,
-                self.last_name,
-                self.phone,
-                self.is_active,
-                self.is_suspended,
-                self.user_id
-            ))
+            set_clauses = [f"{key} = %s" for key in update_dict.keys()]
+            query = f"UPDATE user_accounts SET {', '.join(set_clauses)} WHERE user_id = %s"
+            query_values = list(update_dict.values()) + [user_id]
+            db_cursor.execute(query, query_values)
             db_conn.commit()
             return True
         except Exception as e:
             print(f"Error updating user: {e}")
             db_conn.rollback()
             raise Exception(
-                "Error updating Account with id = %s", (self.user_id,))
+                "Error updating Account with id = %s", (user_id,))
         finally:
             db_cursor.close()
             db_conn.close()
@@ -254,7 +245,7 @@ JOIN user_roles r
     ON u.role_id = r.role_id
 
 ORDER BY event_time DESC
-LIMIT %s;""",(limit,)
+LIMIT %s;""", (limit,)
             )
             return db_cursor.fetchall()
         except Exception as e:
@@ -263,10 +254,9 @@ LIMIT %s;""",(limit,)
         finally:
             db_cursor.close()
             conn.close()
-            
-            
+
     @staticmethod
-    def getAdminDashboardStats(user = None):
+    def getAdminDashboardStats(user=None):
         try:
             conn = get_db_connection()
             db_cursor = conn.cursor(dictionary=True)
@@ -284,12 +274,12 @@ LIMIT %s;""",(limit,)
         finally:
             db_cursor.close()
             conn.close()
-            
+
     @staticmethod
     def getAllUsersWithRoles():
         try:
             conn = get_db_connection()
-            db_cursor = conn.cursor(dictionary = True)
+            db_cursor = conn.cursor(dictionary=True)
             db_cursor.execute(
                 """SELECT u.*, r.role_name FROM user_accounts u JOIN user_roles r ON u.role_id = r.role_id ORDER BY u.last_login DESC"""
             )
@@ -300,19 +290,40 @@ LIMIT %s;""",(limit,)
         finally:
             db_cursor.close()
             conn.close()
+
     @staticmethod
-    def search(input : str): # list method
+    def search(input: str):  # list method
         try:
             conn = get_db_connection()
             db_cursor = conn.cursor(dictionary=True)
 
             db_cursor.execute("""
-        SELECT * FROM users 
+        SELECT u.*,r.role_name FROM user_accounts u join user_roles r
+        ON u.role_id = r.role_id
         WHERE %s = '' 
         OR username LIKE CONCAT('%', %s, '%') 
         OR email LIKE CONCAT('%', %s, '%');
-        """, (input,input,input,))
+        """, (input, input, input,))
             return db_cursor.fetchall()
+        except Exception as e:
+            print(e)
+            raise
+        finally:
+            db_cursor.close()
+            conn.close()
+
+    @staticmethod
+    def GetUsersById(id):  # true get method
+        try:
+            conn = get_db_connection()
+            db_cursor = conn.cursor(dictionary=True)
+
+            db_cursor.execute("""
+        SELECT u.*,r.role_name FROM user_accounts u join user_roles r
+        ON u.role_id = r.role_id
+        WHERE u.user_id = %s;
+        """, (id,))
+            return db_cursor.fetchone()
         except Exception as e:
             print(e)
             raise

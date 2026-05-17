@@ -230,3 +230,5 @@ VALUES (
             db_cursor.close()
             conn.close()
             
+        
+            

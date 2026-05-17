@@ -3189,6 +3189,333 @@ main.admin-dashboard-main {
     position: relative;
 }
 
+/* ── Page wrapper ── */
+/* .page-wrapper */
+.page-wrapper {
+  flex: 1;
+  padding: 20px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 805px;
+  width: 100%;
+  margin: 0 auto;
+}
+ 
+ 
+/* ── Back link ── */
+/* .back-link */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--fundly-text);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+ 
+.back-link:hover {
+  color: var(--fundly-primary);
+}
+ 
+.back-link svg {
+  flex-shrink: 0;
+}
+ 
+ 
+/* ════════════════════════════════════════════
+   ACCOUNT CARD  —  outermost shell
+   .account-card
+   ════════════════════════════════════════════ */
+.account-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(201, 107, 107, 0.08);
+  overflow: hidden;
+}
+ 
+ 
+/* ════════════════════════════════════════════
+   PROFILE HEADER
+   .account-card__profile-header
+   .account-card__avatar
+   .account-card__username
+   .account-card__role-label
+   ════════════════════════════════════════════ */
+.account-card__profile-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 20px 18px;
+  border-bottom: 1px solid #f5eaea;
+}
+ 
+.account-card__avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(201, 107, 107, 0.15);
+  color: var(--fundly-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+ 
+.account-card__username {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--fundly-text);
+  margin: 0 0 2px;
+}
+ 
+.account-card__role-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--fundly-muted);
+  margin: 0 0 6px;
+}
+ 
+ 
+/* ════════════════════════════════════════════
+   STATUS PILL
+   .status-pill
+   .status-pill--active
+   .status-pill--inactive
+   .status-pill__dot
+   ════════════════════════════════════════════ */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+ 
+.status-pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+ 
+.status-pill--active {
+  background: #dcfce7;
+  color: #166534;
+}
+ 
+.status-pill--active .status-pill__dot {
+  background: #22c55e;
+}
+ 
+.status-pill--inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+ 
+.status-pill--inactive .status-pill__dot {
+  background: #ef4444;
+}
+ 
+ 
+/* ════════════════════════════════════════════
+   DETAILS SECTION
+   .account-card__details-section
+   .account-card__section-heading   ← reused in activity section too
+   .account-card__details-grid
+   .details-grid__item
+   .details-grid__item--status      ← green colour override
+   ════════════════════════════════════════════ */
+.account-card__details-section {
+  padding: 18px 20px;
+  border-bottom: 1px solid #f5eaea;
+}
+ 
+.account-card__section-heading {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--fundly-primary);
+  margin: 0 0 14px;
+}
+ 
+.account-card__details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px 20px;
+}
+ 
+.details-grid__item label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--fundly-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 3px;
+}
+ 
+.details-grid__item span {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--fundly-text);
+}
+ 
+.details-grid__item--status span {
+  color: #166534;
+}
+ 
+ 
+/* ════════════════════════════════════════════
+   ACTIVITY SECTION
+   .account-card__activity-section
+   .account-card__activity-list
+   .activity-list__item
+   .activity-list__icon
+   .activity-list__text
+   .activity-list__timestamp
+   ════════════════════════════════════════════ */
+.account-card__activity-section {
+  padding: 18px 20px;
+  border-bottom: 1px solid #f5eaea;
+}
+ 
+.account-card__activity-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 203px;
+  overflow-y: auto;
+}
+ 
+.activity-list__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+ 
+.activity-list__item:not(:last-child) {
+  border-bottom: 1px solid #f5eaea;
+}
+ 
+.activity-list__icon  {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--fundly-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+ 
+.activity-list__icon svg {
+  color: var(--fundly-primary);
+}
+ 
+.activity-list__text {
+  flex: 1;
+  min-width: 0;
+}
+ 
+.activity-list__text p {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--fundly-text);
+  margin: 0 0 2px;
+}
+ 
+.activity-list__text span {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--fundly-muted);
+}
+ 
+.activity-list__timestamp {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--fundly-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+ 
+ 
+/* ════════════════════════════════════════════
+   ACTION BAR
+   .account-card__action-bar
+   .action-bar__btn
+   .action-bar__btn--edit
+   .action-bar__btn--deactivate
+   .action-bar__btn--delete
+   ════════════════════════════════════════════ */
+.account-card__action-bar {
+  display: flex;
+  gap: 8px;
+  padding: 14px 20px;
+  background: #fdf8f8;
+}
+ 
+.action-bar__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  cursor: pointer;
+  border: none;
+  transition: background 0.18s, opacity 0.15s, transform 0.13s;
+}
+ 
+.action-bar__btn:hover  { opacity: 0.88; }
+.action-bar__btn:active { transform: scale(0.97); }
+ 
+/* Edit — primary brand fill */
+.action-bar__btn--edit {
+  background: var(--fundly-primary);
+  color: #fff;
+}
+ 
+.action-bar__btn--edit:hover {
+  background: var(--fundly-primary-dark);
+  opacity: 1;
+}
+ 
+/* Deactivate — ghost */
+.action-bar__btn--deactivate {
+  background: #fff;
+  color: var(--fundly-text);
+  border: 1.5px solid var(--border);
+}
+ 
+.action-bar__btn--deactivate:hover {
+  background: var(--fundly-primary-light);
+  opacity: 1;
+}
+ 
+/* Delete — soft red */
+.action-bar__btn--delete {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1.5px solid #fecaca;
+}
+ 
+.action-bar__btn--delete:hover {
+  background: #fecaca;
+  opacity: 1;
+}
+ 
+
 @media (max-width: 640px) {
     .rpt-stats-grid { grid-template-columns: repeat(2, 1fr); }
 }

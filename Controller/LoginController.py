@@ -12,7 +12,7 @@ class LoginController:
             try:
                 
                 auth:Account = Account.authenticate(email, password, role, self.pwd_context)
-                sess:Session = Session.create(auth.user_id, ip_address, 1*60*60)
+                sess:Session = Session.create(auth.user_id, ip_address, 1*60*60 * 24)
                 return sess
             except Exception as e:
                 print(e)
