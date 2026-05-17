@@ -1,4 +1,4 @@
-const STATUS_COLORS = {
+﻿const STATUS_COLORS = {
     1: '#22c55e',
     0: '#f97316',
 };
@@ -161,7 +161,7 @@ document.getElementById('manage-new-btn').addEventListener('click', () => {
 });
 
 document.getElementById('manage-history-btn').addEventListener('click', () => {
-    window.location.href = 'completed_FRA.html';
+    window.location.href = 'view_completed_FRA.html';
 });
 
 // ── Delete confirm ─────────────────────────────────────────────────────────────

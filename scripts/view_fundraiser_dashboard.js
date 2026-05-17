@@ -1,4 +1,4 @@
-// Status dot colour map
+﻿// Status dot colour map
 const STATUS_COLORS = {
     active:    '#22c55e',
     draft:     '#22c55e',
@@ -110,7 +110,7 @@ document.getElementById('btn-manage-activities').addEventListener('click', () =>
 });
 
 document.getElementById('btn-view-history').addEventListener('click', () => {
-    window.location.href = 'completed_FRA.html';
+    window.location.href = 'view_completed_FRA.html';
 });
 
 // ── Gear dropdown ──────────────────────────────────────────────────────────────

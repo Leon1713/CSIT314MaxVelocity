@@ -1,4 +1,4 @@
-const STATUS_COLORS = {
+﻿const STATUS_COLORS = {
     active: '#22c55e',
     inactive: '#ef4444',
     pending: '#f97316',
@@ -33,8 +33,8 @@ const params = new URLSearchParams(window.location.search);
 const activityId = params.get('id');
 const fromParam  = params.get('from');
 const backHref   = fromParam === 'manage'  ? 'manage_FRA.html'
-                 : fromParam === 'history' ? 'completed_FRA.html'
-                 : 'fundraiser_dashboard.html';
+                 : fromParam === 'history' ? 'view_completed_FRA.html'
+                 : 'view_fundraiser_dashboard.html';
 
 document.getElementById('fra-back-link').href = backHref;
 document.getElementById('fra-close-btn').href = backHref;
@@ -73,13 +73,13 @@ function renderView(a) {
 }
 
 async function loadActivity() {
-    if (!activityId) { window.location.href = 'fundraiser_dashboard.html'; return; }
+    if (!activityId) { window.location.href = 'view_fundraiser_dashboard.html'; return; }
     try {
         const res = await fetch(`http://127.0.0.1:8000/fundraiser/activity/${activityId}`, {
             credentials: 'include'
         });
         if (res.status === 401 || res.status === 403) { window.location.href = 'login.html'; return; }
-        if (res.status === 404) { window.location.href = 'fundraiser_dashboard.html'; return; }
+        if (res.status === 404) { window.location.href = 'view_fundraiser_dashboard.html'; return; }
         if (!res.ok) throw new Error();
         activityData = await res.json();
         renderView(activityData);
