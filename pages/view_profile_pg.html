@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Profiles</title>
 
     <link rel="stylesheet" href="/styles/styles.css">
-    <link rel="stylesheet" href="/styles/manage_profile.css">
+    <link rel="stylesheet" href="/styles/view_profile.css">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
@@ -53,62 +55,142 @@
     </nav>
 
     <!-- ══ Main ══ -->
-    <main class="platform-main">
-
-        <a href="view_admin_dashboard.html" class="fr-back-link">
-            <i class="bi bi-arrow-left-circle"></i> Back
-        </a>
-
-        <div class="cat-card">
-
-            <!-- Card header -->
-            <div class="cat-card-header">
-                <span class="cat-card-title">
-                    <i class="bi bi-person-badge-fill cat-title-icon"></i> User Profiles
-                </span>
-                <div class="cat-controls">
-                    <div class="manage-search-wrap">
-                        <i class="bi bi-search"></i>
-                        <input type="text" id="cat-search" class="manage-search-input" placeholder="Search profiles..." />
-                    </div>
-                    <select id="cat-status-filter" class="manage-status-filter">
-                        <option value="">All Status</option>
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                    </select>
-                    <button class="cat-new-btn" id="cat-new-btn">
-                        <i class="bi bi-plus-lg"></i> New Profile
-                    </button>
+    <main class="page-wrapper">
+             <a href="manage_profile.html" class="fr-back-link">
+                <i class="bi bi-arrow-left-circle"></i> Back
+            </a>
+        <div class="account-card" id="profile-card">
+            <!-- ── Header ── -->
+            <div class="account-card__profile-header">
+                <div class="account-card__avatar" id="role-avatar">
+                    <i class="bi bi-shield-fill"></i>
+                </div>
+                <div>
+                    <h1 class="account-card__username" id="role-name">role_name</h1>
+                    <p class="account-card__role-label" id="role-desc">Manages platform users and access — cannot modify
+                        billing or system settings.</p>
+                    <span class="status-pill status-pill--active" id="role-status">
+                        <span class="status-pill__dot"></span> Active
+                    </span>
                 </div>
             </div>
-
-            <!-- Table -->
-            <div class="cat-table-wrap" style="max-height:520px;">
-                <table class="cat-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>PROFILE</th>
-                            <th>DESCRIPTION</th>
-                            <th>PERMISSIONS</th>
-                            <th>STATUS</th>
-                            <th>ACTIONS</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cat-table-body">
-                        <tr>
-                            <td colspan="6" class="cat-empty">
-                                <span class="spinner-border spinner-border-sm me-2" style="color:var(--fundly-primary)"></span>
-                                Loading profiles…
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- ── Role Info ── -->
+            <div class="account-card__details-section">
+                <p class="account-card__section-heading">Role Information</p>
+                <div class="account-card__details-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="details-grid__item">
+                        <label>Role ID</label>
+                        <span id="role-id">#4</span>
+                    </div>
+                    <div class="details-grid__item">
+                        <label>Role Name</label>
+                        <span id="role-name-detail">user_admin</span>
+                    </div>
+                    <div class="details-grid__item details-grid__item--status">
+                        <label>Status</label>
+                        <span id="role-status-text">Active</span>
+                    </div>     
+                </div>
             </div>
-
+            <!-- ── Dashboard Access ── -->
+            <div class="account-card__details-section">
+                <p class="account-card__section-heading">Dashboard Access</p>
+                <div class="vp-permission-grid" id="dashboard-grid">
+                    <div class="vp-perm-item granted">
+                        <span class="perm-icon"><i class="bi bi-speedometer2"></i></span>
+                        <span class="vp-perm-label" id="admin-dashboard-text">Admin Dashboard</span>
+                        <span class="vp-perm-status ok" id="admin-dashboard-status">On</span>
+                    </div>
+                    <div class="vp-perm-item granted">
+                        <span class="perm-icon"><i class="bi bi-people-fill"></i></span>
+                        <span class="vp-perm-label" id="fr-dashboard-text">FR Dashboard</span>
+                        <span class="vp-perm-status ok" id="fr-dashboard-status">On</span>
+                    </div>
+                    <div class="vp-perm-item denied">
+                        <span class="perm-icon"><i class="bi bi-graph-up-arrow"></i></span>
+                        <span class="vp-perm-label"id="donee-dashboard-text">Donee Dashboard</span>
+                        <span class="vp-perm-status no" id="donee-dashboard-status">Off</span>
+                    </div>
+                    <div class="vp-perm-item denied">
+                        <span class="perm-icon"><i class="bi bi-wallet2"></i></span>
+                        <span class="vp-perm-label" id="platform-text">Platform Mgmt Dashboard</span>
+                        <span class="vp-perm-status no " id="platform-status">Off</span>
+                    </div>
+                </div>
+            </div>
+            <!-- ── Permissions ── -->
+            <div class="account-card__details-section">
+                <p class="account-card__section-heading">Permissions</p>
+                <div class="vp-permission-grid" id="permissions-grid">
+                    <div class="vp-perm-item granted">
+                        <span class="perm-icon"><i class="bi bi-person-plus-fill"></i></span>
+                        <span class="vp-perm-label" id="can_manage_user_profile">Manage User Profile</span>
+                        <span class="vp-perm-status ok">On</span>
+                    </div>
+                    <div class="vp-perm-item granted">
+                        <span class="perm-icon"><i class="bi bi-pencil-fill"></i></span>
+                        <span class="vp-perm-label" id="can_manage_user_account">Manage User Account</span>
+                        <span class="vp-perm-status ok">On</span>
+                    </div>
+                    <div class="vp-perm-item denied">
+                        <span class="perm-icon"><i class="bi bi-trash-fill"></i></span>
+                        <span class="vp-perm-label" id="can_manage_fr">Manage FR</span>
+                        <span class="vp-perm-status no">Off</span>
+                    </div>
+                    <div class="vp-perm-item denied">
+                        <span class="perm-icon"><i class="bi bi-shield-lock-fill"></i></span>
+                        <span class="vp-perm-label" id="can_view_fra">view FRA</span>
+                        <span class="vp-perm-status no">Off</span>
+                    </div>
+                    <div class="vp-perm-item denied">
+                        <span class="perm-icon"><i class="bi bi-database-fill"></i></span>
+                        <span class="vp-perm-label" id="can_manage_fra_favourite">Manage FRA favourite</span>
+                        <span class="vp-perm-status no">Off</span>
+                    </div>
+                    <div class="vp-perm-item granted">
+                        <span class="perm-icon"><i class="bi bi-bell-fill"></i></span>
+                        <span class="vp-perm-label" id="can_view_fr_analytics">View FR Analytics</span>
+                        <span class="vp-perm-status ok">On</span>
+                    </div>
+                    <div class="vp-perm-item granted">
+                        <span class="perm-icon"><i class="bi bi-eye-fill"></i></span>
+                        <span class="vp-perm-label" id="can_manage_donation">Manage Donations</span>
+                        <span class="vp-perm-status ok">On</span>
+                    </div>
+                    <div class="vp-perm-item denied">
+                        <span class="perm-icon"><i class="bi bi-credit-card-fill"></i></span>
+                        <span class="vp-perm-label" id="can_manage_fra_category">Manage FRA category</span>
+                        <span class="vp-perm-status no">Off</span>
+                    </div>
+                    <div class="vp-perm-item denied">
+                        <span class="perm-icon"><i class="bi bi-credit-card-fill"></i></span>
+                        <span class="vp-perm-label" id="can_generate_report">Generate report</span>
+                        <span class="vp-perm-status no">Off</span>
+                    </div>
+                </div>
+            </div>
+            <!-- ── Actions ── -->
+            <div class="account-card__action-bar">
+                <button class="action-bar__btn action-bar__btn--edit" id="edit-role-btn" data-bs-toggle="modal" data-bs-target="#editModal">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Edit Role
+                </button>
+                <button class="action-bar__btn action-bar__btn--delete" id="suspend-role-btn" data-bs-toggle="modal"
+                    data-bs-target="#suspendModal">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                    </svg>
+                    Suspend Role
+                </button>
+            </div>
         </div>
     </main>
-
     <!-- ══ Footer ══ -->
     <footer class="fundly-footer">
         <div class="footer-top">
@@ -153,7 +235,8 @@
                     </div>
                     <div class="fr-form-group mb-2">
                         <label class="fr-form-label">Description</label>
-                        <textarea id="edit-desc" class="fr-form-input fr-form-textarea" placeholder="Brief description of this role"></textarea>
+                        <textarea id="edit-desc" class="fr-form-input fr-form-textarea"
+                            placeholder="Brief description of this role"></textarea>
                     </div>
 
                     <!-- Dashboard Access -->
@@ -167,7 +250,8 @@
                             </label>
                         </div>
                         <div class="modal-perm-row" id="edit-row-fr">
-                            <span class="modal-perm-label"><i class="bi bi-graph-up-arrow"></i>Fundraiser Dashboard</span>
+                            <span class="modal-perm-label"><i class="bi bi-graph-up-arrow"></i>Fundraiser
+                                Dashboard</span>
                             <label class="mini-switch">
                                 <input type="checkbox" id="edit-perm-fr" data-key="can_access_fr_dashboard" />
                                 <span class="mini-slider"></span>
@@ -181,9 +265,11 @@
                             </label>
                         </div>
                         <div class="modal-perm-row" id="edit-row-platform">
-                            <span class="modal-perm-label"><i class="bi bi-bar-chart-fill"></i>Platform Management</span>
+                            <span class="modal-perm-label"><i class="bi bi-bar-chart-fill"></i>Platform
+                                Management</span>
                             <label class="mini-switch">
-                                <input type="checkbox" id="edit-perm-platform" data-key="can_access_platform_mgt_dashboard" />
+                                <input type="checkbox" id="edit-perm-platform"
+                                    data-key="can_access_platform_mgt_dashboard" />
                                 <span class="mini-slider"></span>
                             </label>
                         </div>
@@ -193,14 +279,16 @@
                     <div class="modal-section-label">Permissions</div>
                     <div class="modal-perm-grid">
                         <div class="modal-perm-row" id="edit-row-acc">
-                            <span class="modal-perm-label"><i class="bi bi-person-check-fill"></i>Manage User Accounts</span>
+                            <span class="modal-perm-label"><i class="bi bi-person-check-fill"></i>Manage User
+                                Accounts</span>
                             <label class="mini-switch">
                                 <input type="checkbox" id="edit-perm-acc" data-key="can_manage_user_account" />
                                 <span class="mini-slider"></span>
                             </label>
                         </div>
                         <div class="modal-perm-row" id="edit-row-prof">
-                            <span class="modal-perm-label"><i class="bi bi-person-badge-fill"></i>Manage User Profiles</span>
+                            <span class="modal-perm-label"><i class="bi bi-person-badge-fill"></i>Manage User
+                                Profiles</span>
                             <label class="mini-switch">
                                 <input type="checkbox" id="edit-perm-prof" data-key="can_manage_user_profile" />
                                 <span class="mini-slider"></span>
@@ -228,7 +316,8 @@
                             </label>
                         </div>
                         <div class="modal-perm-row" id="edit-row-ana">
-                            <span class="modal-perm-label"><i class="bi bi-bar-chart-line-fill"></i>View FR Analytics</span>
+                            <span class="modal-perm-label"><i class="bi bi-bar-chart-line-fill"></i>View FR
+                                Analytics</span>
                             <label class="mini-switch">
                                 <input type="checkbox" id="edit-perm-ana" data-key="can_view_fr_analytics" />
                                 <span class="mini-slider"></span>
@@ -249,7 +338,8 @@
                             </label>
                         </div>
                         <div class="modal-perm-row" id="edit-row-rep">
-                            <span class="modal-perm-label"><i class="bi bi-file-earmark-bar-graph-fill"></i>Generate Reports</span>
+                            <span class="modal-perm-label"><i class="bi bi-file-earmark-bar-graph-fill"></i>Generate
+                                Reports</span>
                             <label class="mini-switch">
                                 <input type="checkbox" id="edit-perm-rep" data-key="can_generate_report" />
                                 <span class="mini-slider"></span>
@@ -269,26 +359,28 @@
 
     <!-- ══ Suspend / Delete Confirm Modal ══ -->
     <div class="modal fade" id="suspendModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content fra-delete-modal">
-                <div class="modal-header fra-delete-modal-header border-0">
-                    <i class="bi bi-slash-circle-fill fra-delete-modal-icon"></i>
-                    <h5 class="modal-title fra-delete-modal-title" id="suspend-modal-title">Suspend Profile</h5>
-                </div>
-                <div class="modal-body fra-delete-modal-body">
-                    <p id="suspend-msg"></p>
-                </div>
-                <div class="modal-footer fra-delete-modal-footer border-0">
-                    <button type="button" class="fr-cancel-btn" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="fra-delete-confirm-btn" id="suspend-confirm-btn">Suspend</button>
-                </div>
-            </div>
-        </div>
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content fra-delete-modal">
+      <div class="modal-header fra-delete-modal-header border-0">
+        <i class="bi bi-slash-circle-fill fra-delete-modal-icon"></i>
+        <h5 class="modal-title fra-delete-modal-title">Suspend Role</h5>
+      </div>
+      <div class="modal-body fra-delete-modal-body">
+        <p id="suspend-modal-msg">Are you sure you want to suspend this role?<br>Users with this role will lose access.</p>
+      </div>
+      <div class="modal-footer fra-delete-modal-footer border-0">
+        <button type="button" class="fr-cancel-btn" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="fra-delete-confirm-btn" id="suspend-confirm-btn">Suspend</button>
+      </div>
     </div>
+  </div>
+</div>
+
 
     <!-- ══ Toast ══ -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:1100">
-        <div id="cat-success-toast" class="toast cat-toast border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="cat-success-toast" class="toast cat-toast border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
             <div class="cat-toast-inner">
                 <div class="cat-toast-icon"><i class="bi bi-check-lg"></i></div>
                 <span class="cat-toast-msg" id="cat-toast-msg">Done.</span>
@@ -300,8 +392,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/scripts/ViewProfile.js"></script>
     <script src="/scripts/dropdown_profile.js"></script>
-    <script src="/scripts/manage_profile.js"></script>
 
 </body>
+
 </html>
