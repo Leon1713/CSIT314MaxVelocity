@@ -3519,3 +3519,17 @@ main.admin-dashboard-main {
 @media (max-width: 640px) {
     .rpt-stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── Loading card ── */
+.manage-profiles-loading-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(201, 107, 107, 0.08);
+  padding: 64px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 100%;
+  min-height: 600px;
+}

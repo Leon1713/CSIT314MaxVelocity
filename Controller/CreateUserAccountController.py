@@ -8,12 +8,11 @@ class CreateUserAccountController:
     def __init__(self):
         self.pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
         
-    def createAccount(self, username : str, password : str, email : str, role_name : str, first_name : str, last_name : str, phone : str) -> Account:
+    def createAccount(self, username : str, password : str, email : str, role_id : int, first_name : str, last_name : str, phone : str) -> Account:
             try:
                 hashedPw = self.pwd_context.hash(password)
                 now = datetime.datetime.now()
-                roleId = Account.getRoleId(role_name)
-                newAcc = Account(None, username, email, hashedPw, roleId,
+                newAcc = Account(None, username, email, hashedPw, role_id,
                                 first_name, last_name, phone, True, False, now, now, now)
                 if Account.insertNewUser(newAcc.to_dict()):
                     return {"success": True}

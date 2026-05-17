@@ -26,7 +26,7 @@ class AccountModal(BaseModel):
     username: strictStr
     password: strictStr
     email: strictStr
-    role_name: strictStr
+    role_id: int
     first_name: strictStr
     last_name: strictStr
     phone: strictStr
@@ -90,15 +90,15 @@ def admin_dashboard(admin: Account = Depends(require_admin)):
 
 
 @router.post("/create_account", dependencies=[Depends(require_permission("can_manage_user_account"))])
-def create_account(input: AccountModal):
+def create_account(input : AccountModal):
     controller: CreateUserAccountController = CreateUserAccountController()
     return controller.createAccount(**input.model_dump())
 
 
 @router.get("/user_accounts", dependencies=[Depends(require_permission("can_manage_user_account"))])
-def get_user_accounts_list(search: str = ""):
+def get_user_accounts_list(search: str = "", is_active : str = ""):
     controller: SearchUserAccountsController = SearchUserAccountsController()
-    accounts = controller.search(search)
+    accounts = controller.search(search, is_active)
     account_info_list = accounts
     return account_info_list
 
@@ -106,7 +106,7 @@ def get_user_accounts_list(search: str = ""):
 @router.get("/user_accounts/{user_id}", dependencies=[Depends(require_permission("can_manage_user_account"))])
 def get_user_account_details(user_id: int):
     controller: ReadUserAccountController = ReadUserAccountController()
-    acc: Account = controller.get(user_id)
+    return controller.getUserAccount(user_id)
     if acc is None:
         raise HTTPException(status_code=404, detail="User not found")
     return acc.to_dict()

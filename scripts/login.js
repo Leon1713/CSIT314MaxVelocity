@@ -8,7 +8,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
   const modalEl = document.getElementById("errorModal");
   const modalMsg = document.getElementById("errorModalMessage");
   const roleInput = document.getElementById("loginRole");
-  const modal = new bootstrap.Modal(modalEl);
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
 
   const data = {
     email: emailEl.value,

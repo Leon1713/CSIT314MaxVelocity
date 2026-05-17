@@ -292,18 +292,20 @@ LIMIT %s;""", (limit,)
             conn.close()
 
     @staticmethod
-    def search(input: str):  # list method
+    def search(input: str, active: str):  # list method
         try:
             conn = get_db_connection()
             db_cursor = conn.cursor(dictionary=True)
-
+            active_in = ""
+            if active != "":
+                active_in = active
             db_cursor.execute("""
-        SELECT u.*,r.role_name FROM user_accounts u join user_roles r
-        ON u.role_id = r.role_id
-        WHERE %s = '' 
-        OR username LIKE CONCAT('%', %s, '%') 
-        OR email LIKE CONCAT('%', %s, '%');
-        """, (input, input, input,))
+                              SELECT u.*, r.role_name
+FROM user_accounts u
+JOIN user_roles r ON u.role_id = r.role_id
+WHERE (%s = '' OR u.is_active = %s)
+  AND (%s = '' OR username LIKE CONCAT('%', %s, '%') OR email LIKE CONCAT('%', %s, '%'));
+                              """, (active, active,  input, input, input,))
             return db_cursor.fetchall()
         except Exception as e:
             print(e)

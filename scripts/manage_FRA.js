@@ -40,7 +40,7 @@ function showToast(msg) {
     document.getElementById('fra-toast-msg').textContent = msg;
     new bootstrap.Toast(document.getElementById('fra-success-toast'), { delay: 2500 }).show();
 }
-const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+const deleteModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteModal'));
 
 function renderList(activities) {
     const list = document.getElementById('manage-activity-list');
@@ -189,7 +189,7 @@ document.getElementById('delete-confirm-btn').addEventListener('click', async ()
 });
 
 // ── Edit modal ────────────────────────────────────────────────────────────────
-const editFRAModal = new bootstrap.Modal(document.getElementById('editFRAModal'));
+const editFRAModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('editFRAModal'));
 
 async function openEditModal(id) {
     editingActivityId = id;

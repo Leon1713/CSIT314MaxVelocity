@@ -1,0 +1,159 @@
+/* ── Permission pill tags shown in the view modal ── */
+        .perm-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .perm-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 20px;
+            background: rgba(201, 107, 107, 0.1);
+            color: var(--fundly-primary, #c96b6b);
+        }
+
+        .perm-pill.dashboard {
+            background: rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+        }
+
+        /* ── Permission count badge in table ── */
+        .perm-count-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(201, 107, 107, 0.1);
+            color: var(--fundly-primary, #c96b6b);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 9px;
+            border-radius: 20px;
+        }
+
+        /* ── Role avatar in table ── */
+        .role-table-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: rgba(201, 107, 107, 0.12);
+            color: var(--fundly-primary, #c96b6b);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .role-name-cell {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        /* ── View modal perm grid ── */
+        .perm-view-section {
+            margin-bottom: 10px;
+        }
+
+        .perm-view-section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 5px;
+        }
+
+        /* ── Create / Edit modal sections ── */
+        .modal-section-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin: 14px 0 8px;
+        }
+
+        /* ── Permissions toggle grid inside modal ── */
+        .modal-perm-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .modal-perm-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fdfafa;
+            border: 1.5px solid #f5eaea;
+            border-radius: 9px;
+            padding: 9px 13px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--fundly-text, #2d2d2d);
+            transition: border-color 0.15s;
+        }
+
+        .modal-perm-row:hover {
+            border-color: rgba(201, 107, 107, 0.3);
+        }
+
+        .modal-perm-row.active {
+            border-color: rgba(201, 107, 107, 0.35);
+            background: rgba(201, 107, 107, 0.04);
+        }
+
+        .modal-perm-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .modal-perm-label i {
+            color: var(--fundly-primary, #c96b6b);
+            width: 15px;
+            text-align: center;
+        }
+
+        /* ── Mini switch ── */
+        .mini-switch {
+            position: relative;
+            display: inline-block;
+            width: 36px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .mini-switch input { opacity: 0; width: 0; height: 0; }
+
+        .mini-slider {
+            position: absolute;
+            inset: 0;
+            background: #e0d5d5;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .mini-slider::before {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            left: 3px;
+            top: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+
+        .mini-switch input:checked + .mini-slider { background: var(--fundly-primary, #c96b6b); }
+        .mini-switch input:checked + .mini-slider::before { transform: translateX(16px); }

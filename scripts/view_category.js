@@ -54,8 +54,8 @@ async function loadCategory() {
         document.getElementById('cat-updated-full').textContent = formatDateTime(c.updated_at || c.created_at);
 
         // Wire buttons now that we have the data
-        const editModal   = new bootstrap.Modal(document.getElementById('editModal'));
-        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        const editModal   = bootstrap.Modal.getOrCreateInstance(document.getElementById('editModal'));
+        const deleteModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteModal'));
 
         // Edit — open modal pre-filled with current data
         document.getElementById('cat-edit-btn').addEventListener('click', () => {
