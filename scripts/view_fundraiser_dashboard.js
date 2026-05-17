@@ -110,7 +110,7 @@ document.getElementById('btn-manage-activities').addEventListener('click', () =>
 });
 
 document.getElementById('btn-view-history').addEventListener('click', () => {
-    window.location.href = 'view_completed_FRA.html';
+    window.location.href = 'completed_FRA.html';
 });
 
 // ── Gear dropdown ──────────────────────────────────────────────────────────────

@@ -161,7 +161,7 @@ document.getElementById('manage-new-btn').addEventListener('click', () => {
 });
 
 document.getElementById('manage-history-btn').addEventListener('click', () => {
-    window.location.href = 'view_completed_FRA.html';
+    window.location.href = 'completed_FRA.html';
 });
 
 // ── Delete confirm ─────────────────────────────────────────────────────────────

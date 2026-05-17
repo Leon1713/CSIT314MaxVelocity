@@ -1,9 +1,9 @@
 ﻿function getButtonsByPermission(data) {
     let buttons = [
-        [data.can_access_admin_dashboard, { icon: 'bi-people-fill',   label: 'User Admin',    href: 'view_admin_dashboard.html' }],
-        [data.can_access_fr_dashboard,{ icon: 'bi-cash-stack', label: 'Fundraiser', href: 'view_fundraiser_dashboard.html' } ],
-        [data.can_access_donee_dashboard,{icon: 'bi-hand-heart', label: 'Donee', href: 'view_donee_dashboard.html'}],
-        [data.can_access_platform_mgt_dashboard, {icon: 'bi-speedometer2', label: 'Platform Mgmt', href: 'view_platform_dashboard.html'}]]
+        [data.can_access_admin_dashboard, { icon: 'bi-people-fill',   label: 'User Admin',    href: 'admin_dashboard.html' }],
+        [data.can_access_fr_dashboard,{ icon: 'bi-cash-stack', label: 'Fundraiser', href: 'fundraiser_dashboard.html' } ],
+        [data.can_access_donee_dashboard,{icon: 'bi-hand-heart', label: 'Donee', href: 'donee_dashboard.html'}],
+        [data.can_access_platform_mgt_dashboard, {icon: 'bi-speedometer2', label: 'Platform Mgmt', href: 'platform_dashboard.html'}]]
         return buttons;
 }
 async function loadHub() {
