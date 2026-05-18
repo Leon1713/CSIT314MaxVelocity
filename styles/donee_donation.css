@@ -1,0 +1,475 @@
+body{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .fv-main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 8px 20px 60px;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        @media (max-width: 740px) {
+            .fv-main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Hero card (left) ── */
+        .fv-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 14px rgba(201, 107, 107, .08);
+            overflow: hidden;
+        }
+
+        .fv-card-bar {
+            height: 5px;
+            background: var(--fundly-primary);
+        }
+
+        .fv-card-body {
+            padding: 22px 24px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .fv-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(201, 107, 107, .1);
+            color: var(--fundly-primary);
+            font-size: .7rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            align-self: flex-start;
+        }
+
+        .fv-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #2d2d2d;
+            line-height: 1.3;
+        }
+
+        .fv-status-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .fv-pill {
+            font-size: .68rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .fv-pill.active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .fv-pill.ended {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .fv-tag {
+            font-size: .78rem;
+            font-weight: 700;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Progress */
+        .fv-prog-bg {
+            height: 8px;
+            background: #f5eaea;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .fv-prog-fill {
+            height: 100%;
+            background: var(--fundly-primary);
+            border-radius: 99px;
+            width: 0;
+            transition: width 1s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .fv-prog-nums {
+            display: flex;
+            justify-content: space-between;
+            font-size: .75rem;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
+        .fv-prog-nums .raised {
+            font-size: 1rem;
+            font-weight: 900;
+            color: var(--fundly-primary);
+        }
+
+        .fv-prog-nums .goal {
+            color: #aaa;
+        }
+
+        /* Stats */
+        .fv-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .fv-stat {
+            background: rgba(201, 107, 107, .07);
+            border-radius: 12px;
+            padding: 12px 14px;
+            text-align: center;
+        }
+
+        .fv-stat-val {
+            font-size: 1rem;
+            font-weight: 900;
+            color: var(--fundly-primary);
+            display: block;
+        }
+
+        .fv-stat-lbl {
+            font-size: .65rem;
+            font-weight: 700;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        /* Description */
+        .fv-slabel {
+            font-size: .7rem;
+            font-weight: 800;
+            color: #bbb;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-bottom: 6px;
+        }
+
+        .fv-desc {
+            font-size: .88rem;
+            color: #555;
+            line-height: 1.72;
+            padding: 13px 15px;
+            background: #fdfafa;
+            border: 1.5px solid #f0e0e0;
+            border-radius: 11px;
+            margin: 0;
+        }
+
+        /* Dates */
+        .fv-dates {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .fv-date-box {
+            background: #fdfafa;
+            border: 1.5px solid #f0e0e0;
+            border-radius: 11px;
+            padding: 10px 13px;
+        }
+
+        .fv-date-lbl {
+            font-size: .65rem;
+            font-weight: 800;
+            color: #bbb;
+            text-transform: uppercase;
+        }
+
+        .fv-date-val {
+            font-size: .88rem;
+            font-weight: 800;
+            color: #2d2d2d;
+            margin-top: 2px;
+        }
+
+        /* Fav */
+        .fv-fav-btn {
+            width: 100%;
+            border: 1.5px solid var(--fundly-primary);
+            background: none;
+            color: var(--fundly-primary);
+            border-radius: 10px;
+            padding: 9px 0;
+            font-size: .88rem;
+            font-weight: 800;
+            font-family: 'Nunito', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: background .15s, color .15s;
+        }
+
+        .fv-fav-btn.saved {
+            background: var(--fundly-primary);
+            color: #fff;
+        }
+
+        .fv-fav-btn:hover:not(.saved) {
+            background: rgba(201, 107, 107, .08);
+        }
+
+        /* ── Donation panel ── */
+        .fv-donate-panel {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 14px rgba(201, 107, 107, .08);
+            overflow: hidden;
+            position: sticky;
+            top: 76px;
+        }
+
+        .fv-donate-hdr {
+            background: var(--fundly-primary);
+            padding: 16px 20px 13px;
+            color: #fff;
+        }
+
+        .fv-donate-hdr h4 {
+            font-size: 1rem;
+            font-weight: 900;
+            margin: 0 0 2px;
+        }
+
+        .fv-donate-hdr p {
+            font-size: .76rem;
+            opacity: .82;
+            margin: 0;
+        }
+
+        .fv-donate-body {
+            padding: 18px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .fv-preset-lbl {
+            font-size: .7rem;
+            font-weight: 800;
+            color: #bbb;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+        }
+
+        .fv-presets {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 7px;
+            margin-top: 7px;
+        }
+
+        .fv-preset {
+            border: 1.5px solid #edd8d8;
+            background: none;
+            border-radius: 9px;
+            padding: 7px 3px;
+            font-size: .8rem;
+            font-weight: 800;
+            font-family: 'Nunito', sans-serif;
+            color: #2d2d2d;
+            cursor: pointer;
+            text-align: center;
+            transition: border-color .13s, background .13s, color .13s;
+        }
+
+        .fv-preset:hover,
+        .fv-preset.active {
+            border-color: var(--fundly-primary);
+            background: rgba(201, 107, 107, .09);
+            color: var(--fundly-primary);
+        }
+
+        .fv-amount-wrap {
+            position: relative;
+        }
+
+        .fv-amount-prefix {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: .95rem;
+            font-weight: 900;
+            color: var(--fundly-primary);
+            pointer-events: none;
+        }
+
+        .fv-amount-in {
+            width: 100%;
+            height: 46px;
+            padding: 0 13px 0 28px;
+            border: 2px solid #edd8d8;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            font-family: 'Nunito', sans-serif;
+            color: #2d2d2d;
+            outline: none;
+            transition: border-color .18s;
+        }
+
+        .fv-amount-in:focus {
+            border-color: var(--fundly-primary);
+        }
+
+        .fv-amount-in.error {
+            border-color: #ef4444;
+        }
+
+        .fv-err {
+            font-size: .73rem;
+            font-weight: 700;
+            color: #ef4444;
+            min-height: 16px;
+            margin-top: 3px;
+        }
+
+        .fv-donate-btn {
+            width: 100%;
+            padding: 13px;
+            background: var(--fundly-primary);
+            border: none;
+            border-radius: 11px;
+            color: #fff;
+            font-size: .95rem;
+            font-weight: 900;
+            font-family: 'Nunito', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: background .15s, transform .1s;
+            box-shadow: 0 4px 14px rgba(201, 107, 107, .3);
+        }
+
+        .fv-donate-btn:hover {
+            background: var(--fundly-primary-dark);
+        }
+
+        .fv-donate-btn:active {
+            transform: scale(.98);
+        }
+
+        .fv-donate-btn:disabled {
+            background: #ddd;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .fv-secure {
+            font-size: .68rem;
+            font-weight: 700;
+            color: #bbb;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        /* Success */
+        .fv-success {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 28px 20px 24px;
+            gap: 11px;
+        }
+
+        .fv-success-icon {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: #dcfce7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            color: #16a34a;
+            animation: pop .38s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        @keyframes pop {
+            from {
+                transform: scale(0)
+            }
+
+            to {
+                transform: scale(1)
+            }
+        }
+
+        .fv-success h5 {
+            font-size: 1rem;
+            font-weight: 900;
+            color: #2d2d2d;
+            margin: 0;
+        }
+
+        .fv-success p {
+            font-size: .8rem;
+            color: #aaa;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .fv-another-btn {
+            border: 1.5px solid var(--fundly-primary);
+            background: none;
+            color: var(--fundly-primary);
+            border-radius: 9px;
+            padding: 8px 20px;
+            font-size: .84rem;
+            font-weight: 800;
+            font-family: 'Nunito', sans-serif;
+            cursor: pointer;
+            transition: background .15s;
+        }
+
+        .fv-another-btn:hover {
+            background: rgba(201, 107, 107, .08);
+        }
+
+        /* Skeleton */
+        .skel {
+            background: linear-gradient(90deg, #f5eaea 25%, #fdf5f5 50%, #f5eaea 75%);
+            background-size: 200% 100%;
+            animation: sk 1.3s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes sk {
+            0% {
+                background-position: 200% 0
+            }
+
+            100% {
+                background-position: -200% 0
+            }
+        }

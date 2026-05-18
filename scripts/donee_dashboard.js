@@ -13,7 +13,7 @@ function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&
 async function loadDashboard() {
     // Session / username
     try {
-        const res = await fetch(`${BASE}/me`, { credentials: 'include' });
+        const res = await fetch(`${BASE}/hub`, { credentials: 'include' });
         if (res.status === 401) { window.location.href = 'login.html'; return; }
         const user = await res.json();
         document.getElementById('donee-username').textContent = user.username || user.email || '—';

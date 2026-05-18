@@ -232,6 +232,10 @@ function syncModalFavBtn(fraId) {
     document.getElementById('modal-fav-label').textContent = isFav ? 'Saved ✓' : 'Save to Favourites';
 }
 
+document.getElementById('modal-donate-btn').addEventListener('click', (e) =>{
+    if (openFRAId != null) window.location.href = "donee_donate.html?id=" + openFRAId;
+})
+
 document.getElementById('modal-fav-btn').addEventListener('click', () => {
     if (openFRAId != null) handleFavToggle(openFRAId, '', favouriteIds.has(openFRAId));
 });

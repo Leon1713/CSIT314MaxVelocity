@@ -1,7 +1,7 @@
 import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
-from Controller import SearchFRAController
+from Controller.SearchFRAController import SearchFRAController
 from Controller.ViewFRAController import ViewFRAController
 from Controller.DonationController import DonationController
 from Controller.FavoriteController import FavoriteController

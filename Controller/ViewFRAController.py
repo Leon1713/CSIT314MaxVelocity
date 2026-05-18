@@ -28,3 +28,9 @@ class ViewFRAController:
         except Exception as e:
             print(e)
             raise
+    def doneeSearchFRA(self, keyword, category_id, date_from, date_to):
+        try:
+            return FundraisingActivity.searchFRA(keyword,category_id,date_from,date_to)
+        except Exception as e:
+            print(e)
+            raise
