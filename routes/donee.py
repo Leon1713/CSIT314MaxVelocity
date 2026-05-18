@@ -1,3 +1,5 @@
+import datetime
+
 from fastapi import APIRouter, Depends, HTTPException
 from Controller.GetFRADetailsController import GetFRADetailsController
 from Controller.DonationController import DonationController
@@ -13,10 +15,13 @@ router = APIRouter(prefix="/donee", dependencies=[Depends(require_donee)])
 
 # --- FRA ---
 @router.get("/fundraising_activities", dependencies=[Depends(require_permission("can_view_fra"))])
-def get_fra_list():
+def get_fra_list(keyword="", category_id="", date_from="", date_to=""):
     controller = GetFRADetailsController()
-    fras = controller.getAllActivities()
-    return fras
+    try:
+        fras = controller.doneeSearchFRA(keyword,category_id,date_from,date_to)
+        return fras
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 @router.get("/fundraising_activities/{fra_id}", dependencies=[Depends(require_permission("can_view_fra"))])
 def get_fra(fra_id: int):

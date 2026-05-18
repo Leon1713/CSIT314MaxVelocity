@@ -1,6 +1,7 @@
 from __future__ import annotations
 from db import get_db_connection
 
+
 class FundraisingActivity():
     def __init__(self, id, fundraiser_id, category_id, description,
                  service_type, goal_amount, current_amount, status,
@@ -84,7 +85,7 @@ class FundraisingActivity():
                 data["goal_amount"],
                 data["end_date"],
             ))
-            
+
             db_conn.commit()
             return True
         except Exception as e:
@@ -215,7 +216,8 @@ class FundraisingActivity():
             params = [fundraiser_id]
 
             if filters.get("keyword"):
-                conditions.append("(fa.description LIKE %s OR fa.service_type LIKE %s)")
+                conditions.append(
+                    "(fa.description LIKE %s OR fa.service_type LIKE %s)")
                 kw = f"%{filters['keyword']}%"
                 params.extend([kw, kw])
 
@@ -302,8 +304,9 @@ class FundraisingActivity():
         finally:
             db_cursor.close()
             db_conn.close()
+
     @staticmethod
-    def getFundRaisingActivityById(fra_id : int):
+    def getFundRaisingActivityById(fra_id: int):
         db_conn = get_db_connection()
         db_cursor = db_conn.cursor(dictionary=True)
         try:
@@ -318,3 +321,36 @@ class FundraisingActivity():
         finally:
             db_cursor.close()
             db_conn.close()
+    
+
+    @staticmethod
+    def searchFRA(keyword=None, category_id=None, date_from=None, date_to=None):
+        with get_db_connection() as conn:
+            query = "SELECT * FROM fundraising_activities"
+            cursor = conn.cursor(dictionary=True)
+            conditions = []
+            params = []
+            if keyword is not None:
+                conditions.append("(campaign_title LIKE %s OR description LIKE %s)")
+                params.extend([f"%{keyword}%", f"%{keyword}%"])
+
+            if category_id is not None and category_id!="":
+                conditions.append("category_id = %s")
+                params.append(category_id)
+
+            if date_from is not None and date_from!= "":
+                conditions.append("start_date >= %s")
+                params.append(date_from)
+
+            if date_to is not None and date_to!= "":
+                conditions.append("end_date <= %s")
+                params.append(date_to)
+
+        # Add WHERE only if there are conditions
+            if conditions:
+                query += " WHERE " + " AND ".join(conditions)
+            cursor.execute(query, params)
+                
+            print(query, params)
+            res = cursor.fetchall()
+            return res

@@ -172,9 +172,9 @@ async function updateRole(payload) {
         if (!res.ok) throw new Error("Update failed");
 
         const updated = await res.json();
-        
-            const modalEl = document.getElementById("editModal");
-            const modal = bootstrap.Modal.getInstance(modalEl);
+
+        const modalEl = document.getElementById("editModal");
+        const modal = bootstrap.Modal.getInstance(modalEl);
 
         if (updated) {
             Object.assign(data, payload);
@@ -195,7 +195,6 @@ document.getElementById("edit-save-btn").addEventListener('click', () => {
     updateRole(payload);
 })
 /* ===========================
-
          TOAST
 =============================*/
 
@@ -219,3 +218,17 @@ init();
 
 
 
+/*============================================
+            dropdown
+=============================================*/
+
+// ── Gear dropdown ─────────────────────────────────────────────────────────────
+const gearBtn = document.getElementById('hub-gear-btn');
+const dropdown = document.getElementById('hub-settings-dropdown');
+gearBtn.addEventListener('click', e => { e.stopPropagation(); dropdown.classList.toggle('hidden'); });
+document.addEventListener('click', () => dropdown.classList.add('hidden'));
+dropdown.addEventListener('click', e => e.stopPropagation());
+document.getElementById('hub-logout-btn').addEventListener('click', async () => {
+    try { await fetch('http://127.0.0.1:8000/logout', { method: 'POST', credentials: 'include' }); } catch (_) { }
+    window.location.href = 'login.html';
+});
