@@ -95,7 +95,7 @@ async function loadCategories() {
 
     const sel = document.getElementById('f-category');
     sel.innerHTML = ""; // clear old options
-    
+
     const allOpt = document.createElement('option');
     allOpt.value = "";
     allOpt.textContent = "All Categories";
@@ -122,7 +122,7 @@ function renderGrid(items, isFavTab) {
     }
 
     items.forEach(f => {
-        const fraId = isFavTab ? f.fra_id : f.id;
+        const fraId = f.id || f.fra_id;
         const title = f.campaign_title || f.service_type || `Campaign #${fraId}`;
         const p = pct(f.current_amount, f.goal_amount);
         const isFav = favouriteIds.has(fraId);
@@ -172,8 +172,14 @@ async function loadTab() {
             renderGrid(fras, false);
         } else {
             const favs = await dbSearchFavourites();
-            document.getElementById('count-fav').textContent = favs.length;
-            renderGrid(favs, true);
+
+            // fetch full FRA details for every favourite
+            const fullFavs = await Promise.all(
+                favs.map(f => dbGetFRA(f.fra_id))
+            );
+
+            document.getElementById('count-fav').textContent = fullFavs.length;
+            renderGrid(fullFavs, true);
         }
     } catch (_) {
         document.getElementById('fra-grid').innerHTML = `<div class="fra-empty"><div class="fra-empty-icon"><i class="bi bi-exclamation-circle"></i></div><div class="fra-empty-title">Could not load campaigns.</div></div>`;
@@ -232,7 +238,7 @@ function syncModalFavBtn(fraId) {
     document.getElementById('modal-fav-label').textContent = isFav ? 'Saved ✓' : 'Save to Favourites';
 }
 
-document.getElementById('modal-donate-btn').addEventListener('click', (e) =>{
+document.getElementById('modal-donate-btn').addEventListener('click', (e) => {
     if (openFRAId != null) window.location.href = "donee_donate.html?id=" + openFRAId;
 })
 
