@@ -1,47 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donation History – Fundly</title>
     <link rel="stylesheet" href="/styles/styles.css">
     <link rel="stylesheet" href="/styles/donee_donation_history.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
 </head>
+
 <body class="fr-dashboard-page">
 
     <nav class="fundly-hub-navbar">
         <div class="container-fluid px-4 d-flex align-items-center">
-            <div class="hub-nav-logo"><img src="../img/fundly-logo.png" alt="Fundly Logo" class="fundly-logo-img"/></div>
+            <div class="hub-nav-logo"><img src="../img/fundly-logo.png" alt="Fundly Logo" class="fundly-logo-img" />
+            </div>
             <span class="hub-nav-title">Donation History</span>
             <div class="hub-gear-wrap ms-auto">
                 <button class="hub-nav-gear" id="hub-gear-btn"><i class="bi bi-gear-fill"></i></button>
                 <div id="hub-settings-dropdown" class="hub-settings-dropdown hidden">
-                    <p class="hub-dropdown-section">Account</p>
-                    <div class="hub-dropdown-user">
-                        <div class="hub-dropdown-avatar-wrap">
-                            <i class="bi bi-person-fill" id="dropdown-avatar-icon"></i>
-                            <img id="dropdown-avatar-img" class="hidden" alt=""/>
+                            <p class="hub-dropdown-section">Account</p>
+                            <div class="hub-dropdown-user">
+                                <div class="hub-dropdown-avatar-wrap">
+                                    <i class="bi bi-person-fill" id="dropdown-avatar-icon"></i>
+                                    <img id="dropdown-avatar-img" class="hidden" alt="" />
+                                </div>
+                                <div>
+                                    <span class="hub-dropdown-username" id="dropdown-username"></span>
+                                    <span class="hub-dropdown-role" id="dropdown-role"></span>
+                                </div>
+                            </div>
+                            <div class="hub-dropdown-divider"></div>
+                            <a href="profile.html" class="hub-dropdown-item">
+                                <i class="bi bi-person-circle"></i>My Profile
+                            </a>
+                            <button class="hub-dropdown-item hub-dropdown-logout" id="hub-logout-btn">
+                                <i class="bi bi-box-arrow-right"></i>Logout
+                            </button>
                         </div>
-                        <div>
-                            <span class="hub-dropdown-username" id="dropdown-username"></span>
-                            <span class="hub-dropdown-role" id="dropdown-role"></span>
-                        </div>
-                    </div>
-                    <div class="hub-dropdown-divider"></div>
-                    <a href="profile.html" class="hub-dropdown-item"><i class="bi bi-person-circle"></i>My Profile</a>
-                    <a href="donee_browse_fra.html" class="hub-dropdown-item"><i class="bi bi-grid-fill"></i>Browse Campaigns</a>
-                    <a href="#" class="hub-dropdown-item"><i class="bi bi-envelope"></i>Notifications</a>
-                    <button class="hub-dropdown-item hub-dropdown-logout" id="hub-logout-btn"><i class="bi bi-box-arrow-right"></i>Logout</button>
-                </div>
             </div>
         </div>
     </nav>
 
     <main class="fr-dashboard-main" style="max-width:900px;">
-        <a href="donee_dashboard.html" class="fr-back-link"><i class="bi bi-arrow-left-circle"></i> Back to Dashboard</a>
+        <a href="donee_dashboard.html" class="fr-back-link"><i class="bi bi-arrow-left-circle"></i> Back to
+            Dashboard</a>
 
         <!-- Summary stats (loaded once on page load, no filter) -->
         <div class="dh-summary-row">
@@ -66,13 +72,15 @@
         <div class="filter-bar">
             <div class="search-wrap">
                 <i class="bi bi-search"></i>
-                <input type="text" id="f-keyword" class="search-input" placeholder="Search campaigns…"/>
+                <input type="text" id="f-keyword" class="search-input" placeholder="Search campaigns…" />
             </div>
-            <select id="f-category" class="filter-sel"><option value="">All Categories</option></select>
+            <select id="f-category" class="filter-sel">
+                <option value="">All Categories</option>
+            </select>
             <span class="flabel">From</span>
-            <input type="date" id="f-from" class="date-in"/>
+            <input type="date" id="f-from" class="date-in" />
             <span class="flabel">To</span>
-            <input type="date" id="f-to" class="date-in"/>
+            <input type="date" id="f-to" class="date-in" />
             <button class="clear-btn" id="clear-btn"><i class="bi bi-x-lg"></i> Clear</button>
         </div>
 
@@ -92,13 +100,15 @@
                         </tr>
                     </thead>
                     <tbody id="dh-tbody">
-                        <tr><td colspan="6" style="padding:32px;text-align:center;">
-                            <div style="display:flex;flex-direction:column;gap:8px;max-width:300px;margin:0 auto;">
-                                <div class="skel" style="width:100%"></div>
-                                <div class="skel" style="width:80%"></div>
-                                <div class="skel" style="width:90%"></div>
-                            </div>
-                        </td></tr>
+                        <tr>
+                            <td colspan="6" style="padding:32px;text-align:center;">
+                                <div style="display:flex;flex-direction:column;gap:8px;max-width:300px;margin:0 auto;">
+                                    <div class="skel" style="width:100%"></div>
+                                    <div class="skel" style="width:80%"></div>
+                                    <div class="skel" style="width:90%"></div>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -106,9 +116,14 @@
     </main>
 
     <footer class="fundly-footer">
-        <div class="footer-top"><div class="footer-brand"><img src="../img/fundly-logo.png" alt="Fundly Logo" class="footer-logo-img"/></div><div class="footer-credits">made by jia yuan, chloe,<br/>tara, yaz, yadyoo &amp; hanyi</div></div>
+        <div class="footer-top">
+            <div class="footer-brand"><img src="../img/fundly-logo.png" alt="Fundly Logo" class="footer-logo-img" />
+            </div>
+            <div class="footer-credits">made by jia yuan, chloe,<br />tara, yaz, yadyoo &amp; hanyi</div>
+        </div>
         <div class="footer-divider"></div>
-        <div class="footer-bottom"><i class="bi bi-c-circle footer-copy-icon"></i><span class="footer-copy-text">Fundly</span></div>
+        <div class="footer-bottom"><i class="bi bi-c-circle footer-copy-icon"></i><span
+                class="footer-copy-text">Fundly</span></div>
     </footer>
 
     <!-- Donation Detail Modal -->
@@ -137,4 +152,5 @@
     <script src="/scripts/dropdown_profile.js"></script>
     <script src="/scripts/donee_history.js"></script>
 </body>
+
 </html>

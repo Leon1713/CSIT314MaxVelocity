@@ -85,7 +85,6 @@ class FundraisingActivity():
                 data["goal_amount"],
                 data["end_date"],
             ))
-
             db_conn.commit()
             return True
         except Exception as e:
@@ -138,7 +137,7 @@ class FundraisingActivity():
         db_cursor = conn.cursor(dictionary=True)
         field_map = {
             "title":        "campaign_title",
-            "description": "description",
+            "description":  "description",
             "service_type": "service_type",
             "category_id":  "category_id",
             "goal_amount":  "goal_amount",
@@ -286,9 +285,10 @@ class FundraisingActivity():
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
-                SELECT fa.id, fa.campaign_title, fa.description,fc.category_name, fa.service_type, fa.status, fa.created_at
-                FROM fundraising_activities fa LEFT JOIN
-                fra_categories fc ON fa.category_id = fc.id
+                SELECT fa.id, fa.campaign_title, fa.description, fc.category_name,
+                       fa.service_type, fa.status, fa.created_at
+                FROM fundraising_activities fa
+                LEFT JOIN fra_categories fc ON fa.category_id = fc.id
                 WHERE fundraiser_id = %s
                 ORDER BY created_at DESC
                 LIMIT %s
@@ -307,9 +307,9 @@ class FundraisingActivity():
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
-            SELECT * FROM fundraising_activities
-            WHERE fundraiser_id = %s
-            ORDER BY created_at DESC
+                SELECT * FROM fundraising_activities
+                WHERE fundraiser_id = %s
+                ORDER BY created_at DESC
             """, (user_id,))
             return db_cursor.fetchall()
         finally:
@@ -323,10 +323,10 @@ class FundraisingActivity():
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
-                              SELECT * FROM fundraising_activities
-                              ORDER BY created_at DESC
-                              LIMIT %s OFFSET %s
-                              """, (limitPerPage, offset,))
+                SELECT * FROM fundraising_activities
+                ORDER BY created_at DESC
+                LIMIT %s OFFSET %s
+            """, (limitPerPage, offset,))
             return db_cursor.fetchall()
         except Exception as e:
             print(e)
@@ -341,9 +341,9 @@ class FundraisingActivity():
         db_cursor = db_conn.cursor(dictionary=True)
         try:
             db_cursor.execute("""
-                              SELECT * FROM fundraising_activities
-                              WHERE id = %s
-                              """, (fra_id,))
+                SELECT * FROM fundraising_activities
+                WHERE id = %s
+            """, (fra_id,))
             return db_cursor.fetchone()
         except Exception as e:
             print(e)
@@ -351,7 +351,6 @@ class FundraisingActivity():
         finally:
             db_cursor.close()
             db_conn.close()
-    
 
     @staticmethod
     def searchFRA(keyword=None, category_id=None, date_from=None, date_to=None):
@@ -364,23 +363,72 @@ class FundraisingActivity():
                 conditions.append("(campaign_title LIKE %s OR description LIKE %s)")
                 params.extend([f"%{keyword}%", f"%{keyword}%"])
 
-            if category_id is not None and category_id!="":
+            if category_id is not None and category_id != "":
                 conditions.append("category_id = %s")
                 params.append(category_id)
 
-            if date_from is not None and date_from!= "":
+            if date_from is not None and date_from != "":
                 conditions.append("start_date >= %s")
                 params.append(date_from)
 
-            if date_to is not None and date_to!= "":
+            if date_to is not None and date_to != "":
                 conditions.append("end_date <= %s")
                 params.append(date_to)
 
-        # Add WHERE only if there are conditions
             if conditions:
                 query += " WHERE " + " AND ".join(conditions)
             cursor.execute(query, params)
-                
+
             print(query, params)
             res = cursor.fetchall()
             return res
+
+    @staticmethod
+    def getByIds(fra_ids: list[int]) -> dict[int, dict]:
+        """
+        Fetch FRA rows (with category name) for a given list of fra_ids.
+        Returns a dict keyed by fra_id for O(1) lookup when merging with donations.
+        Called by DonationController — keeps the JOIN inside FundraisingActivity
+        where it belongs, rather than crossing entity boundaries in Donation.
+        """
+        if not fra_ids:
+            return {}
+
+        db_conn = get_db_connection()
+        db_cursor = db_conn.cursor(dictionary=True)
+        try:
+            placeholders = ", ".join(["%s"] * len(fra_ids))
+            db_cursor.execute(f"""
+                SELECT
+                    fa.id              AS fra_id,
+                    fa.campaign_title  AS campaign_title,
+                    fa.description     AS description,
+                    fa.service_type    AS service_type,
+                    fa.goal_amount     AS goal_amount,
+                    fa.current_amount  AS current_amount,
+                    fa.status          AS fra_status,
+                    fa.start_date      AS fra_start_date,
+                    fa.end_date        AS fra_end_date,
+                    fa.fundraiser_id   AS fundraiser_id,
+                    fc.id              AS category_id,
+                    fc.category_name   AS category_name
+                FROM fundraising_activities fa
+                LEFT JOIN fra_categories fc ON fa.category_id = fc.id
+                WHERE fa.id IN ({placeholders})
+            """, fra_ids)
+            rows = db_cursor.fetchall()
+
+            result = {}
+            for row in rows:
+                for key in ("fra_start_date", "fra_end_date"):
+                    if row.get(key) is not None:
+                        row[key] = str(row[key])
+                for key in ("goal_amount", "current_amount"):
+                    if row.get(key) is not None:
+                        row[key] = float(row[key])
+                result[row["fra_id"]] = row
+
+            return result
+        finally:
+            db_cursor.close()
+            db_conn.close()

@@ -1,5 +1,7 @@
 from __future__ import annotations
 from db import get_db_connection
+
+
 class Donation:
     def __init__(self, id, donee_id, fra_id, amount, created_at):
         super().__init__()
@@ -20,11 +22,20 @@ class Donation:
 
     @staticmethod
     def getByDoneeId(donee_id: int):
+        """Fetch all donations for a donee, ordered newest first."""
         db_conn = get_db_connection()
         cursor = db_conn.cursor(dictionary=True)
         try:
-            cursor.execute("SELECT * FROM donations WHERE donee_id = %s", (donee_id,))
+            cursor.execute(
+                "SELECT * FROM donations WHERE donee_id = %s ORDER BY created_at DESC",
+                (donee_id,)
+            )
             rows = cursor.fetchall()
+            for row in rows:
+                if row.get("created_at") is not None:
+                    row["created_at"] = str(row["created_at"])
+                if row.get("amount") is not None:
+                    row["amount"] = float(row["amount"])
             return rows
         finally:
             cursor.close()
@@ -42,8 +53,8 @@ class Donation:
             conn.commit()
             return True
         except Exception:
-           conn.rollback()
-           raise
+            conn.rollback()
+            raise
         finally:
             cursor.close()
             conn.close()

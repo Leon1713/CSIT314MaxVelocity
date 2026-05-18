@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donee Dashboard – Fundly</title>
     <link rel="stylesheet" href="/styles/styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
 </head>
+
 <body class="fr-dashboard-page">
 
     <nav class="fundly-hub-navbar">
         <div class="container-fluid px-4 d-flex align-items-center">
             <div class="hub-nav-logo">
-                <img src="../img/fundly-logo.png" alt="Fundly Logo" class="fundly-logo-img"/>
+                <img src="../img/fundly-logo.png" alt="Fundly Logo" class="fundly-logo-img" />
             </div>
             <span class="hub-nav-title">Donee Dashboard</span>
             <div class="hub-gear-wrap ms-auto">
@@ -26,23 +28,17 @@
                     <div class="hub-dropdown-user">
                         <div class="hub-dropdown-avatar-wrap">
                             <i class="bi bi-person-fill" id="dropdown-avatar-icon"></i>
-                            <img id="dropdown-avatar-img" class="hidden" alt=""/>
+                            <img id="dropdown-avatar-img" class="hidden" alt="" />
                         </div>
                         <div>
                             <span class="hub-dropdown-username" id="dropdown-username"></span>
                             <span class="hub-dropdown-role" id="dropdown-role"></span>
                         </div>
-                        <div class="hub-dropdown-divider"></div>
-                        <a href="profile.html" class="hub-dropdown-item">
-                            <i class="bi bi-person-circle"></i>My Profile
-                        </a>
-                        <button class="hub-dropdown-item hub-dropdown-logout" id="hub-logout-btn">
-                            <i class="bi bi-box-arrow-right"></i>Logout
-                        </button>
                     </div>
                     <div class="hub-dropdown-divider"></div>
-                    <a href="profile.html" class="hub-dropdown-item"><i class="bi bi-person-circle"></i>My Profile</a>
-                    <a href="#" class="hub-dropdown-item"><i class="bi bi-envelope"></i>Notifications</a>
+                    <a href="profile.html" class="hub-dropdown-item">
+                        <i class="bi bi-person-circle"></i>My Profile
+                    </a>
                     <button class="hub-dropdown-item hub-dropdown-logout" id="hub-logout-btn">
                         <i class="bi bi-box-arrow-right"></i>Logout
                     </button>
@@ -87,28 +83,32 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
             <a href="donee_browse_fra.html" style="text-decoration:none;">
                 <div class="platform-activity-card" style="cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;"
-                     onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(201,107,107,0.13)'"
-                     onmouseout="this.style.transform='';this.style.boxShadow=''">
+                    onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(201,107,107,0.13)'"
+                    onmouseout="this.style.transform='';this.style.boxShadow=''">
                     <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-                        <div style="width:36px;height:36px;border-radius:10px;background:rgba(201,107,107,0.12);display:flex;align-items:center;justify-content:center;color:var(--fundly-primary);font-size:1.1rem;">
+                        <div
+                            style="width:36px;height:36px;border-radius:10px;background:rgba(201,107,107,0.12);display:flex;align-items:center;justify-content:center;color:var(--fundly-primary);font-size:1.1rem;">
                             <i class="bi bi-grid-fill"></i>
                         </div>
                         <span style="font-weight:800;font-size:0.95rem;color:#2d2d2d;">Browse Campaigns</span>
                     </div>
-                    <p style="margin:0;font-size:0.82rem;color:#999;line-height:1.5;">Search, filter and view fundraising campaigns. Save your favourites.</p>
+                    <p style="margin:0;font-size:0.82rem;color:#999;line-height:1.5;">Search, filter and view
+                        fundraising campaigns. Save your favourites.</p>
                 </div>
             </a>
             <a href="donee_donation_history.html" style="text-decoration:none;">
                 <div class="platform-activity-card" style="cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;"
-                     onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(201,107,107,0.13)'"
-                     onmouseout="this.style.transform='';this.style.boxShadow=''">
+                    onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(201,107,107,0.13)'"
+                    onmouseout="this.style.transform='';this.style.boxShadow=''">
                     <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-                        <div style="width:36px;height:36px;border-radius:10px;background:rgba(201,107,107,0.12);display:flex;align-items:center;justify-content:center;color:var(--fundly-primary);font-size:1.1rem;">
+                        <div
+                            style="width:36px;height:36px;border-radius:10px;background:rgba(201,107,107,0.12);display:flex;align-items:center;justify-content:center;color:var(--fundly-primary);font-size:1.1rem;">
                             <i class="bi bi-clock-history"></i>
                         </div>
                         <span style="font-weight:800;font-size:0.95rem;color:#2d2d2d;">Donation History</span>
                     </div>
-                    <p style="margin:0;font-size:0.82rem;color:#999;line-height:1.5;">View all your past donations, filter by category or date period.</p>
+                    <p style="margin:0;font-size:0.82rem;color:#999;line-height:1.5;">View all your past donations,
+                        filter by category or date period.</p>
                 </div>
             </a>
         </div>
@@ -129,9 +129,9 @@
     <footer class="fundly-footer">
         <div class="footer-top">
             <div class="footer-brand">
-                <img src="../img/fundly-logo.png" alt="Fundly Logo" class="footer-logo-img"/>
+                <img src="../img/fundly-logo.png" alt="Fundly Logo" class="footer-logo-img" />
             </div>
-            <div class="footer-credits">made by jia yuan, chloe,<br/>tara, yaz, yadyoo &amp; hanyi</div>
+            <div class="footer-credits">made by jia yuan, chloe,<br />tara, yaz, yadyoo &amp; hanyi</div>
         </div>
         <div class="footer-divider"></div>
         <div class="footer-bottom">
@@ -144,4 +144,5 @@
     <script src="/scripts/dropdown_profile.js"></script>
     <script src="/scripts/donee_dashboard.js"></script>
 </body>
+
 </html>
