@@ -1,6 +1,6 @@
 from passlib.context import CryptContext
 from db import get_db_connection
-
+import random
 class AdminInsert:
     def __init__(self):
         self.pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
@@ -22,6 +22,8 @@ class AdminInsert:
             finally:
                 db_cursor.close()
 obj = AdminInsert()
-obj.insertAccount("super", "admin", "superadmin@admin.com", "suadmin","999999","P@ssw0rd",5)
+
+for i in range(1, 100):
+    obj.insertAccount(f"User{i}",None,f"User{i}",f"User{i}",999999,"P@ssw0rd",random.randint(1,4))
         
     
