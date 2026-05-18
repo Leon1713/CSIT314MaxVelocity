@@ -1,7 +1,8 @@
 import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
-from Controller.GetFRADetailsController import GetFRADetailsController
+from Controller import SearchFRAController
+from Controller.ViewFRAController import ViewFRAController
 from Controller.DonationController import DonationController
 from Controller.FavoriteController import FavoriteController
 from Dependencies.Auth import require_permission
@@ -16,16 +17,20 @@ router = APIRouter(prefix="/donee", dependencies=[Depends(require_donee)])
 # --- FRA ---
 @router.get("/fundraising_activities", dependencies=[Depends(require_permission("can_view_fra"))])
 def get_fra_list(keyword="", category_id="", date_from="", date_to=""):
-    controller = GetFRADetailsController()
+    controller = SearchFRAController()
     try:
         fras = controller.doneeSearchFRA(keyword,category_id,date_from,date_to)
         return fras
     except Exception as e:
         raise HTTPException(status_code=404, detail=str(e))
+def get_fra_list():
+    controller = ViewFRAController()
+    fras = controller.getAllActivities()
+    return fras
 
 @router.get("/fundraising_activities/{fra_id}", dependencies=[Depends(require_permission("can_view_fra"))])
 def get_fra(fra_id: int):
-    controller = GetFRADetailsController()
+    controller = ViewFRAController()
     fra = controller.getActivityByFRAId(fra_id)
     if fra is None:
         raise HTTPException(status_code=404, detail="Fundraising activity not found")

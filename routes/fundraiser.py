@@ -5,12 +5,13 @@ from Dependencies.Auth import require_permission
 from Controller.GetFundraiserStatsController import GetFundraiserStatsController
 from Controller.CreateFRAController import CreateFRAController
 from Controller.GetFRACategoriesController import GetFRACategoriesController
-from Controller.GetFRADetailsController import GetFRADetailsController
+from Controller.ViewFRAController import ViewFRAController
 from Controller.DeleteFRAController import DeleteFRAController
-from Controller.GetAllFRAController import GetAllFRAController
+from Controller.ViewFRAListController import ViewFRAListController
 from Controller.UpdateFRAController import UpdateFRAController
 from Controller.RecordFRAViewController import RecordFRAViewController
 from Controller.GetCompletedFRAController import GetCompletedFRAController
+from Controller.SearchFRAController import SearchFRAController
 
 from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
@@ -85,7 +86,7 @@ def get_fundraiser_stats(user: "Account" = Depends(require_permission("can_acces
 
 @router.get("/activities")
 def get_all_activities(user: "Account" = Depends(require_permission("can_access_fr_dashboard"))):
-    controller = GetAllFRAController()
+    controller = ViewFRAListController()
     fid = user.user_id
     try:
         activities = controller.getAllActivities(fid)
@@ -110,12 +111,40 @@ def get_all_activities(user: "Account" = Depends(require_permission("can_access_
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
+@router.get("/activities/search")
+def search_activities(
+    q: str = "",
+    filter_status: str = "",
+    user: "Account" = Depends(require_permission("can_access_fr_dashboard"))
+):
+    ctrl = SearchFRAController()
+    fid = user.user_id
+    try:
+        activities = ctrl.search(fid, q, filter_status)
+        return {"activities": [
+            {
+                "id":              act["id"],
+                "title":           act["description"],
+                "category_name":   act.get("category_name") or "—",
+                "current_amount":  float(act["current_amount"] or 0),
+                "goal_amount":     float(act["goal_amount"] or 0),
+                "status":          _norm_status(act["status"]),
+                "end_date":        str(act["end_date"]) if act["end_date"] else None,
+                "view_count":      int(act.get("view_count") or 0),
+                "shortlist_count": int(act.get("shortlist_count") or 0),
+            }
+            for act in (activities or [])
+        ]}
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
 @router.get("/activity/{activity_id}")
 def get_activity_details(
     activity_id: int,
     user: "Account" = Depends(require_permission("can_view_fra"))
 ):
-    controller = GetFRADetailsController()
+    controller = ViewFRAController()
     fid = user.user_id
     try:
         activity = controller.getActivity(activity_id, fid)
@@ -278,7 +307,7 @@ def create_activity(
 def get_activity_list_fr(
     user: Account = Depends(require_permission("can_view_fra"))
 ):
-    controller = GetFRADetailsController()
+    controller = ViewFRAController()
     try:
         return controller.getActivityList(user.user_id)
     except Exception as e:

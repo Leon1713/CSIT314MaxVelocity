@@ -38,14 +38,16 @@ class PlatformReport:
             cursor.close()
 
     @staticmethod
-    def getTopActivitiesByViews(conn, limit: int = 8) -> list:
+    def getViewsByCategory(conn, limit: int = 8) -> list:
         cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute("""
-                SELECT fa.description AS title,
-                       COALESCE(fs.view_count, 0) AS view_count
-                FROM fundraising_activities fa
+                SELECT fc.category_name AS title,
+                       COALESCE(SUM(fs.view_count), 0) AS view_count
+                FROM fra_categories fc
+                LEFT JOIN fundraising_activities fa ON fc.id = fa.category_id
                 LEFT JOIN fra_stats fs ON fa.id = fs.fra_id
+                GROUP BY fc.id, fc.category_name
                 ORDER BY view_count DESC
                 LIMIT %s
             """, (limit,))
