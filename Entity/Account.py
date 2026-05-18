@@ -332,5 +332,3 @@ WHERE (%s = '' OR u.is_active = %s)
         finally:
             db_cursor.close()
             conn.close()
-    @staticmethod
-    def 
